@@ -1,0 +1,11 @@
+;; Environment Variablen definieren:
+;;   MG_LUA_DIR
+;;   MG_LUA_CUSTOM_DIR
+;;
+;; worlds_mg.lua nach MG_LUA_CUSTOM_DIR kopieren und anpassen
+;;
+;; ausserdem in ~/.tfrc aufnehmen
+
+/eval /load %{MG_LUA_DIR}/tf/init.tf
+/eval /loadlua %{MG_LUA_CUSTOM_DIR}/lua/init-custom.lua
+/eval /loadlua %{MG_LUA_CUSTOM_DIR}/lua/worlds_mg.lua

@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE MudletPackage>
+<MudletPackage version="1.0">
+    <KeyPackage>
+        <KeyGroup isActive="yes" isFolder="yes">
+            <name>dokey-package</name>
+            <packageName>dokey-package</packageName>
+            <script></script>
+            <command></command>
+            <keyCode>1</keyCode>
+            <keyModifier>0</keyModifier>
+            <KeyGroup isActive="yes" isFolder="yes">
+                <name>dokey-group</name>
+                <packageName></packageName>
+                <script></script>
+                <command></command>
+                <keyCode>-1</keyCode>
+                <keyModifier>-1</keyModifier>
+                <Key isActive="yes" isFolder="no">
+                    <name>F1</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;F1&quot;)</script>
+                    <command></command>
+                    <keyCode>16777264</keyCode>
+                    <keyModifier>0</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>F2</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;F2&quot;)</script>
+                    <command></command>
+                    <keyCode>16777265</keyCode>
+                    <keyModifier>0</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>F3</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;F3&quot;)</script>
+                    <command></command>
+                    <keyCode>16777266</keyCode>
+                    <keyModifier>0</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>F4</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;F4&quot;)</script>
+                    <command></command>
+                    <keyCode>16777267</keyCode>
+                    <keyModifier>0</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>F5</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;F5&quot;)</script>
+                    <command></command>
+                    <keyCode>16777268</keyCode>
+                    <keyModifier>0</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>F6</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;F6&quot;)</script>
+                    <command></command>
+                    <keyCode>16777269</keyCode>
+                    <keyModifier>0</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>F7</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;F7&quot;)</script>
+                    <command></command>
+                    <keyCode>16777270</keyCode>
+                    <keyModifier>0</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>F8</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;F8&quot;)</script>
+                    <command></command>
+                    <keyCode>16777271</keyCode>
+                    <keyModifier>0</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>F9</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;F9&quot;)</script>
+                    <command></command>
+                    <keyCode>16777272</keyCode>
+                    <keyModifier>0</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>F10</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;F10&quot;)</script>
+                    <command></command>
+                    <keyCode>16777273</keyCode>
+                    <keyModifier>0</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>F11</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;F11&quot;)</script>
+                    <command></command>
+                    <keyCode>16777274</keyCode>
+                    <keyModifier>0</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>F12</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;F12&quot;)</script>
+                    <command></command>
+                    <keyCode>16777275</keyCode>
+                    <keyModifier>0</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>S-F1</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;S_F1&quot;)</script>
+                    <command></command>
+                    <keyCode>16777264</keyCode>
+                    <keyModifier>33554432</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>S-F2</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;S_F2&quot;)</script>
+                    <command></command>
+                    <keyCode>16777265</keyCode>
+                    <keyModifier>33554432</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>S-F3</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;S_F3&quot;)</script>
+                    <command></command>
+                    <keyCode>16777266</keyCode>
+                    <keyModifier>33554432</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>S-F4</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;S_F4&quot;)</script>
+                    <command></command>
+                    <keyCode>16777267</keyCode>
+                    <keyModifier>33554432</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>S-F5</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;S_F5&quot;)</script>
+                    <command></command>
+                    <keyCode>16777268</keyCode>
+                    <keyModifier>33554432</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>S-F6</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;S_F6&quot;)</script>
+                    <command></command>
+                    <keyCode>16777269</keyCode>
+                    <keyModifier>33554432</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>S-F7</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;S_F7&quot;)</script>
+                    <command></command>
+                    <keyCode>16777270</keyCode>
+                    <keyModifier>33554432</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>S-F8</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;S_F8&quot;)</script>
+                    <command></command>
+                    <keyCode>16777271</keyCode>
+                    <keyModifier>33554432</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>S-F9</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;S_F9&quot;)</script>
+                    <command></command>
+                    <keyCode>16777272</keyCode>
+                    <keyModifier>33554432</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>S-F10</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;S_F10&quot;)</script>
+                    <command></command>
+                    <keyCode>16777273</keyCode>
+                    <keyModifier>33554432</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>S-F11</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;S_F11&quot;)</script>
+                    <command></command>
+                    <keyCode>16777274</keyCode>
+                    <keyModifier>33554432</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>S-F12</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;S_F12&quot;)</script>
+                    <command></command>
+                    <keyCode>16777275</keyCode>
+                    <keyModifier>33554432</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-a</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_a&quot;)</script>
+                    <command></command>
+                    <keyCode>65</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-b</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_b&quot;)</script>
+                    <command></command>
+                    <keyCode>66</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-d</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_d&quot;)</script>
+                    <command></command>
+                    <keyCode>68</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-e</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_e&quot;)</script>
+                    <command></command>
+                    <keyCode>69</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-f</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_f&quot;)</script>
+                    <command></command>
+                    <keyCode>70</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-g</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_g&quot;)</script>
+                    <command></command>
+                    <keyCode>71</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-h</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_h&quot;)</script>
+                    <command></command>
+                    <keyCode>72</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-i</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_i&quot;)</script>
+                    <command></command>
+                    <keyCode>73</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-j</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_j&quot;)</script>
+                    <command></command>
+                    <keyCode>74</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-k</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_k&quot;)</script>
+                    <command></command>
+                    <keyCode>75</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-l</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_l&quot;)</script>
+                    <command></command>
+                    <keyCode>76</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-m</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_m&quot;)</script>
+                    <command></command>
+                    <keyCode>77</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-n</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_n&quot;)</script>
+                    <command></command>
+                    <keyCode>78</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-o</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_o&quot;)</script>
+                    <command></command>
+                    <keyCode>79</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-p</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_p&quot;)</script>
+                    <command></command>
+                    <keyCode>80</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-q</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_q&quot;)</script>
+                    <command></command>
+                    <keyCode>81</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-r</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_r&quot;)</script>
+                    <command></command>
+                    <keyCode>82</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-s</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_s&quot;)</script>
+                    <command></command>
+                    <keyCode>83</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-t</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_t&quot;)</script>
+                    <command></command>
+                    <keyCode>84</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-u</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_u&quot;)</script>
+                    <command></command>
+                    <keyCode>85</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-v</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_v&quot;)</script>
+                    <command></command>
+                    <keyCode>86</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-w</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_w&quot;)</script>
+                    <command></command>
+                    <keyCode>87</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-x</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_x&quot;)</script>
+                    <command></command>
+                    <keyCode>88</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-y</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_y&quot;)</script>
+                    <command></command>
+                    <keyCode>89</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-z</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_z&quot;)</script>
+                    <command></command>
+                    <keyCode>90</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-1</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_1&quot;)</script>
+                    <command></command>
+                    <keyCode>49</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-2</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_2&quot;)</script>
+                    <command></command>
+                    <keyCode>50</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-3</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_3&quot;)</script>
+                    <command></command>
+                    <keyCode>51</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-4</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_4&quot;)</script>
+                    <command></command>
+                    <keyCode>52</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-5</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_5&quot;)</script>
+                    <command></command>
+                    <keyCode>53</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-6</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_6&quot;)</script>
+                    <command></command>
+                    <keyCode>54</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-7</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_7&quot;)</script>
+                    <command></command>
+                    <keyCode>55</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-8</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_8&quot;)</script>
+                    <command></command>
+                    <keyCode>56</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-9</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_9&quot;)</script>
+                    <command></command>
+                    <keyCode>57</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-0</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_0&quot;)</script>
+                    <command></command>
+                    <keyCode>48</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+                <Key isActive="yes" isFolder="no">
+                    <name>M-,</name>
+                    <packageName></packageName>
+                    <script>dokey(&quot;M_komma&quot;)
+</script>
+                    <command></command>
+                    <keyCode>44</keyCode>
+                    <keyModifier>134217728</keyModifier>
+                </Key>
+            </KeyGroup>
+        </KeyGroup>
+    </KeyPackage>
+</MudletPackage>
