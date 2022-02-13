@@ -253,14 +253,17 @@ local status_key_supressed = {}
 local function getGildenStatusLine()
   local status = ''
   for _,id in ipairs(status_ids) do
-    val = status_werte[id]
+    if status ~= '' then
+      status = status..'_'
+    end
+    local val = status_werte[id]
     if val == true then
-      status = status..'_'..id
+      status = status..id
     else
       if status_key_supressed[id] then
-        status = status..'_'..val
+        status = status..val
       else
-        status = status..'_'..id..':'..val
+        status = status..id..':'..val
       end
     end
   end
