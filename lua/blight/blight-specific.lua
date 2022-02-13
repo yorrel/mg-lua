@@ -10,6 +10,17 @@ local logger = client.createLogger('blight')
 -- ---------------------------------------------------------------------------
 -- base
 
+-- gag all prompt lines
+trigger.add(
+  '',
+  { prompt = true, gag = true },
+  function(m) end
+)
+
+
+-- ---------------------------------------------------------------------------
+-- ways
+
 base.keymap['M_,'] =
   function()
     local param = prompt.get()

@@ -7,7 +7,7 @@ local tools = require 'tools'
 
 local function send(...)
   for _,msg in ipairs{...} do
-    mud.send(msg)
+    mud.send(msg, { gag = true })
   end
 end
 
