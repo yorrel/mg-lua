@@ -145,11 +145,11 @@ end
 -- ---------------------------------------------------------------------------
 -- Statuszeile / Trigger
 
-base.statusAdd('Tk','___')  -- Taktik
-base.statusAdd('parade','___',true)
-base.statusAdd('T','___')  -- Technik
-base.statusAdd('schnell','__',true)
-base.statusAdd('rueckendeckung','__',true)
+base.statusAdd('Tk','   ')  -- Taktik
+base.statusAdd('parade','   ',true)
+base.statusAdd('T','   ')  -- Technik
+base.statusAdd('schnell','  ',true)
+base.statusAdd('rueckendeckung','  ',true)
 
 
 local function statusUpdate(id, optVal)
@@ -168,13 +168,13 @@ end
 client.createSubstrTrigger('Du konzentrierst Dich auf die Bewegungen des Parierens, um im kommenden Kampf', statusUpdate('parade','Par'), {'green'})
 client.createSubstrTrigger('Du parierst die naechsten Angriffe mit ', statusUpdate('parade','Par'), {'green'})
 client.createSubstrTrigger('Du merkst, dass du die feindlichen Schlaege nicht mehr lange mit Deiner Waffe', nil, {'yellow'})
-client.createSubstrTrigger('Du beendest Deine Schildparade.', statusUpdate('parade','___'), {'red'})
-client.createSubstrTrigger('Du beendest Deine Parade.', statusUpdate('parade','___'), {'red'})
-client.createSubstrTrigger('Du konzentrierst Dich nun nicht mehr auf die Bewegungen der Parade.', statusUpdate('parade','___'), {'red'})
+client.createSubstrTrigger('Du beendest Deine Schildparade.', statusUpdate('parade','   '), {'red'})
+client.createSubstrTrigger('Du beendest Deine Parade.', statusUpdate('parade','   '), {'red'})
+client.createSubstrTrigger('Du konzentrierst Dich nun nicht mehr auf die Bewegungen der Parade.', statusUpdate('parade','   '), {'red'})
 
 -- rueckendeckung
 client.createRegexTrigger('Du gibst .* Rueckendeckung.', statusUpdate('rueckendeckung','Rd'), {'green'})
-client.createSubstrTrigger('Du beendest die Rueckendeckung fuer ', statusUpdate('rueckendeckung','__'), {'red'})
+client.createSubstrTrigger('Du beendest die Rueckendeckung fuer ', statusUpdate('rueckendeckung','  '), {'red'})
 
 -- schnell
 client.createSubstrTrigger('Du kaempfst jetzt schneller!', statusUpdate('schnell','Sc'), {'green'})
@@ -187,8 +187,8 @@ client.createSubstrTrigger('Du schaffst es nicht mehr, die Schmerzen weiterhin z
 client.createSubstrTrigger('Du kaempfst nun mit der Kampftechnik der Schildkroete.', statusUpdate('T','Skr'), {'green'})
 client.createSubstrTrigger('Du kaempfst nun mit der Kampftechnik des Drachen.', statusUpdate('T','Dra'), {'green'})
 client.createSubstrTrigger('Du kaempfst nun die Technik der Schlange und machst dabei schnelle,', statusUpdate('T','Sna'), {'green'})
-client.createSubstrTrigger('Du beendest die Kampftechnik ', statusUpdate('T','___'), {'red'})
-client.createSubstrTrigger('Du konzentrierst Dich nun nicht mehr auf die Technik ', statusUpdate('T','___'), {'red'})
+client.createSubstrTrigger('Du beendest die Kampftechnik ', statusUpdate('T','   '), {'red'})
+client.createSubstrTrigger('Du konzentrierst Dich nun nicht mehr auf die Technik ', statusUpdate('T','   '), {'red'})
 client.createSubstrTrigger(
   'Du steigerst Dich in wilde Raserei!',
   function()
@@ -196,7 +196,7 @@ client.createSubstrTrigger(
     base.statusUpdate('T','Ras')
   end,
   {'green'})
-client.createSubstrTrigger('Du beendest Deine Raserei', statusUpdate('T','___'), {'red'})
+client.createSubstrTrigger('Du beendest Deine Raserei', statusUpdate('T','   '), {'red'})
 
 -- taktik
 local function setTaktikMatch1(m)

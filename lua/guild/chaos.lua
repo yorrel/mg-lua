@@ -392,15 +392,15 @@ end
 -- ---------------------------------------------------------------------------
 -- Statuszeile
 
-base.statusAdd('CS', '___________')
+base.statusAdd('CS', '           ')
 
 local function chaoskontrolle_einstellung(m)
   local anzahl = m[1]
   local adjektiv = m[2]
   local schaden = m[3]
   local _u = string.sub(adjektiv, 1, 3)
-  local _v = string.sub(schaden..'____', 1, 3)
-  local schadenKuerzel = anzahl..'_'.._u..'_'.._v
+  local _v = string.sub(schaden..'    ', 1, 3)
+  local schadenKuerzel = anzahl..' '.._u..' '.._v
   base.statusUpdate('CS', schadenKuerzel)
 end
 

@@ -150,13 +150,13 @@ client.createSubstrTrigger('Der Nebel loest sich auf.', nil, {'red'})
 -- ---------------------------------------------------------------------------
 -- Statuszeile
 
-base.statusAdd('meditation', '_', true)
-base.statusAdd('gesinnung', '_', true)
-base.statusAdd('kokoro', '__', true)
-base.statusAdd('tegatana', '__', true)
-base.statusAdd('hayai', '__', true)
-base.statusAdd('akshara', '__', true)
-base.statusAdd('rest', '____', true)
+base.statusAdd('meditation', ' ', true)
+base.statusAdd('gesinnung', ' ', true)
+base.statusAdd('kokoro', '  ', true)
+base.statusAdd('tegatana', '  ', true)
+base.statusAdd('hayai', '  ', true)
+base.statusAdd('akshara', '  ', true)
+base.statusAdd('rest', '    ', true)
 
 local function statusZeile1(m)
   base.statusUpdate('meditation', m[4], true)

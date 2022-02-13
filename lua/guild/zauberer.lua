@@ -137,21 +137,21 @@ client.createSubstrTrigger('Du wirst allmaehlich wieder langsamer.', nil, {'red'
 -- ---------------------------------------------------------------------------
 -- Statuszeile
 
-base.statusAdd('SKP', '___')
-base.statusAdd('gesinnung', '_',true)
-base.statusAdd('hand', '_', true)
-base.statusAdd('extrahand', '_', true)
-base.statusAdd('wille', '_', true)
-base.statusAdd('sz', '_', true)
-base.statusAdd('ba', '_', true)
-base.statusAdd('er', '_', true)
-base.statusAdd('gesundheit', '____',true)
+base.statusAdd('SKP', '   ')
+base.statusAdd('gesinnung', ' ',true)
+base.statusAdd('hand', ' ', true)
+base.statusAdd('extrahand', ' ', true)
+base.statusAdd('wille', ' ', true)
+base.statusAdd('sz', ' ', true)
+base.statusAdd('ba', ' ', true)
+base.statusAdd('er', ' ', true)
+base.statusAdd('gesundheit', '    ',true)
 
 local function convert(flag, to)
   if flag == 'J' then
     return to
   else
-    return '_'
+    return ' '
   end
 end
 

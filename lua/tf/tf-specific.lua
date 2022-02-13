@@ -87,6 +87,7 @@ base.registerEventHandler('gmcp.MG.room.info', vsfr2TF)
 
 local function gildenStatus2TF()
   local status = base.getGildenStatusLine()
+  status = string.gsub(status, ' ', '_')
   tf_eval('/set STATUS_GILDE='..status)
   tf_eval('/status_update')
 end

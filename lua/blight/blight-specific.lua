@@ -127,7 +127,7 @@ local function status_update1()
 end
 
 local function status_update2()
-  local gilde = padRight(string.gsub(base.getGildenStatusLine(), '_', ' '), 42)
+  local gilde = padRight(base.getGildenStatusLine(), 42)
   local vsfr = vsfrStatus()
   blight.status_line(2, gilde..'   '..vsfr)
 end

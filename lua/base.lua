@@ -254,7 +254,7 @@ local function getGildenStatusLine()
   local status = ''
   for _,id in ipairs(status_ids) do
     if status ~= '' then
-      status = status..'_'
+      status = status..' '
     end
     local val = status_werte[id]
     if val == true then
@@ -267,7 +267,7 @@ local function getGildenStatusLine()
       end
     end
   end
-  return string.gsub(status, ' ', '_')
+  return status
 end
 
 local function statusUpdate(id, optVal)
