@@ -68,7 +68,7 @@ local function autoSonnenschutz()
   end
 end
 
-client.createSubstrTrigger('Die Sonne scheint gnadenlos auf Dein Haupt und schwaecht Dich.', autoSonnenschutz, {'red'})
+client.createSubstrTrigger('Die Sonne scheint gnadenlos auf Dein Haupt und schwaecht Dich.', autoSonnenschutz, {'<red>'})
 
 
 -- Verkleiden
@@ -102,28 +102,28 @@ local function statusAus(id)
 end
 
 -- weihe
-client.createRegexTrigger('Die Weihe .* klingt wieder ab.', statusAus('We'), {'red'})
+client.createRegexTrigger('Die Weihe .* klingt wieder ab.', statusAus('We'), {'<red>'})
 
 -- aura
-client.createSubstrTrigger('Um Dich herum entsteht eine *magische Aura.', statusAn('A'), {'green'})
-client.createSubstrTrigger('Die Dich umgebene magische Aura stabilisiert sich wieder.', statusAn('A'), {'green'})
-client.createSubstrTrigger('Die Magieaura die Dich umgibt loest sich allmaehlich auf.', statusAus('A'), {'red'})
+client.createSubstrTrigger('Um Dich herum entsteht eine *magische Aura.', statusAn('A'), {'<green>'})
+client.createSubstrTrigger('Die Dich umgebene magische Aura stabilisiert sich wieder.', statusAn('A'), {'<green>'})
+client.createSubstrTrigger('Die Magieaura die Dich umgibt loest sich allmaehlich auf.', statusAus('A'), {'<red>'})
 
 -- schutzschild
-client.createSubstrTrigger('Du konzentrierst Dich auf den Aufbau eines Schutzschilds.', nil, {'blue'})
-client.createSubstrTrigger('Du machst eine Pirouette, schnippst danach mit dem Finger, und auf einmal', nil, {'green'})
-client.createSubstrTrigger('entsteht ein magisches Schutzschild um Dich herum.', statusAn('S'), {'green'})
-client.createSubstrTrigger('Das Schutzschild um Dich herum loest sich langsam auf.', nil, {'yellow'})
-client.createSubstrTrigger('Dein Schutzschild ist nun aufgebraucht.', statusAus('S'), {'red'})
+client.createSubstrTrigger('Du konzentrierst Dich auf den Aufbau eines Schutzschilds.', nil, {'<blue>'})
+client.createSubstrTrigger('Du machst eine Pirouette, schnippst danach mit dem Finger, und auf einmal', nil, {'<green>'})
+client.createSubstrTrigger('entsteht ein magisches Schutzschild um Dich herum.', statusAn('S'), {'<green>'})
+client.createSubstrTrigger('Das Schutzschild um Dich herum loest sich langsam auf.', nil, {'<yellow>'})
+client.createSubstrTrigger('Dein Schutzschild ist nun aufgebraucht.', statusAus('S'), {'<red>'})
 
 -- blitzhand
-client.createSubstrTrigger('Du konzentrierst Dich einen Moment und laesst Deine magische Energie in', statusAn('hnd'), {'green'})
-client.createSubstrTrigger('Das Kribbeln in Deinen Fingern laesst allmaehlich nach.', statusAus('hnd'), {'red'})
-client.createSubstrTrigger('Deine magischen Kraefte verlassen Dich, Deine Haende entspannen sich wieder.', statusAus('hnd'), {'red'})
+client.createSubstrTrigger('Du konzentrierst Dich einen Moment und laesst Deine magische Energie in', statusAn('hnd'), {'<green>'})
+client.createSubstrTrigger('Das Kribbeln in Deinen Fingern laesst allmaehlich nach.', statusAus('hnd'), {'<red>'})
+client.createSubstrTrigger('Deine magischen Kraefte verlassen Dich, Deine Haende entspannen sich wieder.', statusAus('hnd'), {'<red>'})
 
 -- schmerzen
-client.createRegexTrigger('  Du starrst .* in die Augen, bis .*', nil, {'green'})
-client.createSubstrTrigger('Schmerzen lassen nach.', nil, {'red'})
+client.createRegexTrigger('  Du starrst .* in die Augen, bis .*', nil, {'<green>'})
+client.createSubstrTrigger('Schmerzen lassen nach.', nil, {'<red>'})
 
 -- beschwoere
 local function beschwoere_pause()
@@ -134,8 +134,8 @@ local function beschwoere_pause()
     end
   )
 end
-client.createSubstrTrigger('Du machst zahlreiche Gesten ueber der Leiche, aber alle Versuche sie zum', beschwoere_pause, {'red'})
-client.createSubstrTrigger('Du machst zahlreiche Gesten ueber der Leiche und erweckst sie zu neuem Leben.', beschwoere_pause, {'green'})
+client.createSubstrTrigger('Du machst zahlreiche Gesten ueber der Leiche, aber alle Versuche sie zum', beschwoere_pause, {'<red>'})
+client.createSubstrTrigger('Du machst zahlreiche Gesten ueber der Leiche und erweckst sie zu neuem Leben.', beschwoere_pause, {'<green>'})
 
 -- verschmelze
 local function verschmelze_pause()
@@ -146,15 +146,15 @@ local function verschmelze_pause()
     end
   )
 end
-client.createSubstrTrigger('Du legst der Leiche drei Finger an die Schlaefe und vereinigst Deinen Geist', verschmelze_pause, {'green'})
-client.createSubstrTrigger('Du merkst, wie Dein Geist allmaehlich wieder frei wird, und Du die Gedanken-', nil, {'yellow'})
-client.createSubstrTrigger('verschmelzung wieder rueckgaengig machst.', nil, {'yellow'})
-client.createSubstrTrigger('Du reinigst Deinen Geist von der Gedankenverschmelzung vollkommen und fuehlst', nil, {'green'})
-client.createSubstrTrigger('Dich nun auch gleich wieder wesentlich wohler in Deiner Haut.', nil, {'green'})
+client.createSubstrTrigger('Du legst der Leiche drei Finger an die Schlaefe und vereinigst Deinen Geist', verschmelze_pause, {'<green>'})
+client.createSubstrTrigger('Du merkst, wie Dein Geist allmaehlich wieder frei wird, und Du die Gedanken-', nil, {'<yellow>'})
+client.createSubstrTrigger('verschmelzung wieder rueckgaengig machst.', nil, {'<yellow>'})
+client.createSubstrTrigger('Du reinigst Deinen Geist von der Gedankenverschmelzung vollkommen und fuehlst', nil, {'<green>'})
+client.createSubstrTrigger('Dich nun auch gleich wieder wesentlich wohler in Deiner Haut.', nil, {'<green>'})
 
 -- sonnenschutz
-client.createSubstrTrigger('Du murmelst einige Worte vor Dich hin, und auf einmal haeltst Du einen', statusAn('s'), {'green'})
-client.createSubstrTrigger('Dein Schutzfilm gegen die Sonne verblasst langsam wieder.', statusAus('s'), {'red'})
+client.createSubstrTrigger('Du murmelst einige Worte vor Dich hin, und auf einmal haeltst Du einen', statusAn('s'), {'<green>'})
+client.createSubstrTrigger('Dein Schutzfilm gegen die Sonne verblasst langsam wieder.', statusAus('s'), {'<red>'})
 
 
 -- ---------------------------------------------------------------------------

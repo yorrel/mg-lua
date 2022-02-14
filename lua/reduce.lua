@@ -95,28 +95,28 @@ local RE_COLORLISTE = {}
 local outputListener = nil
 
 local function config(val, text, color)
-  RE_SCHADENLISTE[val] = text..'@{n}'
-  RE_COLORLISTE[val] = '@{'..(color or 'n')..'}'
+  RE_SCHADENLISTE[val] = text..'<reset>'
+  RE_COLORLISTE[val] = color or '<reset>'
   if val > 1 and val < 14 then
-    RE_SCHADENLISTE[val+100] = '@{'..(color or 'n')..'}Maximum!@{n}'
-    RE_COLORLISTE[val+100] = '@{'..(color or 'n')..'}'
+    RE_SCHADENLISTE[val+100] = (color or '<reset>')..'Maximum!<reset>'
+    RE_COLORLISTE[val+100] = color or '<reset>'
   end
 end
 
 config(0, 'DEFEND', nil)
 config(1, 'verfehlt', nil)
-config(2, 'gekitzelt', 'Cgreen')
-config(3, 'gekratzt', 'Cgreen')
-config(4, 'getroffen', 'Cyellow')
-config(5, 'hart', 'Cyellow')
-config(6, 'sehr hart', 'Cyellow')
-config(7, 'Krachen', 'Cmagenta')
-config(8, 'Schmettern', 'Cmagenta')
-config(9, 'zu Brei', 'Cred')
-config(10, 'Pulver', 'Cred')
-config(11, 'zerstaeubt', 'Cbgred')
-config(12, 'atomisiert', 'Cbgred')
-config(13, 'vernichtet', 'Cbgmagenta')
+config(2, 'gekitzelt', '<green>')
+config(3, 'gekratzt', '<green>')
+config(4, 'getroffen', '<yellow>')
+config(5, 'hart', '<yellow>')
+config(6, 'sehr hart', '<yellow>')
+config(7, 'Krachen', '<magenta>')
+config(8, 'Schmettern', '<magenta>')
+config(9, 'zu Brei', '<red>')
+config(10, 'Pulver', '<red>')
+config(11, 'zerstaeubt', '<bgred>')
+config(12, 'atomisiert', '<bgred>')
+config(13, 'vernichtet', '<bgmagenta>')
 config(15, 'Fehler!', nil)
 
 -- Trigger, die weitere Trigger zur Schadenserkennung aktivieren
@@ -130,7 +130,7 @@ local FLAECHE_DELAY = 4
 
 local RE_STYLE
 if debug_flag then
-  RE_STYLE = {'cyan'}
+  RE_STYLE = {'<cyan>'}
 else
   RE_STYLE = {'g'}
 end
@@ -182,7 +182,7 @@ end
 
 local function remove_reduce()
   client.killTrigger(reduce_trigger)
-  client.cecho('@{Cred}>>> Entferne Paket: @{Cyellow}reduce.lua')
+  client.cecho('<red>>>> Entferne Paket: <yellow>reduce.lua')
 end
 
 -- Variablen, die jede Kampfrunde geloescht werden
@@ -200,14 +200,14 @@ local function re_loeschen()
   RE_KARATE_ABWEHR = ''
   RE_ABWEHR = {}
   RE_ABWEHR_COLOR = {
-    RDECKUNG = 'Cmagenta',
-    PARADE = 'Cmagenta',
-    WAFFE = 'Cgreen',
-    SCHILD = 'Cgreen',
-    RUESTUNG = 'Cgreen',
-    AMULETT = 'Cmagenta',
-    HELM = 'Cmagenta',
-    RING = 'Cmagenta'
+    RDECKUNG = '<magenta>',
+    PARADE = '<magenta>',
+    WAFFE = '<green>',
+    SCHILD = '<green>',
+    RUESTUNG = '<green>',
+    AMULETT = '<magenta>',
+    HELM = '<magenta>',
+    RING = '<magenta>'
   }
   RE_TMP_TRENNER = nil
 end
@@ -228,31 +228,31 @@ local function abwehr_helfer(typ, val, farbe)
 end
 
 local function trenner_helfer(symbol, color)
-  RE_TMP_TRENNER = '@{'..color..'}'..symbol..'@{n}'
+  RE_TMP_TRENNER = color..symbol..'<reset>'
 end
 
 local function pad(s, length)
   s = s or ''
-  local s_without_color = string.gsub(s, '@{[^}]*}', '')
+  local s_without_color = string.gsub(s, '<[^>]*>', '')
   local n = length - string.len(s_without_color)
   return string.rep('_', n)
 end
 
 local function colorBlue(name, flag)
-  if flag and name ~= '???' and not string.match(name, '@{') then
-    return '@{Cblue}' .. name .. '@{n}'
+  if flag and name ~= '???' and not string.match(name, '<') then
+    return '<blue>' .. name .. '<reset>'
   end
   return name
 end
 
 local function getSchadenRichtung()
   if RE_RICHTUNG == 'out' then
-    return '@{Cgreen}->@{n}'
+    return '<green>-><reset>'
   elseif RE_RICHTUNG == 'in' then
     if RE_TMP_TRENNER ~= nil then
-      return '@{Cred}<'..RE_TMP_TRENNER
+      return '<red><'..RE_TMP_TRENNER
     else
-      return '@{Cred}<-@{n}'
+      return '<red><-<reset>'
     end
   else
     return '--'
@@ -311,24 +311,24 @@ local function abwehr(typ, is_eigener_schaden)
   if is_eigener_schaden then
     color = RE_ABWEHR_COLOR[typ] or 'n'
   end
-  return '@{' .. color .. '}' .. val .. '@{n}'
+  return color..val..'<reset>'
 end
 
 local function getAbwehr(is_eigener_schaden)
   local mitte = ''
   if RE_KARATE > 0 then
     local abwehr_karate = string.sub(RE_KARATE_ABWEHR,1,5)
-    local abwehr_karate = string.sub(abwehr_karate,1,5) .. '@{n}'
+    local abwehr_karate = string.sub(abwehr_karate,1,5) .. '<reset>'
       .. string.rep('*', 5-string.len(abwehr_karate))
     local color = ''
     if RE_KARATE == 4 then
-      color = '@{Cmagenta}'  -- eigene Abwehr gelungen
+      color = '<magenta>'  -- eigene Abwehr gelungen
     elseif RE_KARATE == 3 then
-      color = '@{Cyellow}'   -- fremde Abwehr gelungen
+      color = '<yellow>'   -- fremde Abwehr gelungen
     elseif RE_KARATE == 2 then
-      color = '@{Cred}'      -- eigene Abwehr misslungen
+      color = '<red>'      -- eigene Abwehr misslungen
     else
-      color = '@{Cblue}'     -- fremde Abwehr misslungen
+      color = '<blue>'     -- fremde Abwehr misslungen
     end
     mitte = color .. abwehr_karate
   else
@@ -363,34 +363,34 @@ local function getSchaden()
   else
     RE_SCHADEN_OUT = RE_SCHADENLISTE[15]
   end
-  return (RE_COLORLISTE[RE_SCHADEN] or '@{n}')..RE_SCHADEN_OUT..'@{n}'
+  return (RE_COLORLISTE[RE_SCHADEN] or '<reset>')..RE_SCHADEN_OUT..'<reset>'
 end
 
 local art_color_table = {
-  normal = '@{Cgreen}',
-  extra = '@{Cmagenta}',
-  Magie = '@{Cmagenta}',
-  Chaos = '@{Cmagenta}',
-  Zauberei = '@{Cmagenta}',
-  Klerus = '@{Cmagenta}',
-  Tanjian = '@{Cmagenta}',
-  Delfen = '@{Cmagenta}',
-  Artillerie = '@{Cblue}'
+  normal = '<green>',
+  extra = '<magenta>',
+  Magie = '<magenta>',
+  Chaos = '<magenta>',
+  Zauberei = '<magenta>',
+  Klerus = '<magenta>',
+  Tanjian = '<magenta>',
+  Delfen = '<magenta>',
+  Artillerie = '<blue>'
 }
 
 local function re_ausgabe_zeile()
   local is_eigener_schaden = RE_RICHTUNG == 'in' or RE_RICHTUNG == 'out'
   local art_color = ''
   if is_eigener_schaden then
-    art_color = RE_ART_COLOR or art_color_table[RE_ART] or '@{Cgreen}'
+    art_color = RE_ART_COLOR or art_color_table[RE_ART] or '<green>'
   end
-  local art = art_color..RE_ART..'@{n}'
+  local art = art_color..RE_ART..'<reset>'
   local opfer = re_namekuerzen(RE_OPFER, 13)
   local angreifer = re_namekuerzen(RE_ANGREIFER, 13)
   local waffe = re_namekuerzen(RE_WAFFE, 12)
-  local sichere_erkennung = '@{n}/'
+  local sichere_erkennung = '<reset>/'
   if not RE_SICHER then
-    sichere_erkennung = '@{Cred}/@{n}'
+    sichere_erkennung = '<red>/<reset>'
   end
   local output =
     ':: ' .. pad(art,10) .. art
@@ -400,7 +400,7 @@ local function re_ausgabe_zeile()
     .. ' ' .. getAbwehr(is_eigener_schaden)
     .. ' ' .. getSchadenRichtung()
     .. ' ' .. getSchaden()
-    .. '@{n}'
+    .. '<reset>'
   if RE_SCHADEN ~= nil and RE_SCHADEN >= damage_threshold then
     client.cecho(output)
   end
@@ -583,17 +583,17 @@ createRegexTrigger(
 local status_map = {}
 
 local RE_STATUS_ATTR = {
-  _100 = 'Cblue',
-  _90 = 'Cblue',
-  _80 = 'Cgreen',
-  _70 = 'Cgreen',
-  _60 = 'Cyellow',
-  _50 = 'Cyellow',
-  _40 = 'Cmagenta',
-  _30 = 'Cmagenta',
-  _20 = 'Cred',
-  _10 = 'Cred',
-  _0 = 'n'
+  _100 = '<blue>',
+  _90 = '<blue>',
+  _80 = '<green>',
+  _70 = '<green>',
+  _60 = '<yellow>',
+  _50 = '<yellow>',
+  _40 = '<magenta>',
+  _30 = '<magenta>',
+  _20 = '<red>',
+  _10 = '<red>',
+  _0 = '<reset>'
 }
 
 local function substring_ab(s, pattern)
@@ -608,7 +608,7 @@ end
 local function ausgabe_status(name, status)
   local name_kurz = re_namekuerzen(re_artikelkuerzen(substring_ab(name, ': ')))
   local color = RE_STATUS_ATTR['_'..status]
-  client.cecho('@{Cblue}' .. name_kurz .. ': @{' .. color .. '}' .. status .. '%@{n}')
+  client.cecho('<blue>'..name_kurz..': '..color..status..'%<reset>')
 end
 
 local function ermittle_status(status_meldung)
@@ -1147,7 +1147,7 @@ createRegexTrigger(
     end
     RE_FLAECHE_ANGREIFER = m[1]
     RE_FLAECHE_WAFFE = 'Feuerball'
-    RE_FLAECHE_ART = '@{Cmagenta}Zauberei'
+    RE_FLAECHE_ART = '<magenta>Zauberei'
     RE_FLAECHE_ZEIT = os.time()
     enableTrigger(zaub_feuerball_triggers, FLAECHE_DELAY)
   end
@@ -1546,19 +1546,19 @@ createMultiLineRegexTrigger(
     local qualitaet = m[1]
     if qualitaet == '' then
       RE_ART = 'lasch'
-      RE_ART_COLOR = '@{Cgreen}'
+      RE_ART_COLOR = '<green>'
     elseif qualitaet == 'harmlosen ' then
       RE_ART = 'harmlos'
-      RE_ART_COLOR = '@{Cgreen}'
+      RE_ART_COLOR = '<green>'
     elseif qualitaet == 'maechtigen ' then
       RE_ART = 'maechtig'
-      RE_ART_COLOR = '@{Cred}'
+      RE_ART_COLOR = '<red>'
     elseif qualitaet == 'moerderischen ' then
       RE_ART = 'toedlich'
-      RE_ART_COLOR = '@{Cred}'
+      RE_ART_COLOR = '<red>'
     else
       RE_ART = '???'
-      RE_ART_COLOR = '@{Cgreen}'
+      RE_ART_COLOR = '<green>'
     end
     RE_WAFFE = 'Todesstoss'
   end
@@ -1614,7 +1614,7 @@ createRegexTrigger(
 -- Messerkreis
 createSubstrTrigger(
   ' wird ein wenig tranchiert.',
-  function() trenner_helfer('=', 'Cbgmagenta') end
+  function() trenner_helfer('=', '<bgmagenta>') end
 )
 
 -- Blitz
@@ -1676,7 +1676,7 @@ createRegexTrigger(
   function(m)
     RE_FLAECHE_WAFFE = 'Donner'
     RE_WAFFE =  'Donner'
-    RE_FLAECHE_ART = '@{Cmagenta}Klerus@{n}'
+    RE_FLAECHE_ART = '<magenta>Klerus<reset>'
     RE_ART = RE_FLAECHE_ART
     if m[3] == '' then
       RE_FLAECHE_ANGREIFER = re_genitiv_loeschen(re_artikelkuerzen(m[2]))
@@ -3037,7 +3037,7 @@ createMultiLineRegexTrigger(
   'Die goldenen Faeden der Toga leuchten auf und schicken Deinem Gegner einen>< Blitz entgegen\\.',
   function(m)
     RE_WAFFE = 'Blitz'
-    RE_WFUNC = '@{Cred}Toga'
+    RE_WFUNC = '<red>Toga'
   end
 )
 
@@ -3410,13 +3410,13 @@ local function match_normalen_angriff(m)
     RE_WAFFE = 'Akshara'
   elseif string.match(opfer, 'blutruenstig') then
     RE_ART = 'Raserei'
-    RE_ART_COLOR = '@{Cyellow}'
+    RE_ART_COLOR = '<yellow>'
   elseif string.match(opfer, ' vorsichtig') then
     RE_ART = 'SchKroete'
-    RE_ART_COLOR = '@{Cyellow}'
+    RE_ART_COLOR = '<yellow>'
   elseif string.match(opfer, ' schlangengleich') then
     RE_ART = 'Schlange'
-    RE_ART_COLOR = '@{Cyellow}'
+    RE_ART_COLOR = '<yellow>'
   elseif string.match(RE_WAFFE, '^Blitzen aus (Deinen|seinen|ihren) Fingerkuppen$') then
     RE_WAFFE = 'Blitzhand'
   elseif string.match(RE_WAFFE, 'misslungenen ') then
@@ -3428,7 +3428,7 @@ local function match_normalen_angriff(m)
     end
     RE_WAFFE = string.sub(RE_WAFFE, string.find(RE_WAFFE, 'misslungenen ')+13)
     RE_ART = 'Karate'
-    RE_ART_COLOR = '@{Cyellow}'
+    RE_ART_COLOR = '<yellow>'
     RE_WAFFE = re_karatekuerzen(RE_WAFFE)
     RE_WAFFE = RE_WAFFE .. string.rep('_', 5-string.len(RE_WAFFE)) .. RE_WAFFE_P
   elseif string.match(RE_WAFFE, 'gelungenen ') then
@@ -3440,7 +3440,7 @@ local function match_normalen_angriff(m)
     end
     RE_WAFFE = string.sub(RE_WAFFE, string.find(RE_WAFFE, 'gelungenen ')+11)
     RE_ART = 'Karate'
-    RE_ART_COLOR = '@{Cyellow}'
+    RE_ART_COLOR = '<yellow>'
     RE_WAFFE = re_karatekuerzen(RE_WAFFE)
     RE_WAFFE = RE_WAFFE .. string.rep('_', 5-string.len(RE_WAFFE)) .. RE_WAFFE_P
   else
@@ -3453,7 +3453,7 @@ local function match_normalen_angriff(m)
       RE_WAFFE_P = re_karatekuerzen(RE_WAFFE_P)
       RE_WAFFE = RE_WAFFE .. '+' .. RE_WAFFE_P
       RE_ART = 'Karatekomb'
-      RE_ART_COLOR = '@{Cyellow}'
+      RE_ART_COLOR = '<yellow>'
     end
   end
   RE_WAFFE = re_artikelkuerzen(RE_WAFFE)
@@ -3513,7 +3513,7 @@ createRegexTrigger(
 
 re_loeschen()
 
-client.cecho('@{Cmagenta}>>> Lade Paket: @{Cyellow}reduce.lua@{n}')
+client.cecho('<magenta>>>> Lade Paket: <yellow>reduce.lua<reset>')
 
 client.createStandardAlias(
   'reduce',

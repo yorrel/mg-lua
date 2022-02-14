@@ -31,7 +31,7 @@ client.createRegexTrigger(
       end
     )
   end,
-  {'blue'}
+  {'<blue>'}
 )
 
 

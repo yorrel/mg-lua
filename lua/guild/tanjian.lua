@@ -103,30 +103,30 @@ end
 -- ---------------------------------------------------------------------------
 -- Trigger
 
-client.createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'cyan'})
+client.createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'<cyan>'})
 
-client.createSubstrTrigger('Du bist derzeit in der Parallelwelt.', nil, {'blue'})
-client.createRegexTrigger('Du bist derzeit in Parallelwelt Nr\\. (\\d*)\\.', nil, {'blue'})
+client.createSubstrTrigger('Du bist derzeit in der Parallelwelt.', nil, {'<blue>'})
+client.createRegexTrigger('Du bist derzeit in Parallelwelt Nr\\. (\\d*)\\.', nil, {'<blue>'})
 
 -- meditation
-client.createSubstrTrigger('Du beendest Deine Meditation.', nil, {'green'})
-client.createSubstrTrigger('Deine Konzentrationsfaehigkeit laesst langsam nach.', nil, {'yellow'})
-client.createSubstrTrigger('Deine Umgebung scheint sich auf Deine Meditation auszuwirken.', nil, {'green'})
-client.createSubstrTrigger('Du solltest mal wieder meditieren.', nil, {'red'})
-client.createSubstrTrigger('Du spuerst noch die Wirkung der letzten Meditation.', nil, {'blue'})
+client.createSubstrTrigger('Du beendest Deine Meditation.', nil, {'<green>'})
+client.createSubstrTrigger('Deine Konzentrationsfaehigkeit laesst langsam nach.', nil, {'<yellow>'})
+client.createSubstrTrigger('Deine Umgebung scheint sich auf Deine Meditation auszuwirken.', nil, {'<green>'})
+client.createSubstrTrigger('Du solltest mal wieder meditieren.', nil, {'<red>'})
+client.createSubstrTrigger('Du spuerst noch die Wirkung der letzten Meditation.', nil, {'<blue>'})
 
 -- kokoro
-client.createSubstrTrigger('Die Dunkelheit loest sich von Deinem Geist.', nil, {'green'})
-client.createSubstrTrigger('Die Membran schwingt doch noch!', nil, {'green'})
-client.createSubstrTrigger('Die Energien des Kokoro versiegen.', nil, {'red'})
+client.createSubstrTrigger('Die Dunkelheit loest sich von Deinem Geist.', nil, {'<green>'})
+client.createSubstrTrigger('Die Membran schwingt doch noch!', nil, {'<green>'})
+client.createSubstrTrigger('Die Energien des Kokoro versiegen.', nil, {'<red>'})
 
 -- tegatana, omamori, hayai
-client.createSubstrTrigger('Du konzentrierst Dich auf den Kampf.', nil, {'green'})
-client.createSubstrTrigger('Deine Kampf-Konzentration laesst nach.', nil, {'red'})
-client.createSubstrTrigger('Du konzentrierst Dich auf die Abwehr.', nil, {'green'})
-client.createSubstrTrigger('Deine Abwehr-Konzentration laesst nach.', nil, {'red'})
-client.createSubstrTrigger('Der Zeitfluss veraendert sich', nil, {'green'})
-client.createSubstrTrigger('Die Kontrolle ueber den Zeitfluss entgleitet Dir.', nil, {'red'})
+client.createSubstrTrigger('Du konzentrierst Dich auf den Kampf.', nil, {'<green>'})
+client.createSubstrTrigger('Deine Kampf-Konzentration laesst nach.', nil, {'<red>'})
+client.createSubstrTrigger('Du konzentrierst Dich auf die Abwehr.', nil, {'<green>'})
+client.createSubstrTrigger('Deine Abwehr-Konzentration laesst nach.', nil, {'<red>'})
+client.createSubstrTrigger('Der Zeitfluss veraendert sich', nil, {'<green>'})
+client.createSubstrTrigger('Die Kontrolle ueber den Zeitfluss entgleitet Dir.', nil, {'<red>'})
 
 client.createRegexTrigger(
   'Deine Haende fangen ploetzlich an, .* zu leuchten.',
@@ -138,13 +138,13 @@ client.createRegexTrigger(
       end
     )
   end,
-  {'green'})
-client.createSubstrTrigger('Du verlaesst den Pfad des Lichtes.', nil, {'red'})
+  {'<green>'})
+client.createSubstrTrigger('Du verlaesst den Pfad des Lichtes.', nil, {'<red>'})
 
 -- Clan Nekekami
-client.createSubstrTrigger('Du huellst Dich in einen schuetzenden Nebel.', nil, {'green'})
-client.createSubstrTrigger('Du bist noch in einen Nebel gehuellt.', nil, {'green'})
-client.createSubstrTrigger('Der Nebel loest sich auf.', nil, {'red'})
+client.createSubstrTrigger('Du huellst Dich in einen schuetzenden Nebel.', nil, {'<green>'})
+client.createSubstrTrigger('Du bist noch in einen Nebel gehuellt.', nil, {'<green>'})
+client.createSubstrTrigger('Der Nebel loest sich auf.', nil, {'<red>'})
 
 
 -- ---------------------------------------------------------------------------

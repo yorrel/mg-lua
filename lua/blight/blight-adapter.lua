@@ -88,55 +88,45 @@ blight.bind('end',         function() blight.ui('step_to_end') end)
 
 local darkmode = os.getenv('MG_THEME') == 'dark'
 
+
 local color_codes = {}
-color_codes['@{n}'] = C_RESET
-color_codes['@{Cred}'] = C_RED
-color_codes['@{Cgreen}'] = C_GREEN
-color_codes['@{Cyellow}'] = C_YELLOW
-color_codes['@{Cblue}'] = C_BLUE
-color_codes['@{Cmagenta}'] = C_MAGENTA
-color_codes['@{Ccyan}'] = C_CYAN
-color_codes['@{Cbgred}'] = BG_RED
-color_codes['@{Cbgyellow}'] = BG_YELLOW
-color_codes['@{Cbgmagenta}'] = BG_MAGENTA
+color_codes['<red>'] = C_RED
+color_codes['<green>'] = C_GREEN
+color_codes['<yellow>'] = C_YELLOW
+color_codes['<blue>'] = C_BLUE
+color_codes['<magenta>'] = C_MAGENTA
+color_codes['<cyan>'] = C_CYAN
+color_codes['<bgred>'] = BG_RED
+color_codes['<bggreen>'] = BG_GREEN
+color_codes['<bgmagenta>'] = BG_MAGENTA
+color_codes['<bgyellow>'] = BG_YELLOW
+color_codes['<reset>'] = C_RESET
 
 local darkmode_colors = {}
-darkmode_colors['@{Cred}'] = C_BRED
-darkmode_colors['@{Cgreen}'] = C_BGREEN
-darkmode_colors['@{Cyellow}'] = C_BYELLOW
-darkmode_colors['@{Cblue}'] = C_BBLUE
-darkmode_colors['@{Cmagenta}'] = C_BMAGENTA
-darkmode_colors['@{Ccyan}'] = C_BCYAN
+darkmode_colors['<red>'] = C_BRED
+darkmode_colors['<green>'] = C_BGREEN
+darkmode_colors['<yellow>'] = C_BYELLOW
+darkmode_colors['<blue>'] = C_BBLUE
+darkmode_colors['<magenta>'] = C_BMAGENTA
+darkmode_colors['<cyan>'] = C_BCYAN
 
 local function getColor(c)
   if darkmode then
-    return darkmode_colors[c] or color_codes[c]
-  else
-    return color_codes[c]
+    return darkmode_colors[c] or color_codes[c] or c
   end
+  return color_codes[c] or c
 end
 
-local function replaceTfCode(s)
-  for code,replacement in pairs(color_codes) do
-    s = string.gsub(s, code, replacement)
-  end
-  return s
-end
-
-local function replaceDarkmodeColors(s)
+local function replaceColorCodes(s)
   if not darkmode then
     return s
   end
-  for code,replacement in pairs(darkmode_colors) do
-    s = string.gsub(s, code, replacement)
-  end
+  s = string.gsub(s, '(<%l*>)', getColor)
   return s
 end
 
 local function cecho(msg)
-  msg = replaceDarkmodeColors(msg)
-  msg = replaceTfCode(msg)
-  blight.output(msg)
+  blight.output(replaceColorCodes(msg))
 end
 
 local function line()
@@ -152,22 +142,20 @@ local function createLogger(komponente)
     debug =
       function(msg)
         if debug_on then
-          local color = getColor('@{Ccyan}')
-          blight.output(color..'<DEBUG> '..kmp..' '..msg..C_RESET)
+          cecho('<cyan>[DEBUG] '..kmp..' '..msg..'<reset>')
         end
       end,
     info =
       function(msg)
-        local color = getColor('@{Ccyan}')
-        blight.output(color..'>>> '..kmp..' '..msg..C_RESET)
+        cecho('<cyan>>>> '..kmp..' '..msg..'<reset>')
       end,
     warn =
       function(msg)
-        blight.output(BG_YELLOW..'>>> '..kmp..' '..msg..C_RESET)
+        cecho('<bgyellow>>>> '..kmp..' '..msg..'<reset>')
       end,
     severe =
       function(msg)
-        blight.output(BG_RED..'>>> '..kmp..' '..msg..C_RESET)
+        cecho('<bgred>>>> '..kmp..' '..msg..'<reset>')
       end
   }
 end

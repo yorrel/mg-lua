@@ -113,25 +113,25 @@ end
 -- ---------------------------------------------------------------------------
 -- Trigger fuer Highlighting
 
-client.createRegexTrigger('ist nun von einer (feurigen|eisigen|verschwommenen|magischen|giftgruenen|durchscheinenden|roetlichen|flimmernden|funkelnden) Aura eingehuellt.', nil, {'green'})
-client.createRegexTrigger('Die Aura um Dein.* schwindet.', nil, {'red'})
+client.createRegexTrigger('ist nun von einer (feurigen|eisigen|verschwommenen|magischen|giftgruenen|durchscheinenden|roetlichen|flimmernden|funkelnden) Aura eingehuellt.', nil, {'<green>'})
+client.createRegexTrigger('Die Aura um Dein.* schwindet.', nil, {'<red>'})
 
-client.createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'cyan'})
-client.createSubstrTrigger('Dir fehlen die noetigen Materialien!', nil, {'B','red'})
+client.createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'<cyan>'})
+client.createSubstrTrigger('Dir fehlen die noetigen Materialien!', nil, {'B','<red>'})
 
-client.createSubstrTrigger('Deine Haende beginnen', nil, {'green'})
-client.createSubstrTrigger('Die Verzauberung Deiner Haende laesst langsam nach.', nil, {'red'})
+client.createSubstrTrigger('Deine Haende beginnen', nil, {'<green>'})
+client.createSubstrTrigger('Die Verzauberung Deiner Haende laesst langsam nach.', nil, {'<red>'})
 
-client.createSubstrTrigger('Du konzentrierst Deinen Willen auf Deinen Schutz.', nil, {'green'})
-client.createSubstrTrigger('Dein Wille laesst nach.', nil, {'red'})
+client.createSubstrTrigger('Du konzentrierst Deinen Willen auf Deinen Schutz.', nil, {'<green>'})
+client.createSubstrTrigger('Dein Wille laesst nach.', nil, {'<red>'})
 
-client.createSubstrTrigger('Ploetzlich loest sich Dein Schatten von Dir.', nil, {'green'})
-client.createSubstrTrigger(ME.name..' loest sich in Luft auf.', nil, {'red'})
+client.createSubstrTrigger('Ploetzlich loest sich Dein Schatten von Dir.', nil, {'<green>'})
+client.createSubstrTrigger(ME.name..' loest sich in Luft auf.', nil, {'<red>'})
 
-client.createSubstrTrigger('Du hast jetzt eine zusaetzliche Hand zur Verfuegung.', nil, {'green'})
-client.createSubstrTrigger('Deine Extrahand loest sich auf.', nil, {'red'})
+client.createSubstrTrigger('Du hast jetzt eine zusaetzliche Hand zur Verfuegung.', nil, {'<green>'})
+client.createSubstrTrigger('Deine Extrahand loest sich auf.', nil, {'<red>'})
 
-client.createSubstrTrigger('Du wirst allmaehlich wieder langsamer.', nil, {'red'})
+client.createSubstrTrigger('Du wirst allmaehlich wieder langsamer.', nil, {'<red>'})
 
 
 -- ---------------------------------------------------------------------------

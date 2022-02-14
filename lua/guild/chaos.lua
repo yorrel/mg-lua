@@ -121,13 +121,13 @@ end
 -- Zauber
 
 -- schutz
-client.createSubstrTrigger('Deine Chaoshaut schuetzt Dich jetzt ', nil, {'green'})
-client.createSubstrTrigger('Der magische Schutz Deiner Chaoshaut wird gleich verschwinden!', nil, {'yellow'})
-client.createSubstrTrigger('Der magische Schutz der Chaoshaut verschwindet.', nil, {'red'})
+client.createSubstrTrigger('Deine Chaoshaut schuetzt Dich jetzt ', nil, {'<green>'})
+client.createSubstrTrigger('Der magische Schutz Deiner Chaoshaut wird gleich verschwinden!', nil, {'<yellow>'})
+client.createSubstrTrigger('Der magische Schutz der Chaoshaut verschwindet.', nil, {'<red>'})
 
 -- nachtsicht
-client.createSubstrTrigger('Du veraenderst magisch Deine Augen.', nil, {'green'})
-client.createSubstrTrigger('Die Magie Deiner Augen laesst nach und verschwindet.', nil, {'red'})
+client.createSubstrTrigger('Du veraenderst magisch Deine Augen.', nil, {'<green>'})
+client.createSubstrTrigger('Die Magie Deiner Augen laesst nach und verschwindet.', nil, {'<red>'})
 
 -- finsternis
 client.createRegexTrigger(
@@ -140,20 +140,20 @@ client.createRegexTrigger(
       end
     )
   end,
-  {'blue'}
+  {'<blue>'}
 )
 
 -- daemonenpeitsche
 client.createRegexTrigger(
   'Du schlaegst \\w* kraeftig mit Deiner, ploetzlich chaotisch',
   nil,
-  {'green'}
+  {'<green>'}
 )
 
 -- blutopfer
-client.createSubstrTrigger('Mit einem grimmigen Aufschrei, rammst Du', nil, {'green'})
-client.createSubstrTrigger('naehrt sich an Deinem Blut.', nil, {'green'})
-client.createSubstrTrigger('will Dein Opfer nicht mehr.', nil, {'red'})
+client.createSubstrTrigger('Mit einem grimmigen Aufschrei, rammst Du', nil, {'<green>'})
+client.createSubstrTrigger('naehrt sich an Deinem Blut.', nil, {'<green>'})
+client.createSubstrTrigger('will Dein Opfer nicht mehr.', nil, {'<red>'})
 
 -- dimensionsriss
 client.createSubstrTrigger(
@@ -161,10 +161,10 @@ client.createSubstrTrigger(
   function()
     logger.warn('AUSRUESTUNG WURDE ZUR CHAOSGILDE (Chaosteleporter) teleportiert!')
   end,
-  {'red','B'})
+  {'<red>','B'})
 
 -- Lernerfolg
-client.createSubstrTrigger('Die Macht des Chaos durchstroemt Dich und macht Dich staerker.', nil, {'blue'})
+client.createSubstrTrigger('Die Macht des Chaos durchstroemt Dich und macht Dich staerker.', nil, {'<blue>'})
 
 
 -- ---------------------------------------------------------------------------
@@ -181,8 +181,8 @@ local function haut_ok()
   CHAOSHAUT_OK = true
 end
 
-client.createSubstrTrigger('DER DAEMON IN DEINER HAUT WIRD GLEICH VERSUCHEN SICH ZU BEFREIEN!!!', auto_kontrolle, {'red','B'})
-client.createSubstrTrigger('Du erlangst die Kontrolle ueber die Chaos-Ruestung zurueck.', haut_ok, {'green'})
+client.createSubstrTrigger('DER DAEMON IN DEINER HAUT WIRD GLEICH VERSUCHEN SICH ZU BEFREIEN!!!', auto_kontrolle, {'<red>','B'})
+client.createSubstrTrigger('Du erlangst die Kontrolle ueber die Chaos-Ruestung zurueck.', haut_ok, {'<green>'})
 
 
 -- ---------------------------------------------------------------------------

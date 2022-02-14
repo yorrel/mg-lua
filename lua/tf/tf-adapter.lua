@@ -35,20 +35,32 @@ end
 
 local darkmode = os.getenv('MG_THEME') == 'dark'
 
-local darkmode_replaces = {
-  Cred = 'Cbrightred',
-  Cgreen = 'Cbrightgreen',
-  Cyellow = 'Cbrightyellow',
-  Cblue = 'Cbrightblue',
-  Cmagenta = 'Cbrightmagenta',
-  Ccyan = 'Cbrightcyan',
-}
+local lightmode_colors = {}
+lightmode_colors['<red>'] = '@{Cred}'
+lightmode_colors['<green>'] = '@{Cgreen}'
+lightmode_colors['<yellow>'] = '@{Cyellow}'
+lightmode_colors['<blue>'] = '@{Cblue}'
+lightmode_colors['<magenta>'] = '@{Cmagenta}'
+lightmode_colors['<cyan>'] = '@{Ccyan}'
+lightmode_colors['<bgred>'] = '@{Cbgred}'
+lightmode_colors['<bggreen>'] = '@{Cbggreen}'
+lightmode_colors['<bgmagenta>'] = '@{Cbgmagenta}'
+lightmode_colors['<bgyellow>'] = '@{Cbgyellow}'
+lightmode_colors['<reset>'] = '@{n}'
+
+local darkmode_colors = {}
+darkmode_colors['<red>'] = '@{Cbrightred}'
+darkmode_colors['<green>'] = '@{Cbrightgreen}'
+darkmode_colors['<yellow>'] = '@{Cbrightyellow}'
+darkmode_colors['<blue>'] = '@{Cbrightblue}'
+darkmode_colors['<magenta>'] = '@{Cbrightmagenta}'
+darkmode_colors['<cyan>'] = '@{Cbrightcyan}'
 
 local function getColor(c)
   if darkmode then
-    return darkmode_replaces[c] or c
+    return darkmode_colors[c] or lightmode_colors[c] or c
   else
-    return c
+    return lightmode_colors[c] or c
   end
 end
 
@@ -56,14 +68,14 @@ local function replaceDarkmodeColors(s)
   if not darkmode then
     return s
   end
-  for code,replacement in pairs(darkmode_replaces) do
+  for code,replacement in pairs(darkmode_colors) do
     s = string.gsub(s, '@{'..code..'}', '@{'..replacement..'}')
   end
   return s
 end
 
 local function cecho(msg)
-  msg = replaceDarkmodeColors(msg)
+  msg = string.gsub(msg, '(<%a+>)', getColor)
   msg = string.gsub(msg, '%%', '\\%%')
   tf_eval('/echo -p '..msg)
 end
@@ -85,13 +97,13 @@ local function createLogger(komponente)
     debug =
       function(msg)
         if debug_on then
-          tf_eval('/echo -aCmagenta <DEBUG> '..kmp..' '..msg)
+          tf_eval('/echo -aCmagenta [DEBUG] '..kmp..' '..msg)
         end
       end,
     info =
       function(msg)
-        local color = getColor('Ccyan')
-        tf_eval('/echo -a'..color..' >>> '..kmp..' '..msg)
+        local color = getColor('<cyan>')
+        cecho(color..' >>> '..kmp..' '..msg)
       end,
     warn =
       function(msg)
@@ -191,31 +203,39 @@ local trigger_cmds = {}
 local trigger_type = {}
 local trigger_switches = {}
 
-local styles_common = {
-  g = '-ag',
-  F = '-F',
-  B = '-aB',
-  bgred = '-aCbgred',
-  bggreen = '-aCbggreen',
-}
+local styles_common = {}
+styles_common['g'] = '-ag'
+styles_common['F'] = '-F'
+styles_common['B'] = '-aB'
+styles_common['<bgred>'] = '-aCbgred'
+styles_common['<bggreen>'] = '-aCbggreen'
+styles_common['<bgmagenta>'] = '-aCbgmagenta'
+styles_common['<bgyellow>'] = '-aCbgyellow'
 
-local styles_lightmode = {
-  red = '-aCred',
-  green = '-aCgreen',
-  yellow = '-aCyellow',
-  blue = '-aCblue',
-  magenta = '-aCmagenta',
-  cyan = '-aCcyan',
-}
+local styles_lightmode = {}
+styles_lightmode['<red>'] = '-aCred'
+styles_lightmode['<green>'] = '-aCgreen'
+styles_lightmode['<yellow>'] = '-aCyellow'
+styles_lightmode['<blue>'] = '-aCblue'
+styles_lightmode['<magenta>'] = '-aCmagenta'
+styles_lightmode['<cyan>'] = '-aCcyan'
 
-local styles_darkmode = {
-  red = '-aCbrightred',
-  green = '-aCbrightgreen',
-  yellow = '-aCbrightyellow',
-  blue = '-aCbrightblue',
-  magenta = '-aCbrightmagenta',
-  cyan = '-aCbrightcyan',
-}
+local styles_darkmode = {}
+styles_darkmode['<red>'] = '-aCbrightred'
+styles_darkmode['<green>'] = '-aCbrightgreen'
+styles_darkmode['<yellow>'] = '-aCbrightyellow'
+styles_darkmode['<blue>'] = '-aCbrightblue'
+styles_darkmode['<magenta>'] = '-aCbrightmagenta'
+styles_darkmode['<cyan>'] = '-aCbrightcyan'
+
+
+local function getStyleSwitch(s)
+  if darkmode then
+    return styles_darkmode[s]
+  else
+    return styles_lightmode[s]
+  end
+end
 
 local function getStyleSwitches(style)
   local switches = ''
@@ -223,12 +243,7 @@ local function getStyleSwitches(style)
     return switches
   end
   for _,s in ipairs(style) do
-    local switch
-    if darkmode then
-      switch = styles_darkmode[s]
-    else
-      switch = styles_lightmode[s]
-    end
+    local switch = getStyleSwitch(s)
     if switch == nil then
       switch = styles_common[s]
     end

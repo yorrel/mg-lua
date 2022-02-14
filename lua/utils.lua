@@ -133,11 +133,11 @@ end
 -- ---------------------------------------------------------------------------
 -- Highlighting
 
-client.createSubstrTrigger([[teilt Dir mit:]], nil, {'B','cyan','F'}, 0)
-client.createSubstrTrigger([[Die Hydra sinkt langsam in das Tal der Lupinen nieder.]], nil, {'B','magenta'})
-client.createSubstrTrigger([[Die Elster klaut]], nil, {'B','red'})
-client.createSubstrTrigger([[wird von der Saeure angeaetzt.]], nil, {'B','red'})
-client.createSubstrTrigger([[Du merkst, wie sich der Wurzelsaft aufloest.]], nil, {'B','red'})
+client.createSubstrTrigger([[teilt Dir mit:]], nil, {'B','<cyan>','F'}, 0)
+client.createSubstrTrigger([[Die Hydra sinkt langsam in das Tal der Lupinen nieder.]], nil, {'B','<magenta>'})
+client.createSubstrTrigger([[Die Elster klaut]], nil, {'B','<red>'})
+client.createSubstrTrigger([[wird von der Saeure angeaetzt.]], nil, {'B','<red>'})
+client.createSubstrTrigger([[Du merkst, wie sich der Wurzelsaft aufloest.]], nil, {'B','<red>'})
 
 
 -- ---------------------------------------------------------------------------
