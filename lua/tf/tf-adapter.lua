@@ -436,7 +436,7 @@ local function createMultiLineRegexTrigger(pattern, f, style, prio)
   id2 = createRegexTrigger(
     '^(.*)$',
     function(m)
-      local line = m.line
+      local line = m[1]
       multiline_trigger_buffer[id] = multiline_trigger_buffer[id] .. ' ' .. strip(line)
       if string.match(line, '.*[.!] ?$') then
         disableTrigger(id2)
@@ -454,7 +454,7 @@ local function createMultiLineRegexTrigger(pattern, f, style, prio)
   id1 = createRegexTrigger(
     start,
     function(m)
-      local line = m.line
+      local line = m[1]
       if string.match(line, '.*[.!] ?$') then
         matcheText(line, pattern_multi, f)
       else
