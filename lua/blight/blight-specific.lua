@@ -66,70 +66,67 @@ local function state()
   return base.getPersistentTable('utils')
 end
 
-local function padLeft(s, n)
-  s = '          '..s
-  s = string.sub(s, string.len(s)-n+1)
-  return s
-end
-
-local function padRight(s, n)
-  s = (s or '')..'                              '
-  s = string.sub(s, 1, n)
-  return s
-end
-
 local gift_views = {}
 gift_views[0] = ' '
 gift_views[1] = 'g'
 gift_views[10] = 'G'
 
+local vitalsFormat =
+  C_BOLD..C_BRED..'LP:'..C_RESET..C_BOLD..'%s%3d'..C_BGREEN..'%1s '
+  ..C_BBLUE..'KP:'..C_RESET..C_BOLD..'%3d%1s%1s'..C_RESET
+
 local function vitalsStatus()
-  local lp_style = C_BOLD
+  local lp_style = ''
   if ME.lp < math.min(0.381 * ME.lp_max, 80) then
-    lp_style = lp_style..C_RED
+    lp_style = C_RED
   elseif ME.lp < 0.631 * ME.lp_max then
-    lp_style = lp_style..C_YELLOW
+    lp_style = C_YELLOW
   end
-  local lp = lp_style..padLeft(ME.lp, 3)..C_RESET
   local gift = gift_views[math.min(ME.gift,10)] or ME.gift or ' '
-  local gift_style = gift == ' ' and '' or C_BOLD..C_GREEN
-  gift = gift_style..gift..C_RESET
-  local kp = padLeft(ME.kp, 3)
-  local s = state()
-  local eblock = (s.eblock_voll and '*' or ' ') .. (s.eblock_locked and 'L' or ' ')
-  return C_BOLD..'LP:'..lp..gift..' '..C_BOLD..C_CYAN..'KP:'..kp..eblock..C_RESET
+  local eblock_voll = state().eblock_voll and '*' or ' '
+  local eblock_locked = state().eblock_locked and 'L' or ' '
+  local status = string.format(
+    vitalsFormat,
+    lp_style, ME.lp, gift, ME.kp, eblock_voll, eblock_locked
+  )
+  return status
 end
 
-local function vsfrStatus()
-  local vs = padLeft(state().vorsicht or 0, 3)
-  local flucht = tools.listJoin(room.getEscape(), ';') or state().fluchtrichtung or ''
-  flucht = padRight(flucht, 24)
-  return C_BOLD..C_GREEN..'VS:'..vs..' FR:'..flucht..C_RESET
-end
+local roomStatusFormat =
+  C_BGREEN..'%-13s  '..C_BCYAN..'%-9s  %-24s  %-5s  '..C_BRED..'%2s'..C_RESET
 
 local function roomStatus()
   local para = base.para()
   local paraString = '  '
   if para and para > 0 then
-    paraString = C_BOLD..C_RED..'P'..para..C_RESET
+    paraString = 'P'..para
   end
-  return 'WP:'..padRight(room.getRaumWegpunkt(), 10)
-    ..'  '..padRight(ME.raum_region, 10)
-    ..'  '..padRight(ME.raum_kurz, 24)
-    ..'  '..padRight(ME.raum_id_short, 5)
-    ..'  '..paraString
+  local wp = room.getRaumWegpunkt()
+  wp = wp and '('..string.sub(wp, 1, 11)..')' or ' '
+  local raum_kurz = string.sub(ME.raum_kurz or '', 1, 24)
+  local region = string.sub(ME.raum_region or '', 1, 9)
+  local status = string.format(
+    roomStatusFormat,
+    wp, region, raum_kurz, ME.raum_id_short or '', paraString
+  )
+  return status
 end
 
 local function status_update1()
   local lpkp = vitalsStatus()
-  local room = roomStatus()
-  blight.status_line(1, lpkp..'  '..room)
+  local roomPart = roomStatus()
+  blight.status_line(1, lpkp..'  '..roomPart)
 end
 
+local status2Format = '%-42s  '..C_BOLD..C_BBLUE..'VS:%3d  FR:%-20s'..C_RESET
+
 local function status_update2()
-  local gilde = padRight(base.getGildenStatusLine(), 42)
-  local vsfr = vsfrStatus()
-  blight.status_line(2, gilde..'   '..vsfr)
+  local gilde = base.getGildenStatusLine()
+  local vs = state().vorsicht or 0
+  local flucht = tools.listJoin(room.getEscape(), ';') or state().fluchtrichtung or ''
+  flucht = string.sub(flucht, 1, 24)
+  local status = string.format(status2Format, gilde, vs, flucht)
+  blight.status_line(2, status)
 end
 
 base.registerEventHandler('gmcp.MG.char.vitals', status_update1)
