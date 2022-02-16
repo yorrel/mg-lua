@@ -115,6 +115,7 @@ client.createSubstrTrigger('Du machst eine Pirouette, schnippst danach mit dem F
 client.createSubstrTrigger('entsteht ein magisches Schutzschild um Dich herum.', statusAn('S'), {'<green>'})
 client.createSubstrTrigger('Das Schutzschild um Dich herum loest sich langsam auf.', nil, {'<yellow>'})
 client.createSubstrTrigger('Dein Schutzschild ist nun aufgebraucht.', statusAus('S'), {'<red>'})
+client.createSubstrTrigger('Bei Deiner ganzen Hektik zerplatzt Dir auf einmal Dein Schutzschild.', statusAus('S'), {'<red>'})
 
 -- blitzhand
 client.createSubstrTrigger('Du konzentrierst Dich einen Moment und laesst Deine magische Energie in', statusAn('hnd'), {'<green>'})
