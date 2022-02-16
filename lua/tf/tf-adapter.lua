@@ -12,7 +12,10 @@ local regex   = require 'rex_pcre2'
 
 local function send(...)
   for _,msg in ipairs{...} do
-    tf_eval('/send '..msg)
+    msg = string.gsub(msg, '%%', '&perc&')
+    tf_eval('/set _msg='..msg)
+    tf_eval('/set _msg=$[replace("&perc&","%",_msg)]')
+    tf_eval('/send %{_msg}')
   end
 end
 

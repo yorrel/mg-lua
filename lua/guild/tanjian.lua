@@ -17,7 +17,12 @@ end
 -- ---------------------------------------------------------------------------
 -- Reboot
 
-base.addResetHook('tanjianreport ein')
+base.addResetHook(
+  client.send(
+    'tanjianreport TANJIANREPORT: %ME %Ca %Ko %Te %Ha %Ak#%lf',
+    'tanjianreport an'
+  )
+)
 
 
 -- ---------------------------------------------------------------------------
@@ -158,21 +163,18 @@ base.statusAdd('hayai', '  ', true)
 base.statusAdd('akshara', '  ', true)
 base.statusAdd('rest', '    ', true)
 
-local function statusZeile1(m)
-  base.statusUpdate('meditation', m[4], true)
-  base.statusUpdate('gesinnung', m[3], true)
-  base.statusUpdate('kokoro', m[5], true)
-  base.statusUpdate('tegatana', m[6], true)
-  base.statusUpdate('hayai', m[7], true)
-  base.statusUpdate('akshara', m[8], true)
-end
-
-local function statusZeile2(m)
-  base.statusUpdate('rest', m[1], true)
-end
-
-client.createRegexTrigger('^STATUS1: ([0-9]*) ([0-9]*) (.) (.) (..) (..) (..) (..)', statusZeile1, {'g'})
-client.createRegexTrigger('^STATUS2: (....) ([0-9]+) (.+)', statusZeile2, {'g'})
+client.createRegexTrigger(
+  '^TANJIANREPORT: (.) (.) (..) (..) (..) (..)#',
+  function(m)
+    base.statusUpdate('meditation', m[1], true)
+    base.statusUpdate('gesinnung', m[2], true)
+    base.statusUpdate('kokoro', m[3], true)
+    base.statusUpdate('tegatana', m[4], true)
+    base.statusUpdate('hayai', m[5], true)
+    base.statusUpdate('akshara', m[6], true)
+  end,
+  {'g'}
+)
 
 
 -- ---------------------------------------------------------------------------
