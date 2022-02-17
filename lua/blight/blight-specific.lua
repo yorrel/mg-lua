@@ -66,16 +66,24 @@ local function state()
   return base.getPersistentTable('utils')
 end
 
-local gift_views = {}
-gift_views[0] = ' '
-gift_views[1] = 'g'
-gift_views[10] = 'G'
+
+local vitalsStatus = ''
+local roomStatus = ''
+
+local function status_update1()
+  blight.status_line(1, vitalsStatus..'  '..roomStatus)
+end
 
 local vitalsFormat =
   C_BOLD..C_BRED..'LP:'..C_RESET..C_BOLD..'%s%3d'..C_BGREEN..'%1s '
   ..C_BBLUE..'KP:'..C_RESET..C_BOLD..'%3d%1s%1s'..C_RESET
 
-local function vitalsStatus()
+local gift_views = {}
+gift_views[0] = ' '
+gift_views[1] = 'g'
+gift_views[10] = 'G'
+
+local function updateVitalsStatus()
   local lp_style = ''
   if ME.lp < math.min(0.381 * ME.lp_max, 80) then
     lp_style = C_RED
@@ -85,17 +93,17 @@ local function vitalsStatus()
   local gift = gift_views[math.min(ME.gift,10)] or ME.gift or ' '
   local eblock_voll = state().eblock_voll and '*' or ' '
   local eblock_locked = state().eblock_locked and 'L' or ' '
-  local status = string.format(
+  vitalsStatus = string.format(
     vitalsFormat,
     lp_style, ME.lp, gift, ME.kp, eblock_voll, eblock_locked
   )
-  return status
+  status_update1()
 end
 
 local roomStatusFormat =
   C_BGREEN..'%-13s  '..C_BCYAN..'%-9s  %-24s  %-5s  '..C_BRED..'%2s'..C_RESET
 
-local function roomStatus()
+local function updateRoomStatus()
   local para = base.para()
   local paraString = '  '
   if para and para > 0 then
@@ -105,32 +113,41 @@ local function roomStatus()
   wp = wp and '('..string.sub(wp, 1, 11)..')' or ' '
   local raum_kurz = string.sub(ME.raum_kurz or '', 1, 24)
   local region = string.sub(ME.raum_region or '', 1, 9)
-  local status = string.format(
+  roomStatus = string.format(
     roomStatusFormat,
     wp, region, raum_kurz, ME.raum_id_short or '', paraString
   )
-  return status
+  status_update1()
 end
 
-local function status_update1()
-  local lpkp = vitalsStatus()
-  local roomPart = roomStatus()
-  blight.status_line(1, lpkp..'  '..roomPart)
-end
+base.registerEventHandler('gmcp.MG.char.vitals', updateVitalsStatus)
+base.registerEventHandler('gmcp.MG.room.info', updateRoomStatus)
 
-local status2Format = '%-42s  '..C_BOLD..C_BBLUE..'VS:%3d  FR:%-20s'..C_RESET
+
+local gildenStatus = ''
+local vsfrStatus = ''
 
 local function status_update2()
-  local gilde = base.getGildenStatusLine()
+  blight.status_line(2, gildenStatus..'  '..vsfrStatus)
+end
+
+local gildenStatusFormat = '%-42s'
+
+local function updateGildenStatus()
+  local status = base.getGildenStatusLine()
+  gildenStatus = string.format(gildenStatusFormat, status)
+  status_update2()
+end
+
+local vsfrFormat = C_BOLD..C_BBLUE..'VS:%3d  FR:%-20s'..C_RESET
+
+local function updateVSFR()
   local vs = state().vorsicht or 0
   local flucht = tools.listJoin(room.getEscape(), ';') or state().fluchtrichtung or ''
   flucht = string.sub(flucht, 1, 24)
-  local status = string.format(status2Format, gilde, vs, flucht)
-  blight.status_line(2, status)
+  vsfrStatus = string.format(vsfrFormat, vs, flucht)
+  status_update2()
 end
 
-base.registerEventHandler('gmcp.MG.char.vitals', status_update1)
-base.registerEventHandler('gmcp.MG.room.info', status_update1)
-base.registerEventHandler('gmcp.MG.room.info', status_update1)
-base.registerEventHandler('gmcp.MG.char.wimpy', status_update2)
-base.registerEventHandler('gilde.statusline.update', status_update2)
+base.registerEventHandler('gmcp.MG.char.wimpy', updateVSFR)
+base.registerEventHandler('gilde.statusline.update', updateGildenStatus)
