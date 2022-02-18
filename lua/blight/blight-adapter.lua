@@ -100,6 +100,7 @@ color_codes['<bgred>'] = BG_RED
 color_codes['<bggreen>'] = BG_GREEN
 color_codes['<bgmagenta>'] = BG_MAGENTA
 color_codes['<bgyellow>'] = BG_YELLOW
+color_codes['<bold>'] = C_BOLD
 color_codes['<reset>'] = C_RESET
 
 local darkmode_colors = {}
@@ -248,30 +249,8 @@ end
 -- ---------------------------------------------------------------------------
 -- Trigger
 
-local styles_lightmode = {
-  red = C_RED,
-  green = C_GREEN,
-  yellow = C_YELLOW,
-  yellow = C_YELLOW,
-  blue = C_BLUE,
-  magenta = C_MAGENTA,
-  cyan = C_CYAN,
-  bgred = BG_RED,
-  bggreen = BG_GREEN,
-  B = C_BOLD,
-}
-
-local styles_darkmode = {
-  red = C_BRED,
-  green = C_BGREEN,
-  yellow = C_BYELLOW,
-  blue = C_BBLUE,
-  magenta = C_BMAGENTA,
-  cyan = C_BCYAN,
-  bgred = BG_RED,
-  bggreen = BG_GREEN,
-  B = C_BOLD,
-}
+local styles_trigger = {}
+styles_trigger['B'] = C_BOLD
 
 local function getTriggerOptions(style)
   if style ~= nil and tools.listContains(style, 'g') then
@@ -286,12 +265,7 @@ local function getTriggerColor(style)
     return color
   end
   for _,s in ipairs(style) do
-    local code
-    if darkmode then
-      code = styles_darkmode[s]
-    else
-      code = styles_lightmode[s]
-    end
+    local code = getColor(s) or styles_trigger[s]
     if code ~= nil then
       color = color..code
     end
