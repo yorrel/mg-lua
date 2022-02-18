@@ -1574,9 +1574,9 @@ createRegexTrigger(
 local function re_parade(m)
   local color
   if m[1] == 'Du' then
-    color = 'Cmagenta'
+    color = '<magenta>'
   else
-    color = 'Cyellow'
+    color = '<yellow>'
   end
   if string.match(m[2], 'Kieferknochen$') or string.match(m[2], '[Ss]child') or
     string.match(m[2], '[Ss]chuppe') or string.match(m[2], 'Harpyienfedern$')
@@ -2872,7 +2872,7 @@ createRegexTrigger(
   'Dein Schild faengt .+ Angriff (.+) ab\\.',
   function(m)
     local qualitaet = m[1]
-    abwehr_helfer('SCHILD', skillschild_quals[qualitaet], 'Cgreen')
+    abwehr_helfer('SCHILD', skillschild_quals[qualitaet], '<green>')
   end
 )
 
@@ -2889,7 +2889,7 @@ createSubstrTrigger(
 )
 createRegexTrigger(
   ' Drachenschuppe wandelt .* Feuer in heilende Waerme.*\\.',
-  function() abwehr_helfer('SCHILD', 'H', 'Cmagenta') end
+  function() abwehr_helfer('SCHILD', 'H', '<magenta>') end
 )
 
 -- Anti-Feuerring (AFR)
@@ -3062,7 +3062,7 @@ createSubstrTrigger(
 -- Steintrollpanzer
 createSubstrTrigger(
   ' verstaucht sich bei dem Schlag die Hand.',
-  function() trenner_helfer('S', 'Cgreen') end
+  function() trenner_helfer('S', '<green>') end
 )
 
 -- Schutzschild der Dunkelelfen
