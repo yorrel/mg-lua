@@ -87,40 +87,36 @@ end
 -- ---------------------------------------------------------------------------
 -- Trigger + Statuszeile
 
-local function statusAn(id, optVal)
-  return
-    function()
-      base.statusAdd(id, optVal)
-    end
-end
+local statusConf = '{blitzhand:3} {schutzschild:1} {aura:1}'
+base.statusConfig(statusConf)
 
-local function statusAus(id)
+local function statusUpdate(id, optVal)
   return
     function()
-      base.statusRemove(id)
+      base.statusUpdate({id, optVal})
     end
 end
 
 -- weihe
-client.createRegexTrigger('Die Weihe .* klingt wieder ab.', statusAus('We'), {'<red>'})
+client.createRegexTrigger('Die Weihe .* klingt wieder ab.', nil, {'<red>'})
 
 -- aura
-client.createSubstrTrigger('Um Dich herum entsteht eine *magische Aura.', statusAn('A'), {'<green>'})
-client.createSubstrTrigger('Die Dich umgebene magische Aura stabilisiert sich wieder.', statusAn('A'), {'<green>'})
-client.createSubstrTrigger('Die Magieaura die Dich umgibt loest sich allmaehlich auf.', statusAus('A'), {'<red>'})
+client.createSubstrTrigger('Um Dich herum entsteht eine .*magische Aura.', statusUpdate('aura','A'), {'<green>'})
+client.createSubstrTrigger('Die Dich umgebene magische Aura stabilisiert sich wieder.', statusUpdate('aura','A'), {'<green>'})
+client.createSubstrTrigger('Die Magieaura die Dich umgibt loest sich allmaehlich auf.', statusUpdate('aura'), {'<red>'})
 
 -- schutzschild
 client.createSubstrTrigger('Du konzentrierst Dich auf den Aufbau eines Schutzschilds.', nil, {'<blue>'})
 client.createSubstrTrigger('Du machst eine Pirouette, schnippst danach mit dem Finger, und auf einmal', nil, {'<green>'})
-client.createSubstrTrigger('entsteht ein magisches Schutzschild um Dich herum.', statusAn('S'), {'<green>'})
-client.createSubstrTrigger('Das Schutzschild um Dich herum loest sich langsam auf.', nil, {'<yellow>'})
-client.createSubstrTrigger('Dein Schutzschild ist nun aufgebraucht.', statusAus('S'), {'<red>'})
-client.createSubstrTrigger('Bei Deiner ganzen Hektik zerplatzt Dir auf einmal Dein Schutzschild.', statusAus('S'), {'<red>'})
+client.createSubstrTrigger('entsteht ein magisches Schutzschild um Dich herum.', statusUpdate('schutzschild','S'), {'<green>'})
+client.createSubstrTrigger('Das Schutzschild um Dich herum loest sich langsam auf.', statusUpdate('schutzschild','S'), {'<yellow>'})
+client.createSubstrTrigger('Dein Schutzschild ist nun aufgebraucht.', statusUpdate('schutzschild'), {'<red>'})
+client.createSubstrTrigger('Bei Deiner ganzen Hektik zerplatzt Dir auf einmal Dein Schutzschild.', statusUpdate('schutzschild'), {'<red>'})
 
 -- blitzhand
-client.createSubstrTrigger('Du konzentrierst Dich einen Moment und laesst Deine magische Energie in', statusAn('hnd'), {'<green>'})
-client.createSubstrTrigger('Das Kribbeln in Deinen Fingern laesst allmaehlich nach.', statusAus('hnd'), {'<red>'})
-client.createSubstrTrigger('Deine magischen Kraefte verlassen Dich, Deine Haende entspannen sich wieder.', statusAus('hnd'), {'<red>'})
+client.createSubstrTrigger('Du konzentrierst Dich einen Moment und laesst Deine magische Energie in', statusUpdate('blitzhand','hnd'), {'<green>'})
+client.createSubstrTrigger('Das Kribbeln in Deinen Fingern laesst allmaehlich nach.', statusUpdate('blitzhand'), {'<red>'})
+client.createSubstrTrigger('Deine magischen Kraefte verlassen Dich, Deine Haende entspannen sich wieder.', statusUpdate('blitzhand'), {'<red>'})
 
 -- schmerzen
 client.createRegexTrigger('  Du starrst .* in die Augen, bis .*', nil, {'<green>'})
@@ -154,8 +150,8 @@ client.createSubstrTrigger('Du reinigst Deinen Geist von der Gedankenverschmelzu
 client.createSubstrTrigger('Dich nun auch gleich wieder wesentlich wohler in Deiner Haut.', nil, {'<green>'})
 
 -- sonnenschutz
-client.createSubstrTrigger('Du murmelst einige Worte vor Dich hin, und auf einmal haeltst Du einen', statusAn('s'), {'<green>'})
-client.createSubstrTrigger('Dein Schutzfilm gegen die Sonne verblasst langsam wieder.', statusAus('s'), {'<red>'})
+client.createSubstrTrigger('Du murmelst einige Worte vor Dich hin, und auf einmal haeltst Du einen', nil, {'<green>'})
+client.createSubstrTrigger('Dein Schutzfilm gegen die Sonne verblasst langsam wieder.', nil, {'<red>'})
 
 
 -- ---------------------------------------------------------------------------

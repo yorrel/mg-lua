@@ -155,13 +155,9 @@ client.createSubstrTrigger('Der Nebel loest sich auf.', nil, {'<red>'})
 -- ---------------------------------------------------------------------------
 -- Statuszeile
 
-base.statusAdd('meditation', ' ', true)
-base.statusAdd('gesinnung', ' ', true)
-base.statusAdd('kokoro', '  ', true)
-base.statusAdd('tegatana', '  ', true)
-base.statusAdd('hayai', '  ', true)
-base.statusAdd('akshara', '  ', true)
-base.statusAdd('rest', '    ', true)
+local tanjianStatusConf =
+  '{meditation:1} {gesinnung:1} {kokoro:2} {tegatana:2} {hayai:2} {akshara:2}'
+base.statusConfig(tanjianStatusConf)
 
 client.createRegexTrigger(
   '^TANJIANREPORT: (.) (.) (..) (..) (..) (..)#',

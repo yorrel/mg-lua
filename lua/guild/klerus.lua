@@ -82,10 +82,10 @@ end
 -- ---------------------------------------------------------------------------
 -- Statuszeile / Trigger
 
-base.statusAdd('heiligenschein','  ',true)
-base.statusAdd('Esc','  ')
-base.statusAdd('Esp','  ')
-
+local statusConf =
+  '{heiligenschein:2} Esc:{eleschutz} Esp:{elesphaere:2}'
+  ..' {messerkreis:2} {weihe:2} {giftschwaechung:2}'
+base.statusConfig(statusConf)
 
 local function statusUpdate(id, optVal)
   return
@@ -94,61 +94,47 @@ local function statusUpdate(id, optVal)
     end
 end
 
-local function statusAn(id)
-  return
-    function()
-      base.statusAdd(id)
-    end
-end
-
-local function statusAus(id)
-  return
-    function()
-      base.statusRemove(id)
-    end
-end
-
 -- Heiligenschein
 client.createSubstrTrigger('Lembold erhoert Dich. Ueber Deinem Haupt erscheint ein Heiligenschein.', statusUpdate('heiligenschein','Hs'), {'<green>'})
 client.createSubstrTrigger('Dein Heiligenschein flackert.', nil, {'<yellow>'})
-client.createSubstrTrigger('Dein Heiligenschein verglimmt.', statusUpdate('heiligenschein','  '), {'<red>'})
+client.createSubstrTrigger('Dein Heiligenschein verglimmt.', statusUpdate('heiligenschein'), {'<red>'})
 
 -- Goettermacht
 client.createSubstrTrigger('Eine goettliche Aura huellt Dich ein.', nil, {'<green>'})
 client.createSubstrTrigger('Die goettliche Aura verlaesst Dich wieder.', nil, {'<red>'})
 
 -- Elementarschild
-client.createSubstrTrigger('Die Erde zu Deinen Fuessen woelbt sich und bricht auf. Ein irdener Schild', statusUpdate('Esc','er'), {'<green>'})
-client.createSubstrTrigger('Eine Stichflamme schiesst vor Dir aus dem Boden und umgibt Dich mit einem', statusUpdate('Esc','fe'), {'<green>'})
-client.createSubstrTrigger('Klirrende Kaelte umgibt Dich auf einmal schuetzend.', statusUpdate('Esc','ei'), {'<green>'})
-client.createSubstrTrigger('Ein ploetzlicher Regenschauer prasselt hernieder, ohne Dich jedoch zu', statusUpdate('Esc','wa'), {'<green>'})
-client.createSubstrTrigger('Ein starker Wind umtost Dich auf einmal und bildet so einen luftigen Schild.', statusUpdate('Esc','lu'), {'<green>'})
-client.createSubstrTrigger('Eine Wolke aus Saeuregasen bildet sich um Dich herum. Einige Blitze erden sich', statusUpdate('Esc','sa'), {'<green>'})
+client.createSubstrTrigger('Die Erde zu Deinen Fuessen woelbt sich und bricht auf. Ein irdener Schild', statusUpdate('eleschutz','er'), {'<green>'})
+client.createSubstrTrigger('Eine Stichflamme schiesst vor Dir aus dem Boden und umgibt Dich mit einem', statusUpdate('eleschutz','fe'), {'<green>'})
+client.createSubstrTrigger('Klirrende Kaelte umgibt Dich auf einmal schuetzend.', statusUpdate('eleschutz','ei'), {'<green>'})
+client.createSubstrTrigger('Ein ploetzlicher Regenschauer prasselt hernieder, ohne Dich jedoch zu', statusUpdate('eleschutz','wa'), {'<green>'})
+client.createSubstrTrigger('Ein starker Wind umtost Dich auf einmal und bildet so einen luftigen Schild.', statusUpdate('eleschutz','lu'), {'<green>'})
+client.createSubstrTrigger('Eine Wolke aus Saeuregasen bildet sich um Dich herum. Einige Blitze erden sich', statusUpdate('eleschutz','sa'), {'<green>'})
 client.createSubstrTrigger('Dein Elementarschild wird duenner.', nil, {'<yellow>'})
-client.createSubstrTrigger('Der Elementarschild zerfaellt.', statusUpdate('Esc','  '), {'<red>'})
+client.createSubstrTrigger('Der Elementarschild zerfaellt.', statusUpdate('eleschutz'), {'<red>'})
 
 -- Elementarsphaere
-client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Erde. Dann wird Deine', statusUpdate('Esp','er'), {'<green>'})
-client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristallinem Feuer. Dann wird Deine', statusUpdate('Esp','fe'), {'<green>'})
-client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Kaelte. Dann wird Deine', statusUpdate('Esp','ei'), {'<green>'})
-client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristallinem Wasser. Dann wird Deine', statusUpdate('Esp','wa'), {'<green>'})
-client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Luft. Dann wird Deine', statusUpdate('Esp','lua'), {'<green>'})
-client.createSubstrTrigger('Die Elementarsphaere loest sich auf.', statusUpdate('Esp','  '), {'<green>'})
+client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Erde. Dann wird Deine', statusUpdate('elesphaere','er'), {'<green>'})
+client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristallinem Feuer. Dann wird Deine', statusUpdate('elesphaere','fe'), {'<green>'})
+client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Kaelte. Dann wird Deine', statusUpdate('elesphaere','ei'), {'<green>'})
+client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristallinem Wasser. Dann wird Deine', statusUpdate('elesphaere','wa'), {'<green>'})
+client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Luft. Dann wird Deine', statusUpdate('elesphaere','lua'), {'<green>'})
+client.createSubstrTrigger('Die Elementarsphaere loest sich auf.', statusUpdate('elesphaere'), {'<green>'})
 
 -- Messerkreis
-client.createSubstrTrigger('Kandri erfasst Dich mit ihrer Macht! Du beginnst zu gluehen! Das Gluehen', statusAn('Mk'), {'<green>'})
-client.createSubstrTrigger('Der Kreis wirbelnder Messer verschwindet wieder.', statusAus('Mk'), {'<red>'})
+client.createSubstrTrigger('Kandri erfasst Dich mit ihrer Macht! Du beginnst zu gluehen! Das Gluehen', statusUpdate('messerkreis','Mk'), {'<green>'})
+client.createSubstrTrigger('Der Kreis wirbelnder Messer verschwindet wieder.', statusUpdate('messerkreis'), {'<red>'})
 
 -- Weihe
-client.createSubstrTrigger('Du sprichst ein kurzes, inbruenstiges Gebet.', statusAn('We'), {'<green>'})
-client.createSubstrTrigger('Der Heilige Zorn Lembolds ist verraucht.', statusAus('We'), {'<red>'})
+client.createSubstrTrigger('Du sprichst ein kurzes, inbruenstiges Gebet.', statusUpdate('weihe','We'), {'<green>'})
+client.createSubstrTrigger('Der Heilige Zorn Lembolds ist verraucht.', statusUpdate('weihe'), {'<red>'})
 
 -- Spaltung
 client.createSubstrTrigger('Ein Abbild Duraths loest sich in Wohlgefallen auf.', nil, {'<red>'})
 
 -- Giftschwaechung
-client.createSubstrTrigger('Vergiftungen wirken nun nicht mehr so schnell bei Dir.', statusAn('Gs'), {'<green>'})
-client.createSubstrTrigger('Die Wirkung der Giftschwaechung ist nun ganz abgeklungen.', statusAus('Gs'), {'<red>'})
+client.createSubstrTrigger('Vergiftungen wirken nun nicht mehr so schnell bei Dir.', statusUpdate('giftschwaechung','Gs'), {'<green>'})
+client.createSubstrTrigger('Die Wirkung der Giftschwaechung ist nun ganz abgeklungen.', statusUpdate('giftschwaechung'), {'<red>'})
 
 
 -- ---------------------------------------------------------------------------

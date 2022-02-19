@@ -246,56 +246,45 @@ local function set_para_welt(welt)
 end
 
 
-local status_ids = {}
-local status_werte = {}
-local status_key_supressed = {}
+local status_config = ''
+local attribute_length = {}
+local attribute_values = {}
 
-local function getGildenStatusLine()
-  local status = ''
-  for _,id in ipairs(status_ids) do
-    if status ~= '' then
-      status = status..' '
+-- arg: config string with attribute definitions '...{name:4}...'
+local function statusConfig(conf)
+  status_config = string.gsub(
+    conf,
+    '({%a+:%d+})',
+    function(attr)
+      local index = string.find(attr, ':')
+      local key = string.sub(attr, 2, index-1)
+      local length = string.sub(attr, index+1, string.len(attr)-1)
+      attribute_length[key] = tonumber(length)
+      return '{'..key..'}'
     end
-    local val = status_werte[id]
-    if val == true then
-      status = status..id
-    else
-      if status_key_supressed[id] then
-        status = status..val
-      else
-        status = status..id..':'..val
-      end
-    end
-  end
-  return status
+  )
 end
 
--- args: list of lists { id, optVal }
+-- args: list of lists { id, val }
 local function statusUpdate(...)
   for _,entry in ipairs{...} do
-    local id = entry[1]
-    local optVal = entry[2]
-    status_werte[id] = optVal or true
+    local attr = entry[1]
+    local val = entry[2]
+    attribute_values[attr] = val
   end
   raiseEvent('gilde.statusline.update')
 end
 
--- nur id: es wird 'id' angezeigt
--- mit val und ohne flag: Anzeige 'id:val'
--- mit val und mit flag: Anzeige 'val'
-local function statusAdd(id, optVal, optShowValOnly)
-  if not tools.listContains(status_ids, id) then
-    status_ids[#status_ids+1] = id
-  end
-  status_key_supressed[id] = optShowValOnly
-  statusUpdate({id, optVal})
-end
-
-local function statusRemove(id)
-  status_werte[id] = nil
-  status_key_supressed[id] = nil
-  tools.listRemove(status_ids, id)
-  raiseEvent('gilde.statusline.update')
+local function getGildenStatusLine()
+  return string.gsub(
+    status_config,
+    '{(%a+)}',
+    function(key)
+      local val = attribute_values[key] or ''
+      local len = attribute_length[key] or 1
+      return string.format('%'..len..'s', val)
+    end
+  )
 end
 
 
@@ -340,9 +329,8 @@ return {
   getCommonPersistentTable = getCommonPersistentTable,
   setCommonPersistentTableDirty = setCommonPersistentTableDirty,
   gilde = gilde,
-  statusAdd = statusAdd,
+  statusConfig = statusConfig,
   statusUpdate = statusUpdate,
-  statusRemove = statusRemove,
   getGildenStatusLine = getGildenStatusLine,
   addResetHook = addResetHook,
   charName = function() return character_name end,

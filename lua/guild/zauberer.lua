@@ -137,22 +137,14 @@ client.createSubstrTrigger('Du wirst allmaehlich wieder langsamer.', nil, {'<red
 -- ---------------------------------------------------------------------------
 -- Statuszeile
 
-base.statusAdd('SKP', '   ')
-base.statusAdd('gesinnung', ' ',true)
-base.statusAdd('hand', ' ', true)
-base.statusAdd('extrahand', ' ', true)
-base.statusAdd('wille', ' ', true)
-base.statusAdd('sz', ' ', true)
-base.statusAdd('ba', ' ', true)
-base.statusAdd('er', ' ', true)
-base.statusAdd('gesundheit', '    ',true)
+local statusConf =
+  'SKP:{skp:3} {hand:1} {extrahand:1} {wille:1} {sz:1} {ba:1}'
+  ..'{er:1} {gesinnung:1} {gesundheit:4}'
+base.statusConfig(statusConf)
+
 
 local function convert(flag, to)
-  if flag == 'J' then
-    return to
-  else
-    return ' '
-  end
+  return flag == 'J' and to or ' '
 end
 
 local function statusZeile1(m)
@@ -160,7 +152,7 @@ local function statusZeile1(m)
     convert(m[5],'G')..convert(m[6],'B')
     ..convert(m[7],'T')..convert(m[8],'F')
   base.statusUpdate(
-    {'SKP', m[3]},
+    {'skp', m[3]},
     {'gesinnung', m[4]},
     {'gesundheit', gesundheit}
   )

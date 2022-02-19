@@ -392,7 +392,8 @@ end
 -- ---------------------------------------------------------------------------
 -- Statuszeile
 
-base.statusAdd('CS', '           ')
+local statusConf = 'CS:{chaosball:11}'
+base.statusConfig(statusConf)
 
 local function chaoskontrolle_einstellung(m)
   local anzahl = m[1]
@@ -401,7 +402,7 @@ local function chaoskontrolle_einstellung(m)
   local _u = string.sub(adjektiv, 1, 3)
   local _v = string.sub(schaden..'    ', 1, 3)
   local schadenKuerzel = anzahl..' '.._u..' '.._v
-  base.statusUpdate({'CS', schadenKuerzel})
+  base.statusUpdate({'chaosball', schadenKuerzel})
 end
 
 client.createRegexTrigger(
