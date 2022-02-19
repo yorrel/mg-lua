@@ -401,7 +401,7 @@ local function chaoskontrolle_einstellung(m)
   local _u = string.sub(adjektiv, 1, 3)
   local _v = string.sub(schaden..'    ', 1, 3)
   local schadenKuerzel = anzahl..' '.._u..' '.._v
-  base.statusUpdate('CS', schadenKuerzel)
+  base.statusUpdate({'CS', schadenKuerzel})
 end
 
 client.createRegexTrigger(

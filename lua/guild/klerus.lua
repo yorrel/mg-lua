@@ -90,7 +90,7 @@ base.statusAdd('Esp','  ')
 local function statusUpdate(id, optVal)
   return
     function()
-      base.statusUpdate(id, optVal)
+      base.statusUpdate({id, optVal})
     end
 end
 

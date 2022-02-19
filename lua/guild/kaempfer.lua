@@ -155,13 +155,13 @@ base.statusAdd('rueckendeckung','  ',true)
 local function statusUpdate(id, optVal)
   return
     function()
-      base.statusUpdate(id, optVal)
+      base.statusUpdate({id, optVal})
     end
 end
 
 local function setTaktik(val)
   state().taktik = tonumber(val)
-  base.statusUpdate('Tk', state().taktik)
+  base.statusUpdate({'Tk', state().taktik})
 end
 
 -- paraden
@@ -193,7 +193,7 @@ client.createSubstrTrigger(
   'Du steigerst Dich in wilde Raserei!',
   function()
     setTaktik(0)
-    base.statusUpdate('T','Ras')
+    base.statusUpdate({'T','Ras'})
   end,
   {'<green>'})
 client.createSubstrTrigger('Du beendest Deine Raserei', statusUpdate('T','   '), {'<red>'})

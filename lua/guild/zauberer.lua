@@ -156,19 +156,25 @@ local function convert(flag, to)
 end
 
 local function statusZeile1(m)
-  base.statusUpdate('SKP', m[3])
-  base.statusUpdate('gesinnung', m[4], true)
-  local gesundheit = convert(m[5],'G')..convert(m[6],'B')..convert(m[7],'T')..convert(m[8],'F')
-  base.statusUpdate('gesundheit', gesundheit, true)
+  local gesundheit =
+    convert(m[5],'G')..convert(m[6],'B')
+    ..convert(m[7],'T')..convert(m[8],'F')
+  base.statusUpdate(
+    {'SKP', m[3]},
+    {'gesinnung', m[4]},
+    {'gesundheit', gesundheit}
+  )
 end
 
 local function statusZeile2(m)
-  base.statusUpdate('hand', m[1], true)
-  base.statusUpdate('extrahand', m[2], true)
-  base.statusUpdate('wille', m[3], true)
-  base.statusUpdate('sz', m[4], true)
-  base.statusUpdate('ba', m[5], true)
-  base.statusUpdate('er', m[6], true)
+  base.statusUpdate(
+    {'hand', m[1]},
+    {'extrahand', m[2]},
+    {'wille', m[3]},
+    {'sz', m[4]},
+    {'ba', m[5]},
+    {'er', m[6]}
+  )
 end
 
 client.createRegexTrigger('^STATUS1: ([0-9]+) ([0-9]+) ([0-9]+) (.) (.) (.) (.) (.)', statusZeile1, {'g'})

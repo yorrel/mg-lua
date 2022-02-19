@@ -135,7 +135,7 @@ local gildenStatusFormat = '%-42s'
 
 local function updateGildenStatus()
   local status = base.getGildenStatusLine()
-  gildenStatus = string.format(gildenStatusFormat, status)
+  gildenStatus = string.format(C_BMAGENTA..gildenStatusFormat..C_RESET, status)
   status_update2()
 end
 

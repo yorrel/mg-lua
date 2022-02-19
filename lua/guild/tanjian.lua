@@ -166,12 +166,14 @@ base.statusAdd('rest', '    ', true)
 client.createRegexTrigger(
   '^TANJIANREPORT: (.) (.) (..) (..) (..) (..)#',
   function(m)
-    base.statusUpdate('meditation', m[1], true)
-    base.statusUpdate('gesinnung', m[2], true)
-    base.statusUpdate('kokoro', m[3], true)
-    base.statusUpdate('tegatana', m[4], true)
-    base.statusUpdate('hayai', m[5], true)
-    base.statusUpdate('akshara', m[6], true)
+    base.statusUpdate(
+      {'meditation', m[1]},
+      {'gesinnung', m[2]},
+      {'kokoro', m[3]},
+      {'tegatana', m[4]},
+      {'hayai', m[5]},
+      {'akshara', m[6]}
+    )
   end,
   {'g'}
 )

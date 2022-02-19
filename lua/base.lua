@@ -270,8 +270,13 @@ local function getGildenStatusLine()
   return status
 end
 
-local function statusUpdate(id, optVal)
-  status_werte[id] = optVal or true
+-- args: list of lists { id, optVal }
+local function statusUpdate(...)
+  for _,entry in ipairs{...} do
+    local id = entry[1]
+    local optVal = entry[2]
+    status_werte[id] = optVal or true
+  end
   raiseEvent('gilde.statusline.update')
 end
 
@@ -283,7 +288,7 @@ local function statusAdd(id, optVal, optShowValOnly)
     status_ids[#status_ids+1] = id
   end
   status_key_supressed[id] = optShowValOnly
-  statusUpdate(id, optVal)
+  statusUpdate({id, optVal})
 end
 
 local function statusRemove(id)

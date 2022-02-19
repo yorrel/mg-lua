@@ -39,7 +39,7 @@ local function configItems(id, langname, itemmap)
 end
 
 local function configSticky(...)
-  for _, e in ipairs({...}) do
+  for _, e in ipairs{...} do
     itemdb.sticky[e] = true
   end
 end
