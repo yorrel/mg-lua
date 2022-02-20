@@ -36,6 +36,32 @@ client.createRegexTrigger(
 
 
 -- ---------------------------------------------------------------------------
+-- Statuszeile
+
+local statusConf = '{haarwuchs:2} {schimmer:2} {beruhige:2}'
+base.statusConfig(statusConf)
+
+local function statusUpdate(id, optVal)
+  return
+    function()
+      base.statusUpdate({id, optVal})
+    end
+end
+
+-- haarwuchs
+client.createSubstrTrigger('Dir wachsen ueberall Haare.', statusUpdate('haarwuchs', 'Ha'), {'<green>'})
+client.createSubstrTrigger('Deine Haare fallen aus.', statusUpdate('haarwuchs'), {'<red>'})
+
+-- schimmer
+client.createSubstrTrigger('Dein Koerper faengt an zu schimmern.', statusUpdate('schimmer', 'Sc'), {'<green>'})
+client.createSubstrTrigger('Der Schimmer, der Dich umgibt, verblasst.', statusUpdate('schimmer'), {'<red>'})
+
+-- beruhige
+client.createSubstrTrigger('Du bist die Ruhe selbst.', statusUpdate('beruhige', 'Be'), {'<green>'})
+client.createSubstrTrigger('Du wirst wieder unruhiger.', statusUpdate('beruhige'), {'<red>'})
+
+
+-- ---------------------------------------------------------------------------
 -- Standardfunktionen aller Gilden
 
 base.gilde.info = nil
