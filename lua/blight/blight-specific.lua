@@ -124,14 +124,14 @@ base.registerEventHandler('gmcp.MG.char.vitals', updateVitalsStatus)
 base.registerEventHandler('gmcp.MG.room.info', updateRoomStatus)
 
 
-local gildenStatus = ''
+local gildenStatusFormat = '%-42s'
+
+local gildenStatus = string.format(gildenStatusFormat, '')
 local vsfrStatus = ''
 
 local function status_update2()
   blight.status_line(2, gildenStatus..'  '..vsfrStatus)
 end
-
-local gildenStatusFormat = '%-42s'
 
 local function updateGildenStatus()
   local status = base.getGildenStatusLine()
