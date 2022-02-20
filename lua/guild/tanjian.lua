@@ -18,10 +18,12 @@ end
 -- Reboot
 
 base.addResetHook(
-  client.send(
-    'tanjianreport TANJIANREPORT: %ME %Ca %Ko %Te %Ha %Ak#%lf',
-    'tanjianreport an'
-  )
+  function()
+    client.send(
+      'tanjianreport TANJIANREPORT: %ME %Ca %Ko %Te %Ha %Ak#%lf',
+      'tanjianreport an'
+    )
+  end
 )
 
 
