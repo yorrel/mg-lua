@@ -121,9 +121,22 @@ end
 -- Zauber
 
 -- schutz
-client.createSubstrTrigger('Deine Chaoshaut schuetzt Dich jetzt ', nil, {'<green>'})
+client.createRegexTrigger(
+  'Deine Chaoshaut schuetzt Dich jetzt (etwas|wesentlich) besser\\.',
+  function(m)
+    local schutz = m[1] == 'wesentlich' and 'S+' or 'S'
+    base.statusUpdate({'schutz', schutz})
+  end,
+  {'<green>'}
+)
 client.createSubstrTrigger('Der magische Schutz Deiner Chaoshaut wird gleich verschwinden!', nil, {'<yellow>'})
-client.createSubstrTrigger('Der magische Schutz der Chaoshaut verschwindet.', nil, {'<red>'})
+client.createSubstrTrigger(
+  'Der magische Schutz der Chaoshaut verschwindet.',
+  function(m)
+    base.statusUpdate({'schutz'})
+  end,
+  {'<red>'}
+)
 
 -- nachtsicht
 client.createSubstrTrigger('Du veraenderst magisch Deine Augen.', nil, {'<green>'})
@@ -392,7 +405,7 @@ end
 -- ---------------------------------------------------------------------------
 -- Statuszeile
 
-local statusConf = 'CS:{chaosball:11}'
+local statusConf = 'CS:{chaosball:11}  {schutz:2}'
 base.statusConfig(statusConf)
 
 local function chaoskontrolle_einstellung(m)
