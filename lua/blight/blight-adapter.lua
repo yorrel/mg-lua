@@ -113,9 +113,9 @@ darkmode_colors['<cyan>'] = C_BCYAN
 
 local function getColor(c)
   if darkmode then
-    return darkmode_colors[c] or color_codes[c] or c
+    return darkmode_colors[c] or color_codes[c]
   end
-  return color_codes[c] or c
+  return color_codes[c]
 end
 
 local function replaceColorCodes(s)
