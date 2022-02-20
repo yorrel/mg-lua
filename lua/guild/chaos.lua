@@ -405,21 +405,62 @@ end
 -- ---------------------------------------------------------------------------
 -- Statuszeile
 
-local statusConf = 'CS:{chaosball:11}  {schutz:2}'
+local statusConf = 'CB:{chaosball:11}  {schutz:2}'
 base.statusConfig(statusConf)
+
+local cs_arten = {}
+cs_arten['harte Felsbrocken'] = 'fn'
+cs_arten['rotierende Messer'] = 'me'
+cs_arten['eherne Pfeile'] = 'pf'
+cs_arten['wirbelnde Peitschenhiebe'] = 'pe'
+cs_arten['gemeine Widerhaken'] = 'wi'
+cs_arten['Daumenschrauben'] = 'qu'
+cs_arten['explosive Magierschaedel'] = 'ex'
+
+cs_arten['lodernde Flammenkugeln'] = 'fe'
+cs_arten['frostige Eiswolken'] = 'ei'
+cs_arten['aetzende Saeureregen'] = 'sa'
+cs_arten['fuerchterliche Blitze'] = 'bl'
+cs_arten['todbringende Stuerme'] = 'lu'
+cs_arten['ueble Wasserstrahlen'] = 'wa'
+cs_arten['konzentrierte Gifte'] = 'gi'
+cs_arten['schrille Kampfschreie'] = 'kr'
+cs_arten['magische Strahlen'] = 'ma'
+cs_arten['hinterhaeltige Terrorattacken'] = 'te'
+cs_arten['satanische Flueche'] = 'bo'
+
+local ck_mag = {}
+ck_mag['brennende'] = 'fe'
+ck_mag['eisige'] = 'ei'
+ck_mag['aetzende'] = 'sa'
+ck_mag['blitzende'] = 'bl'
+ck_mag['stuermische'] = 'lu'
+ck_mag['fluessige'] = 'wa'
+ck_mag['giftige'] = 'gi'
+ck_mag['schreiende'] = 'kr'
+ck_mag['magische'] = 'ma'
+ck_mag['grauenvolle'] = 'te'
+ck_mag['satanische'] = 'bo'
+
+local ck_phy = {}
+ck_phy['Felsbrocken'] = 'fn'
+ck_phy['Messerschnitte'] = 'me'
+ck_phy['Pfeile'] = 'pf'
+ck_phy['Peitschenhiebe'] = 'pe'
+ck_phy['Widerhaken'] = 'wi'
+ck_phy['Daumenschrauben'] = 'qu'
+ck_phy['Magierschaedel'] = 'ex'
 
 local function chaoskontrolle_einstellung(m)
   local anzahl = m[1]
-  local adjektiv = m[2]
-  local schaden = m[3]
-  local _u = string.sub(adjektiv, 1, 3)
-  local _v = string.sub(schaden..'    ', 1, 3)
-  local schadenKuerzel = anzahl..' '.._u..' '.._v
+  local full = (m[2]=='' and m[2] or m[2]..' ') .. m[3]
+  local art = cs_arten[full] or ck_mag[m[2]]..'+'..ck_phy[m[3]]
+  local schadenKuerzel = anzahl..' '..art
   base.statusUpdate({'chaosball', schadenKuerzel})
 end
 
 client.createRegexTrigger(
-  '^Die naechsten ([0-9]*) Chaosbaelle sind: ([A-Za-z]*)(([^A-Za-z][A-Za-z]*)?)',
+  '^Die naechsten ([0-9]+) Chaosbaelle sind: ([a-z]+)? ?([A-Z][a-z]+)\\.$',
   chaoskontrolle_einstellung
 )
 

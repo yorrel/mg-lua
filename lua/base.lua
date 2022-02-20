@@ -282,7 +282,7 @@ local function getGildenStatusLine()
     function(key)
       local val = attribute_values[key] or ''
       local len = attribute_length[key] or 1
-      return string.format('%'..len..'s', val)
+      return string.format('%-'..len..'s', val)
     end
   )
 end
