@@ -3,7 +3,6 @@ if blight then
 
   client = require 'blight.blight-adapter'
   require 'blight.blight-specific'
-  require 'init'
 
 else
   
@@ -12,4 +11,19 @@ else
 
 end
 
-require 'init'
+require 'base'
+require 'battle'
+require 'damage'
+require 'gmcp-data'
+require 'guild.common'
+require 'inventory'
+require 'itemdb'
+require 'pub'
+require 'reduce'
+require 'report'
+require 'room'
+require 'timer'
+require 'tools'
+require 'utils'
+require 'ways'
+require 'ways-extensions'
