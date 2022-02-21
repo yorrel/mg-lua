@@ -61,7 +61,7 @@
 ;; lua starten
 
 /echo >>> starte lua...
-/eval /loadlua %{MG_LUA_DIR}/lua/init-tf.lua
+/eval /loadlua %{MG_LUA_DIR}/main.lua
 
 
 ;; ---------------------------------------------------------------------------
