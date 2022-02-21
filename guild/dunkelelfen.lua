@@ -87,7 +87,7 @@ end
 -- ---------------------------------------------------------------------------
 -- Trigger + Statuszeile
 
-local statusConf = '{blitzhand:3} {schutzschild:1} {aura:1}'
+local statusConf = '{blitzhand:3} {schutzschild:1} {aura:2}'
 base.statusConfig(statusConf)
 
 local function statusUpdate(id, optVal)
@@ -101,8 +101,9 @@ end
 client.createRegexTrigger('Die Weihe .* klingt wieder ab.', nil, {'<red>'})
 
 -- aura
-client.createSubstrTrigger('Um Dich herum entsteht eine .*magische Aura.', statusUpdate('aura','A'), {'<green>'})
-client.createSubstrTrigger('Die Dich umgebene magische Aura stabilisiert sich wieder.', statusUpdate('aura','A'), {'<green>'})
+client.createRegexTrigger('Um Dich herum entsteht eine .*magische Aura\\.', statusUpdate('aura','A'), {'<green>'})
+client.createSubstrTrigger('Die Aura um Dich waechst gewaltig.', statusUpdate('aura','A+'), {'<green>'})
+client.createSubstrTrigger('Die Dich umgebene magische Aura stabilisiert sich wieder.', nil, {'<green>'})
 client.createSubstrTrigger('Die Magieaura die Dich umgibt loest sich allmaehlich auf.', statusUpdate('aura'), {'<red>'})
 
 -- schutzschild
