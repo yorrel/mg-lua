@@ -56,7 +56,8 @@ local logger = client.createLogger('base')
 base.registerEventHandler(
   'base.char.init.done',
   function()
-    guildModules[base.charGuild()].enable()
+    local guild = base.charGuild()
+    guildModules[guild].enable()
     logger.info('Code zur Gilde \''..(guild or '')..'\' aktiviert')
   end
 )
