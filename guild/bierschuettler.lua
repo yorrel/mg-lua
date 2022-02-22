@@ -11,16 +11,6 @@ local logger = client.createLogger('bierschuettler')
 local trigger = {}
 
 
-pub.setOrderCmd(
-  function(id)
-    local cmd = room.getLabel() == 'bkneipe' and 'bkaufe' or 'bestelle'
-    client.send(cmd..' '..id)
-  end
-)
-
-
-
-
 -- ---------------------------------------------------------------------------
 -- Statuszeile
 
@@ -57,6 +47,13 @@ local function enable()
   base.gilde.info = nil
   base.gilde.schaetz = 'beobachte'
   base.gilde.identifiziere = function(item) inv.doWithHands(1, 'schuettele '..item) end
+
+  pub.setOrderCmd(
+    function(id)
+      local cmd = room.getLabel() == 'bkneipe' and 'bkaufe' or 'bestelle'
+      client.send(cmd..' '..id)
+    end
+  )
 
   -- Trigger -----------------------------------------------------------------
   -- schuettelstarre

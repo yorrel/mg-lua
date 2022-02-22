@@ -6,9 +6,9 @@
             <name>Init external lua scripts</name>
             <packageName></packageName>
             <script>
-MG_LUA_SAVE_DIR = &quot;/home/kst/Dropbox/games/mg-save&quot;
+MG_LUA_SAVE_DIR = &quot;path_save_dir&quot;
 
-local mg_lua = &quot;/home/kst/work/mg-lua&quot;
+local mg_lua = &quot;path_mg_lua&quot;
 package.path = package.path..&quot;;&quot;..mg_lua..&quot;/lib/?.lua;&quot;..mg_lua..&quot;/lua/?.lua&quot;
 
 require &quot;mudlet/mudlet-adapter&quot;
@@ -17,7 +17,7 @@ require &quot;mudlet/gui&quot;
 require &quot;init&quot;
 
 
-local mg_custom = &quot;/home/kst/work/mg-custom&quot;
+local mg_custom = &quot;path_mg_custom&quot;
 package.path = package.path..&quot;;&quot;..mg_custom..&quot;/lua/?.lua&quot;
 
 require &quot;init-custom&quot;
