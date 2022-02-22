@@ -6,13 +6,11 @@ local base   = require 'base'
 local itemdb = require 'itemdb'
 local inv    = require 'inventory'
 local tools  = require 'tools'
-local ME     = require 'gmcp-data'
 local timer  = require 'timer'
 local kampf  = require 'battle'
 
 local logger = client.createLogger('chaos')
-local keymap = base.keymap
-
+local trigger = {}
 
 local function state()
   return base.getPersistentTable('chaos')
@@ -121,7 +119,7 @@ end
 -- Zauber
 
 -- schutz
-client.createRegexTrigger(
+trigger[#trigger+1] = client.createRegexTrigger(
   'Deine Chaoshaut schuetzt Dich jetzt (etwas|wesentlich) besser\\.',
   function(m)
     local schutz = m[1] == 'wesentlich' and 'S+' or 'S'
@@ -129,8 +127,8 @@ client.createRegexTrigger(
   end,
   {'<green>'}
 )
-client.createSubstrTrigger('Der magische Schutz Deiner Chaoshaut wird gleich verschwinden!', nil, {'<yellow>'})
-client.createSubstrTrigger(
+trigger[#trigger+1] = client.createSubstrTrigger('Der magische Schutz Deiner Chaoshaut wird gleich verschwinden!', nil, {'<yellow>'})
+trigger[#trigger+1] = client.createSubstrTrigger(
   'Der magische Schutz der Chaoshaut verschwindet.',
   function(m)
     base.statusUpdate({'schutz'})
@@ -139,11 +137,11 @@ client.createSubstrTrigger(
 )
 
 -- nachtsicht
-client.createSubstrTrigger('Du veraenderst magisch Deine Augen.', nil, {'<green>'})
-client.createSubstrTrigger('Die Magie Deiner Augen laesst nach und verschwindet.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du veraenderst magisch Deine Augen.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Magie Deiner Augen laesst nach und verschwindet.', nil, {'<red>'})
 
 -- finsternis
-client.createRegexTrigger(
+trigger[#trigger+1] = client.createRegexTrigger(
   'Du huellst .* in eine Wolke aus Finsternis ein\\.',
   function()
     timer.enqueue(
@@ -157,19 +155,19 @@ client.createRegexTrigger(
 )
 
 -- daemonenpeitsche
-client.createRegexTrigger(
+trigger[#trigger+1] = client.createRegexTrigger(
   'Du schlaegst \\w* kraeftig mit Deiner, ploetzlich chaotisch',
   nil,
   {'<green>'}
 )
 
 -- blutopfer
-client.createSubstrTrigger('Mit einem grimmigen Aufschrei, rammst Du', nil, {'<green>'})
-client.createSubstrTrigger('naehrt sich an Deinem Blut.', nil, {'<green>'})
-client.createSubstrTrigger('will Dein Opfer nicht mehr.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Mit einem grimmigen Aufschrei, rammst Du', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('naehrt sich an Deinem Blut.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('will Dein Opfer nicht mehr.', nil, {'<red>'})
 
 -- dimensionsriss
-client.createSubstrTrigger(
+trigger[#trigger+1] = client.createSubstrTrigger(
   'durch einen winzigen Dimensionsriss gesaugt',
   function()
     logger.warn('AUSRUESTUNG WURDE ZUR CHAOSGILDE (Chaosteleporter) teleportiert!')
@@ -177,7 +175,7 @@ client.createSubstrTrigger(
   {'<red>','B'})
 
 -- Lernerfolg
-client.createSubstrTrigger('Die Macht des Chaos durchstroemt Dich und macht Dich staerker.', nil, {'<blue>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Macht des Chaos durchstroemt Dich und macht Dich staerker.', nil, {'<blue>'})
 
 
 -- ---------------------------------------------------------------------------
@@ -194,8 +192,8 @@ local function haut_ok()
   CHAOSHAUT_OK = true
 end
 
-client.createSubstrTrigger('DER DAEMON IN DEINER HAUT WIRD GLEICH VERSUCHEN SICH ZU BEFREIEN!!!', auto_kontrolle, {'<red>','B'})
-client.createSubstrTrigger('Du erlangst die Kontrolle ueber die Chaos-Ruestung zurueck.', haut_ok, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('DER DAEMON IN DEINER HAUT WIRD GLEICH VERSUCHEN SICH ZU BEFREIEN!!!', auto_kontrolle, {'<red>','B'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du erlangst die Kontrolle ueber die Chaos-Ruestung zurueck.', haut_ok, {'<green>'})
 
 
 -- ---------------------------------------------------------------------------
@@ -315,15 +313,15 @@ local function zeug_retten()
   end
 end
 
-client.createSubstrTrigger('Yrintri beendet seine Daseinsform.', zeug_retten)
-client.createSubstrTrigger('Tutszt bildet einen grossen Blutfleck.', zeug_retten)
-client.createSubstrTrigger('Flaxtri verschwindet brodelnd im Erdreich.', zeug_retten)
-client.createSubstrTrigger('Graiop verschwindet in einer Feuerexplosion.', zeug_retten)
-client.createSubstrTrigger('Nurchak zerfaellt zu einem Haufen Eiskristalle.', zeug_retten)
-client.createSubstrTrigger('Harkuhu verschwindet in einem Lichtblitz.', zeug_retten)
-client.createSubstrTrigger('Irkitis oeffnet eine unsichtbare Tuer und verschwindet.', zeug_retten)
+trigger[#trigger+1] = client.createSubstrTrigger('Yrintri beendet seine Daseinsform.', zeug_retten)
+trigger[#trigger+1] = client.createSubstrTrigger('Tutszt bildet einen grossen Blutfleck.', zeug_retten)
+trigger[#trigger+1] = client.createSubstrTrigger('Flaxtri verschwindet brodelnd im Erdreich.', zeug_retten)
+trigger[#trigger+1] = client.createSubstrTrigger('Graiop verschwindet in einer Feuerexplosion.', zeug_retten)
+trigger[#trigger+1] = client.createSubstrTrigger('Nurchak zerfaellt zu einem Haufen Eiskristalle.', zeug_retten)
+trigger[#trigger+1] = client.createSubstrTrigger('Harkuhu verschwindet in einem Lichtblitz.', zeug_retten)
+trigger[#trigger+1] = client.createSubstrTrigger('Irkitis oeffnet eine unsichtbare Tuer und verschwindet.', zeug_retten)
 
-client.createRegexTrigger(
+trigger[#trigger+1] = client.createRegexTrigger(
   '(Yrintri|Tutszt|Flaxtri|Graiop|Nurchak|Harkuhu|Irkitis) laesst.* (\\w+) fallen\\.',
   function(m)
     if m[1] == aktKampfDaemon then
@@ -406,7 +404,6 @@ end
 -- Statuszeile
 
 local statusConf = 'CB:{chaosball:11}  {schutz:2}'
-base.statusConfig(statusConf)
 
 local cs_arten = {}
 cs_arten['harte Felsbrocken'] = 'fn'
@@ -459,7 +456,7 @@ local function chaoskontrolle_einstellung(m)
   base.statusUpdate({'chaosball', schadenKuerzel})
 end
 
-client.createRegexTrigger(
+trigger[#trigger+1] = client.createRegexTrigger(
   '^Die naechsten ([0-9]+) Chaosbaelle sind: ([a-z]+)? ?([A-Z][a-z]+)\\.$',
   chaoskontrolle_einstellung
 )
@@ -551,10 +548,6 @@ local function chaos_identifiziere(ziel)
   end
 end
 
-base.gilde.info = gilden_info
-base.gilde.schaetz = chaos_schaetz
-base.gilde.identifiziere = chaos_identifiziere
-
 
 -- ---------------------------------------------------------------------------
 -- Helper
@@ -582,57 +575,68 @@ end
 
 
 -- ---------------------------------------------------------------------------
--- Tastenbelegung
+-- module definition
 
--- F5: Daemonen-Handling
-keymap.F5   = chaosteam
-keymap.S_F5 = daemon_stop_folge
--- F6: Daemon auftanken
-keymap.F6   = chaos_blutopfer
-keymap.S_F6 = chaos_friss_leiche
--- F7 und F8: Angriff
-keymap.F7   = createFunctionMitGegner('verbanne')
-keymap.S_F7 = 'dimensionsriss'
-keymap.F8   = createFunctionMitGegner('chaosball')
-keymap.S_F8 = chaoskontrolle_auto
+local function enable()
+  -- Standardfunktionen ------------------------------------------------------
+  base.statusConfig(statusConf)
+  base.gilde.info = gilden_info
+  base.gilde.schaetz = chaos_schaetz
+  base.gilde.identifiziere = chaos_identifiziere
 
-keymap.M_k = chaos_unt_daemon
-keymap.M_v = createFunctionSchutzMitStaerke('stark')
-keymap.M_m = createFunctionSchutzMitStaerke('')
-keymap.M_b = createFunctionSchutzMitStaerke('schwach')
-keymap.M_f = createFunctionMitGegner('finsternis')
-keymap.M_x = chaos_peitsche_daemon
+  -- Trigger -----------------------------------------------------------------
+  client.enableTrigger(trigger)
 
-keymap.M_l = 'nachtsicht'
-keymap.M_d = 'dunkelheit'
-keymap.M_y = chaosschaden_auto
-keymap.M_z = chaos_binde
+  -- Tasten ------------------------------------------------------------------
+  local keymap = base.keymap
+  keymap.F5   = chaosteam
+  keymap.S_F5 = daemon_stop_folge
+  keymap.F6   = chaos_blutopfer
+  keymap.S_F6 = chaos_friss_leiche
+  keymap.F7   = createFunctionMitGegner('verbanne')
+  keymap.S_F7 = 'dimensionsriss'
+  keymap.F8   = createFunctionMitGegner('chaosball')
+  keymap.S_F8 = chaoskontrolle_auto
 
-keymap.M_p = createFunctionMitHands(2, 'chaosruestung')
-keymap.M_i = 'kontrolle'
-keymap.M_r = chaos_druest
-keymap.M_e = function() chaos_druest('-') end
+  keymap.M_k = chaos_unt_daemon
+  keymap.M_v = createFunctionSchutzMitStaerke('stark')
+  keymap.M_m = createFunctionSchutzMitStaerke('')
+  keymap.M_b = createFunctionSchutzMitStaerke('schwach')
+  keymap.M_f = createFunctionMitGegner('finsternis')
+  keymap.M_x = chaos_peitsche_daemon
+
+  keymap.M_l = 'nachtsicht'
+  keymap.M_d = 'dunkelheit'
+  keymap.M_y = chaosschaden_auto
+  keymap.M_z = chaos_binde
+
+  keymap.M_p = createFunctionMitHands(2, 'chaosruestung')
+  keymap.M_i = 'kontrolle'
+  keymap.M_r = chaos_druest
+  keymap.M_e = function() chaos_druest('-') end
+
+  -- Aliases -----------------------------------------------------------------
+  client.createStandardAlias('skills', 0, 'tm kruuolq faehigkeiten')
+  client.createStandardAlias('quests', 0, 'tm hutschat aufgaben')
+
+  client.createStandardAlias('cs', 1, chaos_chaosschaden)
+  client.createStandardAlias('ck', 2, chaos_chaoskontrolle)
+
+  client.createStandardAlias('d',  1, chaos_beschwoere)
+  client.createStandardAlias('b',  1, chaos_binde)
+  client.createStandardAlias('v',  1, chaos_verbanne)
+  client.createStandardAlias('bef', 2, chaos_befehle)
+  client.createStandardAlias('u',  1, chaos_unt_daemon)
+  client.createStandardAlias('druest', 1, chaos_druest)
+  client.createStandardAlias('dww', 1, chaos_dww)
+  client.createStandardAlias('dfi', 1, bhuturih_finde)
+  client.createStandardAlias('dnerv', 1, ombatis_folge)
+  client.createStandardAlias('dheile', 1, tyoorthok_heile)
+  client.createStandardAlias('dunt', 1, tyoorthok_untersuche)
+  client.createStandardAlias('dcs', 1, yrintri_wandel)
+end
 
 
--- ---------------------------------------------------------------------------
--- Aliases
-
-client.createStandardAlias('skills', 0, 'tm kruuolq faehigkeiten')
-client.createStandardAlias('quests', 0, 'tm hutschat aufgaben')
-
-client.createStandardAlias('cs', 1, chaos_chaosschaden)
-client.createStandardAlias('ck', 2, chaos_chaoskontrolle)
-
-client.createStandardAlias('d',  1, chaos_beschwoere)
-client.createStandardAlias('b',  1, chaos_binde)
-client.createStandardAlias('v',  1, chaos_verbanne)
-client.createStandardAlias('bef', 2, chaos_befehle)
-client.createStandardAlias('u',  1, chaos_unt_daemon)
-client.createStandardAlias('druest', 1, chaos_druest)
-client.createStandardAlias('dww', 1, chaos_dww)
-
-client.createStandardAlias('dfi', 1, bhuturih_finde)
-client.createStandardAlias('dnerv', 1, ombatis_folge)
-client.createStandardAlias('dheile', 1, tyoorthok_heile)
-client.createStandardAlias('dunt', 1, tyoorthok_untersuche)
-client.createStandardAlias('dcs', 1, yrintri_wandel)
+return {
+  enable = enable
+}

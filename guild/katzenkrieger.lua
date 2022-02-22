@@ -3,19 +3,22 @@
 local base   = require 'base'
 local kampf  = require 'battle'
 
-local keymap = base.keymap
-
 
 -- ---------------------------------------------------------------------------
--- Tastenbelegung
+-- module definition
 
-keymap.F5   = kampf.createAttackFunctionWithEnemy('krallenschlag', 1)
-keymap.F6   = kampf.createAttackFunctionWithEnemy('blitz', 1)
+local function enable()
+  -- Tasten ------------------------------------------------------------------
+  local keymap = base.keymap
+  keymap.F5   = kampf.createAttackFunctionWithEnemy('krallenschlag', 1)
+  keymap.F6   = kampf.createAttackFunctionWithEnemy('blitz', 1)
+  keymap.M_l = 'nachtsicht'
 
-keymap.M_l = 'nachtsicht'
+  -- Aliases -----------------------------------------------------------------
+  client.createStandardAlias('skills', 0, 'tm xelonir faehigkeiten')
+end
 
 
--- ---------------------------------------------------------------------------
--- Aliases
-
-client.createStandardAlias('skills', 0, 'tm xelonir faehigkeiten')
+return {
+  enable = enable
+}

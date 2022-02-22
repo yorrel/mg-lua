@@ -1,20 +1,11 @@
 -- zauberer
 
-local base   = require 'base'
-local inv    = require 'inventory'
-local itemdb = require 'itemdb'
-local kampf  = require 'battle'
-local ME     = require 'gmcp-data'
+local base    = require 'base'
+local inv     = require 'inventory'
+local kampf   = require 'battle'
 
-local logger = client.createLogger('zauberer')
-local keymap = base.keymap
-
-
--- ---------------------------------------------------------------------------
--- Standardfunktionen aller Gilden
-
-base.gilde.entsorgeLeiche = 'entsorge leiche'
-
+local logger  = client.createLogger('zauberer')
+local trigger = {}
 
 -- ---------------------------------------------------------------------------
 -- Zauber
@@ -113,25 +104,24 @@ end
 -- ---------------------------------------------------------------------------
 -- Trigger fuer Highlighting
 
-client.createRegexTrigger('ist nun von einer (feurigen|eisigen|verschwommenen|magischen|giftgruenen|durchscheinenden|roetlichen|flimmernden|funkelnden) Aura eingehuellt.', nil, {'<green>'})
-client.createRegexTrigger('Die Aura um Dein.* schwindet.', nil, {'<red>'})
+trigger[#trigger+1] = client.createRegexTrigger('ist nun von einer (feurigen|eisigen|verschwommenen|magischen|giftgruenen|durchscheinenden|roetlichen|flimmernden|funkelnden) Aura eingehuellt.', nil, {'<green>'})
+trigger[#trigger+1] = client.createRegexTrigger('Die Aura um Dein.* schwindet.', nil, {'<red>'})
 
-client.createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'<cyan>'})
-client.createSubstrTrigger('Dir fehlen die noetigen Materialien!', nil, {'B','<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'<cyan>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Dir fehlen die noetigen Materialien!', nil, {'B','<red>'})
 
-client.createSubstrTrigger('Deine Haende beginnen', nil, {'<green>'})
-client.createSubstrTrigger('Die Verzauberung Deiner Haende laesst langsam nach.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Deine Haende beginnen', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Verzauberung Deiner Haende laesst langsam nach.', nil, {'<red>'})
 
-client.createSubstrTrigger('Du konzentrierst Deinen Willen auf Deinen Schutz.', nil, {'<green>'})
-client.createSubstrTrigger('Dein Wille laesst nach.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du konzentrierst Deinen Willen auf Deinen Schutz.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Dein Wille laesst nach.', nil, {'<red>'})
 
-client.createSubstrTrigger('Ploetzlich loest sich Dein Schatten von Dir.', nil, {'<green>'})
-client.createSubstrTrigger(ME.name..' loest sich in Luft auf.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Ploetzlich loest sich Dein Schatten von Dir.', nil, {'<green>'})
 
-client.createSubstrTrigger('Du hast jetzt eine zusaetzliche Hand zur Verfuegung.', nil, {'<green>'})
-client.createSubstrTrigger('Deine Extrahand loest sich auf.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du hast jetzt eine zusaetzliche Hand zur Verfuegung.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Deine Extrahand loest sich auf.', nil, {'<red>'})
 
-client.createSubstrTrigger('Du wirst allmaehlich wieder langsamer.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du wirst allmaehlich wieder langsamer.', nil, {'<red>'})
 
 
 -- ---------------------------------------------------------------------------
@@ -140,8 +130,6 @@ client.createSubstrTrigger('Du wirst allmaehlich wieder langsamer.', nil, {'<red
 local statusConf =
   'SKP:{skp:3} {hand:1} {extrahand:1} {wille:1} {sz:1} {ba:1}'
   ..'{er:1} {gesinnung:1} {gesundheit:4}'
-base.statusConfig(statusConf)
-
 
 local function convert(flag, to)
   return flag == 'J' and to or ' '
@@ -169,8 +157,10 @@ local function statusZeile2(m)
   )
 end
 
-client.createRegexTrigger('^STATUS1: ([0-9]+) ([0-9]+) ([0-9]+) (.) (.) (.) (.) (.)', statusZeile1, {'g'})
-client.createRegexTrigger('^STATUS2: (.) (.) (.) (.) (.) (.) ([0-9]+) (.+)', statusZeile2, {'g'})
+trigger[#trigger+1] = client.createRegexTrigger('^STATUS1: ([0-9]+) ([0-9]+) ([0-9]+) (.) (.) (.) (.) (.)', statusZeile1, {'g'})
+trigger[#trigger+1] = client.createRegexTrigger('^STATUS2: (.) (.) (.) (.) (.) (.) ([0-9]+) (.+)', statusZeile2, {'g'})
+
+client.disableTrigger(trigger)
 
 
 -- ---------------------------------------------------------------------------
@@ -181,12 +171,6 @@ local function zauberer_info()
   client.send('verletzungstyp')
   client.send('ginhalt')
 end
-
-base.gilde.info = zauberer_info
-
-
--- ---------------------------------------------------------------------------
--- Tasten
 
 local function createFunctionMitGegner(cmd)
   return
@@ -202,51 +186,61 @@ local function createFunctionMitHands(n, cmd)
     end
 end
 
-keymap.F5   = function() hand('feuer') end
-keymap.S_F5 = function() hand('eis') end
-keymap.F6   = function() hand('saeure') end
-keymap.S_F6 = createFunctionMitGegner('giftpfeil')
-keymap.F7   = createFunctionMitGegner('feuerball')
-keymap.S_F7 = createFunctionMitGegner('blitz')
-keymap.F8   = createFunctionMitGegner('verletze')
-keymap.S_F8 = createFunctionMitGegner('entkraefte')
-
-keymap.M_a = 'vorahnung'
-keymap.M_b = 'erdbeben'
-keymap.M_d = 'zauberschild'
-keymap.M_e = 'nachtsicht schwach'
-keymap.M_f = createFunctionMitGegner('irritiere')
-keymap.M_g = createFunctionMitGegner('schmerzen')
-keymap.M_i = 'wille'
-keymap.M_j = createFunctionMitHands(2, 'extrahand')
-keymap.M_k = 'schattenkaempfer'
-keymap.M_l = 'licht'
-keymap.M_m = 'schutzhuelle'
-keymap.M_p = 'befriede'
-keymap.M_r = 'schutzzone'
-keymap.M_t = 'teleport'
-keymap.M_v = 'schutz'
-keymap.M_y = hand
-keymap.M_x = 'schnell'
-keymap.M_z = 'erschoepfung'
-
-
--- ---------------------------------------------------------------------------
--- Aliases
-
-client.createStandardAlias('skills', 0, 'tm llystrathe faehigkeiten')
-client.createStandardAlias('quests', 0, 'tm llystrathe anforderungen')
-
-client.createStandardAlias('ruesten', 0, ruesten)
-client.createStandardAlias('cs', 1, verletzeSchaden)
-client.createStandardAlias('zs', 1, stabschaden)
-client.createStandardAlias('as', 2, spruchstaerke)
-
 
 -- ---------------------------------------------------------------------------
 -- module definition
 
+local function enable()
+  -- Standardfunktionen ------------------------------------------------------
+  base.statusConfig(statusConf)
+  base.gilde.info = zauberer_info
+  base.gilde.entsorgeLeiche = 'entsorge leiche'
+
+  -- Trigger -----------------------------------------------------------------
+  client.createSubstrTrigger(base.charName()..' loest sich in Luft auf.', nil, {'<red>'})
+  client.enableTrigger(trigger)
+
+  -- Tasten ------------------------------------------------------------------
+  local keymap = base.keymap
+  keymap.F5   = function() hand('feuer') end
+  keymap.S_F5 = function() hand('eis') end
+  keymap.F6   = function() hand('saeure') end
+  keymap.S_F6 = createFunctionMitGegner('giftpfeil')
+  keymap.F7   = createFunctionMitGegner('feuerball')
+  keymap.S_F7 = createFunctionMitGegner('blitz')
+  keymap.F8   = createFunctionMitGegner('verletze')
+  keymap.S_F8 = createFunctionMitGegner('entkraefte')
+
+  keymap.M_a = 'vorahnung'
+  keymap.M_b = 'erdbeben'
+  keymap.M_d = 'zauberschild'
+  keymap.M_e = 'nachtsicht schwach'
+  keymap.M_f = createFunctionMitGegner('irritiere')
+  keymap.M_g = createFunctionMitGegner('schmerzen')
+  keymap.M_i = 'wille'
+  keymap.M_j = createFunctionMitHands(2, 'extrahand')
+  keymap.M_k = 'schattenkaempfer'
+  keymap.M_l = 'licht'
+  keymap.M_m = 'schutzhuelle'
+  keymap.M_p = 'befriede'
+  keymap.M_r = 'schutzzone'
+  keymap.M_t = 'teleport'
+  keymap.M_v = 'schutz'
+  keymap.M_y = hand
+  keymap.M_x = 'schnell'
+  keymap.M_z = 'erschoepfung'
+
+  -- Aliases -----------------------------------------------------------------
+  client.createStandardAlias('skills', 0, 'tm llystrathe faehigkeiten')
+  client.createStandardAlias('quests', 0, 'tm llystrathe anforderungen')
+
+  client.createStandardAlias('ruesten', 0, ruesten)
+  client.createStandardAlias('cs', 1, verletzeSchaden)
+  client.createStandardAlias('zs', 1, stabschaden)
+  client.createStandardAlias('as', 2, spruchstaerke)
+end
+
+
 return {
-  getVerletzeSchaden = getVerletzeSchaden,
-  setVerletzeSchaden = verletzeSchaden,
+  enable = enable
 }

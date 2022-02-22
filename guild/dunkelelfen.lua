@@ -8,21 +8,10 @@ local timer  = require 'timer'
 local kampf  = require 'battle'
 
 local logger = client.createLogger('delfen')
-local keymap = base.keymap
-
+local trigger = {}
 
 local function state()
   return base.getPersistentTable('dunkelelf')
-end
-
--- Konvention ist: '*' bedeutet Default-Waffe
-local function setVerkleidenWaffe(newVal)
-  local name = itemdb.waffenName(newVal) or newVal
-  state().verkleidenwaffe = name
-end
-
-local function verkleidenWaffe()
-  return state().verkleidenwaffe
 end
 
 
@@ -68,10 +57,24 @@ local function autoSonnenschutz()
   end
 end
 
-client.createSubstrTrigger('Die Sonne scheint gnadenlos auf Dein Haupt und schwaecht Dich.', autoSonnenschutz, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Sonne scheint gnadenlos auf Dein Haupt und schwaecht Dich.', autoSonnenschutz, {'<red>'})
 
 
 -- Verkleiden
+
+-- Konvention ist: '*' bedeutet Default-Waffe
+local function setVerkleidenWaffe(newVal)
+  local name = itemdb.waffenName(newVal) or newVal
+  state().verkleidenwaffe = name
+end
+
+local function resetVerkleidenWaffe()
+  setVerkleidenWaffe(nil)
+end
+
+local function verkleidenWaffe()
+  return state().verkleidenwaffe
+end
 
 local function verkleidung_schneiden()
   local w = verkleidenWaffe()
@@ -88,7 +91,6 @@ end
 -- Trigger + Statuszeile
 
 local statusConf = '{blitzhand:3} {schutzschild:1} {aura:2}'
-base.statusConfig(statusConf)
 
 local function statusUpdate(id, optVal)
   return
@@ -98,30 +100,30 @@ local function statusUpdate(id, optVal)
 end
 
 -- weihe
-client.createRegexTrigger('Die Weihe .* klingt wieder ab.', nil, {'<red>'})
+trigger[#trigger+1] = client.createRegexTrigger('Die Weihe .* klingt wieder ab.', nil, {'<red>'})
 
 -- aura
-client.createRegexTrigger('Um Dich herum entsteht eine .*magische Aura\\.', statusUpdate('aura','A'), {'<green>'})
-client.createSubstrTrigger('Die Aura um Dich waechst gewaltig.', statusUpdate('aura','A+'), {'<green>'})
-client.createSubstrTrigger('Die Dich umgebene magische Aura stabilisiert sich wieder.', nil, {'<green>'})
-client.createSubstrTrigger('Die Magieaura die Dich umgibt loest sich allmaehlich auf.', statusUpdate('aura'), {'<red>'})
+trigger[#trigger+1] = client.createRegexTrigger('Um Dich herum entsteht eine .*magische Aura\\.', statusUpdate('aura','A'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Aura um Dich waechst gewaltig.', statusUpdate('aura','A+'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Dich umgebene magische Aura stabilisiert sich wieder.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Magieaura die Dich umgibt loest sich allmaehlich auf.', statusUpdate('aura'), {'<red>'})
 
 -- schutzschild
-client.createSubstrTrigger('Du konzentrierst Dich auf den Aufbau eines Schutzschilds.', nil, {'<blue>'})
-client.createSubstrTrigger('Du machst eine Pirouette, schnippst danach mit dem Finger, und auf einmal', nil, {'<green>'})
-client.createSubstrTrigger('entsteht ein magisches Schutzschild um Dich herum.', statusUpdate('schutzschild','S'), {'<green>'})
-client.createSubstrTrigger('Das Schutzschild um Dich herum loest sich langsam auf.', statusUpdate('schutzschild','S'), {'<yellow>'})
-client.createSubstrTrigger('Dein Schutzschild ist nun aufgebraucht.', statusUpdate('schutzschild'), {'<red>'})
-client.createSubstrTrigger('Bei Deiner ganzen Hektik zerplatzt Dir auf einmal Dein Schutzschild.', statusUpdate('schutzschild'), {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du konzentrierst Dich auf den Aufbau eines Schutzschilds.', nil, {'<blue>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du machst eine Pirouette, schnippst danach mit dem Finger, und auf einmal', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('entsteht ein magisches Schutzschild um Dich herum.', statusUpdate('schutzschild','S'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Das Schutzschild um Dich herum loest sich langsam auf.', statusUpdate('schutzschild','S'), {'<yellow>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Dein Schutzschild ist nun aufgebraucht.', statusUpdate('schutzschild'), {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Bei Deiner ganzen Hektik zerplatzt Dir auf einmal Dein Schutzschild.', statusUpdate('schutzschild'), {'<red>'})
 
 -- blitzhand
-client.createSubstrTrigger('Du konzentrierst Dich einen Moment und laesst Deine magische Energie in', statusUpdate('blitzhand','hnd'), {'<green>'})
-client.createSubstrTrigger('Das Kribbeln in Deinen Fingern laesst allmaehlich nach.', statusUpdate('blitzhand'), {'<red>'})
-client.createSubstrTrigger('Deine magischen Kraefte verlassen Dich, Deine Haende entspannen sich wieder.', statusUpdate('blitzhand'), {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du konzentrierst Dich einen Moment und laesst Deine magische Energie in', statusUpdate('blitzhand','hnd'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Das Kribbeln in Deinen Fingern laesst allmaehlich nach.', statusUpdate('blitzhand'), {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Deine magischen Kraefte verlassen Dich, Deine Haende entspannen sich wieder.', statusUpdate('blitzhand'), {'<red>'})
 
 -- schmerzen
-client.createRegexTrigger('  Du starrst .* in die Augen, bis .*', nil, {'<green>'})
-client.createSubstrTrigger('Schmerzen lassen nach.', nil, {'<red>'})
+trigger[#trigger+1] = client.createRegexTrigger('  Du starrst .* in die Augen, bis .*', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Schmerzen lassen nach.', nil, {'<red>'})
 
 -- beschwoere
 local function beschwoere_pause()
@@ -132,8 +134,8 @@ local function beschwoere_pause()
     end
   )
 end
-client.createSubstrTrigger('Du machst zahlreiche Gesten ueber der Leiche, aber alle Versuche sie zum', beschwoere_pause, {'<red>'})
-client.createSubstrTrigger('Du machst zahlreiche Gesten ueber der Leiche und erweckst sie zu neuem Leben.', beschwoere_pause, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du machst zahlreiche Gesten ueber der Leiche, aber alle Versuche sie zum', beschwoere_pause, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du machst zahlreiche Gesten ueber der Leiche und erweckst sie zu neuem Leben.', beschwoere_pause, {'<green>'})
 
 -- verschmelze
 local function verschmelze_pause()
@@ -144,25 +146,17 @@ local function verschmelze_pause()
     end
   )
 end
-client.createSubstrTrigger('Du legst der Leiche drei Finger an die Schlaefe und vereinigst Deinen Geist', verschmelze_pause, {'<green>'})
-client.createSubstrTrigger('Du merkst, wie Dein Geist allmaehlich wieder frei wird, und Du die Gedanken-', nil, {'<yellow>'})
-client.createSubstrTrigger('verschmelzung wieder rueckgaengig machst.', nil, {'<yellow>'})
-client.createSubstrTrigger('Du reinigst Deinen Geist von der Gedankenverschmelzung vollkommen und fuehlst', nil, {'<green>'})
-client.createSubstrTrigger('Dich nun auch gleich wieder wesentlich wohler in Deiner Haut.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du legst der Leiche drei Finger an die Schlaefe und vereinigst Deinen Geist', verschmelze_pause, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du merkst, wie Dein Geist allmaehlich wieder frei wird, und Du die Gedanken-', nil, {'<yellow>'})
+trigger[#trigger+1] = client.createSubstrTrigger('verschmelzung wieder rueckgaengig machst.', nil, {'<yellow>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du reinigst Deinen Geist von der Gedankenverschmelzung vollkommen und fuehlst', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Dich nun auch gleich wieder wesentlich wohler in Deiner Haut.', nil, {'<green>'})
 
 -- sonnenschutz
-client.createSubstrTrigger('Du murmelst einige Worte vor Dich hin, und auf einmal haeltst Du einen', nil, {'<green>'})
-client.createSubstrTrigger('Dein Schutzfilm gegen die Sonne verblasst langsam wieder.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du murmelst einige Worte vor Dich hin, und auf einmal haeltst Du einen', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Dein Schutzfilm gegen die Sonne verblasst langsam wieder.', nil, {'<red>'})
 
-
--- ---------------------------------------------------------------------------
--- reboot / reset
-
-local function reset()
-  setVerkleidenWaffe(nil)
-end
-
-base.addResetHook(reset)
+client.disableTrigger(trigger)
 
 
 -- ---------------------------------------------------------------------------
@@ -172,53 +166,61 @@ local function info()
   logger.info('Verkleiden    [#kvw]: '..(verkleidenWaffe() or ''))
 end
 
-base.gilde.info = info
-
 
 -- ---------------------------------------------------------------------------
--- Tasten
+-- module definition
 
--- licht
-keymap.M_l = 'nachtsicht'
--- sonnenschutz
-keymap.M_d = createFunctionMitHands(1, 'schutz')
--- bete (heilt), mit verzoegerung
-keymap.M_z = createFunctionMitHands(2, 'bete', 5)
--- schutzzauber
-keymap.M_m = createFunctionMitHands(2, 'aura')
-keymap.M_v = 'schutzschild'
--- weihe
-keymap.M_e = createFunctionMitHands(2, 'weihe mich')
-keymap.M_r = createFunctionMitHands(2, 'weihe raum')
--- ehrfurcht (befriede)
-keymap.M_p = createFunctionMitGegner('ehrfurcht')
-keymap.M_i = createFunctionMitGegner('bannkreis')
-keymap.M_g = createFunctionMitGegner('schmerz')
-keymap.M_a = 'balsamiere leiche'
-keymap.M_b = verkleidung_schneiden
+local function enable()
+  -- Standardfunktionen ------------------------------------------------------
+  base.statusConfig(statusConf)
+  base.gilde.info = info
+  base.addResetHook(resetVerkleidenWaffe)
 
--- kampf
-keymap.F5   = 'blitzhand'
-keymap.F6   = createFunctionMitHandsUndGegner(2, 'finsternis', 3)
-keymap.F7   = createFunctionMitGegner('vergifte')
-keymap.F8   = createFunctionMitHandsUndGegner(1, 'feuerlanze')
-keymap.S_F8 = createFunctionMitHandsUndGegner(1, 'entziehe')
+  -- Trigger -----------------------------------------------------------------
+  client.enableTrigger(trigger)
 
--- zombie
-keymap.M_j = 'unt zombie'
-keymap.M_k = createFunctionMitHands(2, 'beschwoere leiche leise')
+  -- Tasten ------------------------------------------------------------------
+  local keymap = base.keymap
+  keymap.M_l = 'nachtsicht'
+  -- sonnenschutz
+  keymap.M_d = createFunctionMitHands(1, 'schutz')
+  -- bete (heilt), mit verzoegerung
+  keymap.M_z = createFunctionMitHands(2, 'bete', 5)
+  -- schutzzauber
+  keymap.M_m = createFunctionMitHands(2, 'aura')
+  keymap.M_v = 'schutzschild'
+  -- weihe
+  keymap.M_e = createFunctionMitHands(2, 'weihe mich')
+  keymap.M_r = createFunctionMitHands(2, 'weihe raum')
+  -- ehrfurcht (befriede)
+  keymap.M_p = createFunctionMitGegner('ehrfurcht')
+  keymap.M_i = createFunctionMitGegner('bannkreis')
+  keymap.M_g = createFunctionMitGegner('schmerz')
+  keymap.M_a = 'balsamiere leiche'
+  keymap.M_b = verkleidung_schneiden
+  -- kampf
+  keymap.F5   = 'blitzhand'
+  keymap.F6   = createFunctionMitHandsUndGegner(2, 'finsternis', 3)
+  keymap.F7   = createFunctionMitGegner('vergifte')
+  keymap.F8   = createFunctionMitHandsUndGegner(1, 'feuerlanze')
+  keymap.S_F8 = createFunctionMitHandsUndGegner(1, 'entziehe')
+  -- zombie
+  keymap.M_j = 'unt zombie'
+  keymap.M_k = createFunctionMitHands(2, 'beschwoere leiche leise')
+
+  -- Aliases -----------------------------------------------------------------
+  client.createStandardAlias('bete', 0, verschmelze_aufheben)
+  client.createStandardAlias('kvw', 1, setVerkleidenWaffe)
+  client.createStandardAlias(
+    'skills',
+    0,
+    function()
+      client.send('tm nenaisu sprueche', 'tm teo faehigkeiten')
+    end
+  )
+end
 
 
--- ---------------------------------------------------------------------------
--- Aliases
-
-client.createStandardAlias(
-  'skills',
-  0,
-  function()
-    client.send('tm nenaisu sprueche', 'tm teo faehigkeiten')
-  end
-)
-
-client.createStandardAlias('bete', 0, verschmelze_aufheben)
-client.createStandardAlias('kvw', 1, setVerkleidenWaffe)
+return {
+  enable = enable
+}

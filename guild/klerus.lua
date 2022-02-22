@@ -5,7 +5,7 @@ local inv    = require 'inventory'
 local kampf  = require 'battle'
 
 local logger = client.createLogger('klerus')
-local keymap = base.keymap
+local trigger = {}
 
 
 local function kleriker_begrabe_leiche()
@@ -85,7 +85,6 @@ end
 local statusConf =
   '{heiligenschein:2} Esc:{eleschutz} Esp:{elesphaere:2}'
   ..' {messerkreis:2} {weihe:2} {giftschwaechung:2}'
-base.statusConfig(statusConf)
 
 local function statusUpdate(id, optVal)
   return
@@ -95,46 +94,48 @@ local function statusUpdate(id, optVal)
 end
 
 -- Heiligenschein
-client.createSubstrTrigger('Lembold erhoert Dich. Ueber Deinem Haupt erscheint ein Heiligenschein.', statusUpdate('heiligenschein','Hs'), {'<green>'})
-client.createSubstrTrigger('Dein Heiligenschein flackert.', nil, {'<yellow>'})
-client.createSubstrTrigger('Dein Heiligenschein verglimmt.', statusUpdate('heiligenschein'), {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Lembold erhoert Dich. Ueber Deinem Haupt erscheint ein Heiligenschein.', statusUpdate('heiligenschein','Hs'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Dein Heiligenschein flackert.', nil, {'<yellow>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Dein Heiligenschein verglimmt.', statusUpdate('heiligenschein'), {'<red>'})
 
 -- Goettermacht
-client.createSubstrTrigger('Eine goettliche Aura huellt Dich ein.', nil, {'<green>'})
-client.createSubstrTrigger('Die goettliche Aura verlaesst Dich wieder.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Eine goettliche Aura huellt Dich ein.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die goettliche Aura verlaesst Dich wieder.', nil, {'<red>'})
 
 -- Elementarschild
-client.createSubstrTrigger('Die Erde zu Deinen Fuessen woelbt sich und bricht auf. Ein irdener Schild', statusUpdate('eleschutz','er'), {'<green>'})
-client.createSubstrTrigger('Eine Stichflamme schiesst vor Dir aus dem Boden und umgibt Dich mit einem', statusUpdate('eleschutz','fe'), {'<green>'})
-client.createSubstrTrigger('Klirrende Kaelte umgibt Dich auf einmal schuetzend.', statusUpdate('eleschutz','ei'), {'<green>'})
-client.createSubstrTrigger('Ein ploetzlicher Regenschauer prasselt hernieder, ohne Dich jedoch zu', statusUpdate('eleschutz','wa'), {'<green>'})
-client.createSubstrTrigger('Ein starker Wind umtost Dich auf einmal und bildet so einen luftigen Schild.', statusUpdate('eleschutz','lu'), {'<green>'})
-client.createSubstrTrigger('Eine Wolke aus Saeuregasen bildet sich um Dich herum. Einige Blitze erden sich', statusUpdate('eleschutz','sa'), {'<green>'})
-client.createSubstrTrigger('Dein Elementarschild wird duenner.', nil, {'<yellow>'})
-client.createSubstrTrigger('Der Elementarschild zerfaellt.', statusUpdate('eleschutz'), {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Erde zu Deinen Fuessen woelbt sich und bricht auf. Ein irdener Schild', statusUpdate('eleschutz','er'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Eine Stichflamme schiesst vor Dir aus dem Boden und umgibt Dich mit einem', statusUpdate('eleschutz','fe'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Klirrende Kaelte umgibt Dich auf einmal schuetzend.', statusUpdate('eleschutz','ei'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Ein ploetzlicher Regenschauer prasselt hernieder, ohne Dich jedoch zu', statusUpdate('eleschutz','wa'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Ein starker Wind umtost Dich auf einmal und bildet so einen luftigen Schild.', statusUpdate('eleschutz','lu'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Eine Wolke aus Saeuregasen bildet sich um Dich herum. Einige Blitze erden sich', statusUpdate('eleschutz','sa'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Dein Elementarschild wird duenner.', nil, {'<yellow>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Der Elementarschild zerfaellt.', statusUpdate('eleschutz'), {'<red>'})
 
 -- Elementarsphaere
-client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Erde. Dann wird Deine', statusUpdate('elesphaere','er'), {'<green>'})
-client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristallinem Feuer. Dann wird Deine', statusUpdate('elesphaere','fe'), {'<green>'})
-client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Kaelte. Dann wird Deine', statusUpdate('elesphaere','ei'), {'<green>'})
-client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristallinem Wasser. Dann wird Deine', statusUpdate('elesphaere','wa'), {'<green>'})
-client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Luft. Dann wird Deine', statusUpdate('elesphaere','lua'), {'<green>'})
-client.createSubstrTrigger('Die Elementarsphaere loest sich auf.', statusUpdate('elesphaere'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Erde. Dann wird Deine', statusUpdate('elesphaere','er'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristallinem Feuer. Dann wird Deine', statusUpdate('elesphaere','fe'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Kaelte. Dann wird Deine', statusUpdate('elesphaere','ei'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristallinem Wasser. Dann wird Deine', statusUpdate('elesphaere','wa'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Luft. Dann wird Deine', statusUpdate('elesphaere','lua'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Elementarsphaere loest sich auf.', statusUpdate('elesphaere'), {'<green>'})
 
 -- Messerkreis
-client.createSubstrTrigger('Kandri erfasst Dich mit ihrer Macht! Du beginnst zu gluehen! Das Gluehen', statusUpdate('messerkreis','Mk'), {'<green>'})
-client.createSubstrTrigger('Der Kreis wirbelnder Messer verschwindet wieder.', statusUpdate('messerkreis'), {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Kandri erfasst Dich mit ihrer Macht! Du beginnst zu gluehen! Das Gluehen', statusUpdate('messerkreis','Mk'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Der Kreis wirbelnder Messer verschwindet wieder.', statusUpdate('messerkreis'), {'<red>'})
 
 -- Weihe
-client.createSubstrTrigger('Du sprichst ein kurzes, inbruenstiges Gebet.', statusUpdate('weihe','We'), {'<green>'})
-client.createSubstrTrigger('Der Heilige Zorn Lembolds ist verraucht.', statusUpdate('weihe'), {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du sprichst ein kurzes, inbruenstiges Gebet.', statusUpdate('weihe','We'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Der Heilige Zorn Lembolds ist verraucht.', statusUpdate('weihe'), {'<red>'})
 
 -- Spaltung
-client.createSubstrTrigger('Ein Abbild Duraths loest sich in Wohlgefallen auf.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Ein Abbild Duraths loest sich in Wohlgefallen auf.', nil, {'<red>'})
 
 -- Giftschwaechung
-client.createSubstrTrigger('Vergiftungen wirken nun nicht mehr so schnell bei Dir.', statusUpdate('giftschwaechung','Gs'), {'<green>'})
-client.createSubstrTrigger('Die Wirkung der Giftschwaechung ist nun ganz abgeklungen.', statusUpdate('giftschwaechung'), {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Vergiftungen wirken nun nicht mehr so schnell bei Dir.', statusUpdate('giftschwaechung','Gs'), {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Wirkung der Giftschwaechung ist nun ganz abgeklungen.', statusUpdate('giftschwaechung'), {'<red>'})
+
+client.disableTrigger(trigger)
 
 
 -- ---------------------------------------------------------------------------
@@ -146,52 +147,55 @@ local function klerus_info()
   client.send('unt talisman in mir')
 end
 
-base.gilde.info = klerus_info
-
-
--- ---------------------------------------------------------------------------
--- Tastenbelegung
-
--- F5-F8: Angriffs-Zauber
-keymap.F5 = angriff_goetterzorn
-keymap.S_F5 = angriff_wunder
-keymap.F6 = angriff_erloese
-keymap.F7 = 'donner'
-keymap.F8 = angriff_blitz
-
--- M-*
-keymap.M_b = kleriker_begrabe_leiche
-keymap.M_e = kleriker_weihe
-keymap.M_k = 'spaltung'
-keymap.M_j = 'entlasse abbild'
-keymap.M_p = 'frieden'
-keymap.M_t = 'messerkreis'
-keymap.M_v = 'heiligenschein'
-keymap.M_l = 'leuchten'
-keymap.M_m = kleriker_elementarschild
-keymap.M_x = 'goettermacht'
-keymap.M_z = kleriker_bete
-
--- HP-spell:
-keymap.M_a = kleriker_heiltrank
-
-
--- ---------------------------------------------------------------------------
--- Aliases
-
-client.createStandardAlias('be',  1, kleriker_bete)
-client.createStandardAlias('efl', 1, kleriker_entfluche)
-client.createStandardAlias('sg',  1, kleriker_segne)
-client.createStandardAlias('esp', 1, kleriker_elementarsphaere)
-client.createStandardAlias('esc', 1, kleriker_elementarschild)
-client.createStandardAlias('we',  1, kleriker_weihe)
-
 
 -- ---------------------------------------------------------------------------
 -- module definition
 
+local function enable()
+  -- Standardfunktionen ------------------------------------------------------
+  base.statusConfig(statusConf)
+  base.gilde.info = klerus_info
+
+  -- Trigger -----------------------------------------------------------------
+  client.enableTrigger(trigger)
+
+  -- Tasten ------------------------------------------------------------------
+  local keymap = base.keymap
+  -- F5-F8: Angriffs-Zauber
+  keymap.F5 = angriff_goetterzorn
+  keymap.S_F5 = angriff_wunder
+  keymap.F6 = angriff_erloese
+  keymap.F7 = 'donner'
+  keymap.F8 = angriff_blitz
+  
+  keymap.M_b = kleriker_begrabe_leiche
+  keymap.M_e = kleriker_weihe
+  keymap.M_k = 'spaltung'
+  keymap.M_j = 'entlasse abbild'
+  keymap.M_p = 'frieden'
+  keymap.M_t = 'messerkreis'
+  keymap.M_v = 'heiligenschein'
+  keymap.M_l = 'leuchten'
+  keymap.M_m = kleriker_elementarschild
+  keymap.M_x = 'goettermacht'
+  keymap.M_z = kleriker_bete
+
+  -- HP-spell:
+  keymap.M_a = kleriker_heiltrank
+
+  -- Aliases -----------------------------------------------------------------
+  client.createStandardAlias('be',  1, kleriker_bete)
+  client.createStandardAlias('efl', 1, kleriker_entfluche)
+  client.createStandardAlias('sg',  1, kleriker_segne)
+  client.createStandardAlias('esp', 1, kleriker_elementarsphaere)
+  client.createStandardAlias('esc', 1, kleriker_elementarschild)
+  client.createStandardAlias('we',  1, kleriker_weihe)
+end
+
+local function enable()
+end
+
+
 return {
-  segne = kleriker_segne,
-  heiltrank = kleriker_heiltrank,
-  entfluche = kleriker_entfluche,
+  enable = enable
 }

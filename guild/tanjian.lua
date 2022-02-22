@@ -6,25 +6,11 @@ local timer  = require 'timer'
 local kampf  = require 'battle'
 
 local logger = client.createLogger('tanjian')
-local keymap = base.keymap
-
+local trigger = {}
 
 local function state()
   return base.getPersistentTable('tanjian')
 end
-
-
--- ---------------------------------------------------------------------------
--- Reboot
-
-base.addResetHook(
-  function()
-    client.send(
-      'tanjianreport TANJIANREPORT: %ME %Ca %Ko %Te %Ha %Ak#%lf',
-      'tanjianreport an'
-    )
-  end
-)
 
 
 -- ---------------------------------------------------------------------------
@@ -110,32 +96,32 @@ end
 -- ---------------------------------------------------------------------------
 -- Trigger
 
-client.createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'<cyan>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'<cyan>'})
 
-client.createSubstrTrigger('Du bist derzeit in der Parallelwelt.', nil, {'<blue>'})
-client.createRegexTrigger('Du bist derzeit in Parallelwelt Nr\\. (\\d*)\\.', nil, {'<blue>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du bist derzeit in der Parallelwelt.', nil, {'<blue>'})
+trigger[#trigger+1] = client.createRegexTrigger('Du bist derzeit in Parallelwelt Nr\\. (\\d*)\\.', nil, {'<blue>'})
 
 -- meditation
-client.createSubstrTrigger('Du beendest Deine Meditation.', nil, {'<green>'})
-client.createSubstrTrigger('Deine Konzentrationsfaehigkeit laesst langsam nach.', nil, {'<yellow>'})
-client.createSubstrTrigger('Deine Umgebung scheint sich auf Deine Meditation auszuwirken.', nil, {'<green>'})
-client.createSubstrTrigger('Du solltest mal wieder meditieren.', nil, {'<red>'})
-client.createSubstrTrigger('Du spuerst noch die Wirkung der letzten Meditation.', nil, {'<blue>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du beendest Deine Meditation.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Deine Konzentrationsfaehigkeit laesst langsam nach.', nil, {'<yellow>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Deine Umgebung scheint sich auf Deine Meditation auszuwirken.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du solltest mal wieder meditieren.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du spuerst noch die Wirkung der letzten Meditation.', nil, {'<blue>'})
 
 -- kokoro
-client.createSubstrTrigger('Die Dunkelheit loest sich von Deinem Geist.', nil, {'<green>'})
-client.createSubstrTrigger('Die Membran schwingt doch noch!', nil, {'<green>'})
-client.createSubstrTrigger('Die Energien des Kokoro versiegen.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Dunkelheit loest sich von Deinem Geist.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Membran schwingt doch noch!', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Energien des Kokoro versiegen.', nil, {'<red>'})
 
 -- tegatana, omamori, hayai
-client.createSubstrTrigger('Du konzentrierst Dich auf den Kampf.', nil, {'<green>'})
-client.createSubstrTrigger('Deine Kampf-Konzentration laesst nach.', nil, {'<red>'})
-client.createSubstrTrigger('Du konzentrierst Dich auf die Abwehr.', nil, {'<green>'})
-client.createSubstrTrigger('Deine Abwehr-Konzentration laesst nach.', nil, {'<red>'})
-client.createSubstrTrigger('Der Zeitfluss veraendert sich', nil, {'<green>'})
-client.createSubstrTrigger('Die Kontrolle ueber den Zeitfluss entgleitet Dir.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du konzentrierst Dich auf den Kampf.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Deine Kampf-Konzentration laesst nach.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du konzentrierst Dich auf die Abwehr.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Deine Abwehr-Konzentration laesst nach.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Der Zeitfluss veraendert sich', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Kontrolle ueber den Zeitfluss entgleitet Dir.', nil, {'<red>'})
 
-client.createRegexTrigger(
+trigger[#trigger+1] = client.createRegexTrigger(
   'Deine Haende fangen ploetzlich an, .* zu leuchten.',
   function()
     timer.enqueue(
@@ -146,12 +132,12 @@ client.createRegexTrigger(
     )
   end,
   {'<green>'})
-client.createSubstrTrigger('Du verlaesst den Pfad des Lichtes.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du verlaesst den Pfad des Lichtes.', nil, {'<red>'})
 
 -- Clan Nekekami
-client.createSubstrTrigger('Du huellst Dich in einen schuetzenden Nebel.', nil, {'<green>'})
-client.createSubstrTrigger('Du bist noch in einen Nebel gehuellt.', nil, {'<green>'})
-client.createSubstrTrigger('Der Nebel loest sich auf.', nil, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du huellst Dich in einen schuetzenden Nebel.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Du bist noch in einen Nebel gehuellt.', nil, {'<green>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Der Nebel loest sich auf.', nil, {'<red>'})
 
 
 -- ---------------------------------------------------------------------------
@@ -159,9 +145,8 @@ client.createSubstrTrigger('Der Nebel loest sich auf.', nil, {'<red>'})
 
 local tanjianStatusConf =
   '{meditation:1} {gesinnung:1} {kokoro:2} {tegatana:2} {hayai:2} {akshara:2}'
-base.statusConfig(tanjianStatusConf)
 
-client.createRegexTrigger(
+trigger[#trigger+1] = client.createRegexTrigger(
   '^TANJIANREPORT: (.) (.) (..) (..) (..) (..)#',
   function(m)
     base.statusUpdate(
@@ -176,6 +161,8 @@ client.createRegexTrigger(
   {'g'}
 )
 
+client.disableTrigger(trigger)
+
 
 -- ---------------------------------------------------------------------------
 -- Standardfunktionen aller Gilden
@@ -186,15 +173,6 @@ local function tanjian_info()
   client.send('tanjiantest')
 end
 
-base.gilde.info = tanjian_info
-base.gilde.schaetz = 'koryoku'
-base.gilde.identifiziere = 'koryoku'
-base.gilde.entsorgeLeiche = 'entsorge leiche'
-
-
--- ---------------------------------------------------------------------------
--- Tastenbelegung
-
 local function createFunctionMitGegner(cmd)
   return
     function()
@@ -202,35 +180,60 @@ local function createFunctionMitGegner(cmd)
     end
 end
 
-keymap.F5 = createFunctionMitGegner('samusa')
-keymap.S_F5 = createFunctionMitGegner('kshira')
-keymap.F6 = createFunctionMitGegner('kaminari')
-keymap.F7 = createFunctionMitGegner('arashi')
-keymap.F8 = angriff_kami
-
-keymap.M_k = 'kokoro'
-keymap.M_t = 'tegatana'
-keymap.M_v = 'omamori'
-keymap.M_m = tanjian_kiri
-keymap.M_x = 'hayai'
-keymap.M_r = toggle_akshara
-
-keymap.M_z = 'meditation'
-
 
 -- ---------------------------------------------------------------------------
--- Aliases
+-- module definition
 
-client.createStandardAlias(
-  'skills',
-  0,
-  function()
-    client.send('tm siamil faehigkeiten')
-    client.send('tm siamil waffenfaehigkeiten')
-  end
-)
-client.createStandardAlias('quests', 0, 'tm siamil aufgaben')
+local function enable()
+  -- Standardfunktionen ------------------------------------------------------
+  base.addResetHook(
+    function()
+      client.send(
+        'tanjianreport TANJIANREPORT: %ME %Ca %Ko %Te %Ha %Ak#%lf',
+        'tanjianreport an'
+      )
+    end
+  )
+  base.statusConfig(tanjianStatusConf)
+  base.gilde.info = tanjian_info
+  base.gilde.schaetz = 'koryoku'
+  base.gilde.identifiziere = 'koryoku'
+  base.gilde.entsorgeLeiche = 'entsorge leiche'
 
-client.createStandardAlias('cs', 1, tanjian_set_kamischaden)
-client.createStandardAlias('cs', 0, tanjian_set_kamischaden)
-client.createStandardAlias('akh', 1, setAksharaHandschuhe)
+  -- Trigger -----------------------------------------------------------------
+  client.enableTrigger(trigger)
+
+  -- Tasten ------------------------------------------------------------------
+  local keymap = base.keymap
+  keymap.F5 = createFunctionMitGegner('samusa')
+  keymap.S_F5 = createFunctionMitGegner('kshira')
+  keymap.F6 = createFunctionMitGegner('kaminari')
+  keymap.F7 = createFunctionMitGegner('arashi')
+  keymap.F8 = angriff_kami
+
+  keymap.M_k = 'kokoro'
+  keymap.M_t = 'tegatana'
+  keymap.M_v = 'omamori'
+  keymap.M_m = tanjian_kiri
+  keymap.M_x = 'hayai'
+  keymap.M_r = toggle_akshara
+  keymap.M_z = 'meditation'
+
+  -- Aliases -----------------------------------------------------------------
+  client.createStandardAlias(
+    'skills',
+    0,
+    function()
+      client.send('tm siamil faehigkeiten', 'tm siamil waffenfaehigkeiten')
+    end
+  )
+  client.createStandardAlias('quests', 0, 'tm siamil aufgaben')
+  client.createStandardAlias('cs', 1, tanjian_set_kamischaden)
+  client.createStandardAlias('cs', 0, tanjian_set_kamischaden)
+  client.createStandardAlias('akh', 1, setAksharaHandschuhe)
+end
+
+
+return {
+  enable = enable
+}

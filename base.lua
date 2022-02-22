@@ -131,10 +131,6 @@ local function initCharakter(name, guild, race, wizlevel)
   pcall(readCharState, name)
   -- Charakter-uebergreifende Daten einlesen
   pcall(readCommonState)
-  -- Code zur Gilde
-  if pcall(require, 'guild/'..guild) then
-    logger.info('Code zur Gilde \''..(guild or '')..'\' eingelesen')
-  end
   raiseEvent('base.char.init.done')
 end
 

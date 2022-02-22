@@ -3,9 +3,6 @@
 local base   = require 'base'
 local kampf  = require 'battle'
 
-local keymap = base.keymap
-
-
 local function state()
   return base.getPersistentTable('karate')
 end
@@ -50,22 +47,30 @@ local function karateka_info()
   client.send('daempfung')
 end
 
-base.gilde.info = karateka_info
-
 
 -- ---------------------------------------------------------------------------
--- Tastenbelegung
+-- module definition
 
-keymap.F5   = daempfungReduzieren
-keymap.S_F5 = daempfungSteigern
-keymap.F6   = 'angriff mit ssu'
-keymap.S_F6 = 'angriff mit ueu'     -- standard ist wohl oeu
-keymap.F7   = 'angriff mit fg, fog'
-keymap.S_F7 = 'angriff mit cz'
-keymap.F8   = 'toete alle'
-keymap.S_F8 = 'angriff mit allem'
+local function enable()
+  -- Standardfunktionen ------------------------------------------------------
+  base.gilde.info = karateka_info
 
--- kampfwille der karateka
-keymap.M_j = 'nemoku-owaru'
-keymap.M_k = konzentrationAufGegner
+  -- Tasten ------------------------------------------------------------------
+  local keymap = base.keymap
+  keymap.F5   = daempfungReduzieren
+  keymap.S_F5 = daempfungSteigern
+  keymap.F6   = 'angriff mit ssu'
+  keymap.S_F6 = 'angriff mit ueu'     -- standard ist wohl oeu
+  keymap.F7   = 'angriff mit fg, fog'
+  keymap.S_F7 = 'angriff mit cz'
+  keymap.F8   = 'toete alle'
+  keymap.S_F8 = 'angriff mit allem'
+  -- kampfwille der karateka
+  keymap.M_j = 'nemoku-owaru'
+  keymap.M_k = konzentrationAufGegner
+end
 
+
+return {
+  enable = enable
+}
