@@ -59,6 +59,7 @@ local function process_MG_room_info(s)
   ME.raum_kurz     = data.short
   ME.raum_region   = data.domain
   ME.raum_id       = data.id
+  ME.raum_exits    = data.exits
   ME.raum_id_short = string.sub(data.id, 1, 5)
   base.raiseEvent('gmcp.MG.room.info')
 end
