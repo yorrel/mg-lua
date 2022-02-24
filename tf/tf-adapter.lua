@@ -80,7 +80,10 @@ end
 local function cecho(msg)
   msg = string.gsub(msg, '(<%a+>)', getColor)
   msg = string.gsub(msg, '%%', '\\%%')
-  tf_eval('/echo -p '..msg)
+  local lines = tools.splitString(msg, '\n')
+  for _,line in ipairs(lines) do
+    tf_eval('/echo -p '..line)
+  end
 end
 
 local function echo(msg)
