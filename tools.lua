@@ -36,7 +36,7 @@ local function listJoin(t, separator)
     return nil
   end
   local s = ''
-  for _,e in pairs(t) do
+  for _,e in ipairs(t) do
     s = s .. e .. separator
   end
   if string.len(s) > 0 then

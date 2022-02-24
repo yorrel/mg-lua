@@ -371,6 +371,11 @@ local function pattern2log(pattern)
   return pattern
 end
 
+local function rex_gsub(t, pattern, replacement)
+  replacement = string.gsub(replacement, '$(%d)', '%%1')
+  return regex.gsub(t, pattern, replacement)
+end
+
 local function rex_match(t, pattern)
   -- regex.match return full text if no captures are specified
   local m1,m2,m3,m4,m5,m6,m7,m8 = regex.match(t, pattern)
@@ -381,7 +386,7 @@ local function rex_match(t, pattern)
 end
 
 local rex = {
-  gsub = regex.gsub,
+  gsub = rex_gsub,
   match = rex_match,
 }
 
