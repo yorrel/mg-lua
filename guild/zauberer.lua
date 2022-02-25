@@ -163,15 +163,6 @@ trigger[#trigger+1] = client.createRegexTrigger('^STATUS2: (.) (.) (.) (.) (.) (
 client.disableTrigger(trigger)
 
 
--- ---------------------------------------------------------------------------
--- Standardfunktionen aller Gilden
-
-local function zauberer_info()
-  client.send('stabinfo')
-  client.send('verletzungstyp')
-  client.send('ginhalt')
-end
-
 local function createFunctionMitGegner(cmd)
   return
     function()
@@ -188,13 +179,25 @@ end
 
 
 -- ---------------------------------------------------------------------------
--- module definition
+-- Guild class Zauberer
 
-local function enable()
+local class  = require 'class'
+local Guild  = require 'guild/guild'
+local Zauberer = class(Guild)
+
+function Zauberer:info()
+  client.send('stabinfo')
+  client.send('verletzungstyp')
+  client.send('ginhalt')
+end
+
+function Zauberer:entsorgeLeiche()
+  client.send('entsorge leiche')
+end
+
+function Zauberer:enable()
   -- Standardfunktionen ------------------------------------------------------
   base.statusConfig(statusConf)
-  base.gilde.info = zauberer_info
-  base.gilde.entsorgeLeiche = 'entsorge leiche'
 
   -- Trigger -----------------------------------------------------------------
   client.createSubstrTrigger(base.charName()..' loest sich in Luft auf.', nil, {'<red>'})
@@ -241,6 +244,4 @@ local function enable()
 end
 
 
-return {
-  enable = enable
-}
+return Zauberer

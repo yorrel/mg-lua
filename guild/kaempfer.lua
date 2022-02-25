@@ -254,9 +254,13 @@ end
 
 
 -- ---------------------------------------------------------------------------
--- Standardfunktionen aller Gilden
+-- Guild class Kaempfer
 
-local function info()
+local class  = require 'class'
+local Guild  = require 'guild/guild'
+local Kaempfer = class(Guild)
+
+function Kaempfer:info()
   logger.info('Finte/Waf.tr. [#kf] : '..(fintenwaffe() or '*'))
   logger.info('Waffenschlag  [#kws]: '..(waffenschlagwaffe() or '*'))
   logger.info('Waffenbruch   [#kwb]: '..(waffenbruchwaffe() or '*'))
@@ -264,14 +268,9 @@ local function info()
   client.send('taktik')
 end
 
-
--- ---------------------------------------------------------------------------
--- module definition
-
-local function enable()
+function Kaempfer:enable()
   -- Standardfunktionen ------------------------------------------------------
   base.statusConfig(statusConf)
-  base.gilde.info = info
   base.addResetHook(reset)
 
   -- Trigger -----------------------------------------------------------------
@@ -330,6 +329,4 @@ local function enable()
 end
 
 
-return {
-  enable = enable
-}
+return Kaempfer

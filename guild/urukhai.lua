@@ -5,9 +5,13 @@ local kampf  = require 'battle'
 
 
 -- ---------------------------------------------------------------------------
--- module definition
+-- Guild class Urukhai
 
-local function enable()
+local class  = require 'class'
+local Guild  = require 'guild/guild'
+local Urukhai = class(Guild)
+
+function Urukhai:enable()
   -- Tasten ------------------------------------------------------------------
   local keymap = base.keymap
   keymap.F5 = kampf.createAttackFunctionWithEnemy('beisse')
@@ -22,7 +26,4 @@ local function enable()
   client.createStandardAlias('skills', 0, 'tm hragznor faehigkeiten')
 end
 
-
-return {
-  enable = enable
-}
+return Urukhai

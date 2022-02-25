@@ -39,22 +39,17 @@ end
 
 
 -- ---------------------------------------------------------------------------
--- Standardfunktionen aller Gilden
+-- Guild class Karate
 
-local function karateka_info()
-  client.send('angriff')
-  client.send('abwehr')
-  client.send('daempfung')
+local class  = require 'class'
+local Guild  = require 'guild/guild'
+local Karate = class(Guild)
+
+function Karate:info()
+  client.send('angriff', 'abwehr', 'daempfung')
 end
 
-
--- ---------------------------------------------------------------------------
--- module definition
-
-local function enable()
-  -- Standardfunktionen ------------------------------------------------------
-  base.gilde.info = karateka_info
-
+function Karate:enable()
   -- Tasten ------------------------------------------------------------------
   local keymap = base.keymap
   keymap.F5   = daempfungReduzieren
@@ -71,6 +66,4 @@ local function enable()
 end
 
 
-return {
-  enable = enable
-}
+return Karate

@@ -45,10 +45,10 @@ local allGuilds = {
   'zauberer'
 }
 
-local guildModules = {}
+local guildClasses = {}
 
 for _,guild in ipairs(allGuilds) do
-  guildModules[guild] = require('guild/'..guild)
+  guildClasses[guild] = require('guild/'..guild)
 end
 
 local logger = client.createLogger('base')
@@ -56,8 +56,13 @@ local logger = client.createLogger('base')
 base.registerEventHandler(
   'base.char.init.done',
   function()
-    local guild = base.charGuild()
-    guildModules[guild].enable()
-    logger.info('Code zur Gilde \''..(guild or '')..'\' aktiviert')
+    local guildName = base.charGuild()
+    local guildClass = guildClasses[guildName]
+    if guildClass ~= nil then
+      local guild = guildClass()
+      guild.enable()
+      base.setGuild(guild)
+      logger.info('Code zur Gilde \''..(guildName or '')..'\' aktiviert')
+    end
   end
 )

@@ -1,5 +1,6 @@
 -- Bierschuettler
 
+local class  = require 'class'
 local base   = require 'base'
 local inv    = require 'inventory'
 local pub    = require 'pub'
@@ -39,14 +40,22 @@ client.disableTrigger(trigger)
 
 
 -- ---------------------------------------------------------------------------
--- module definition
+-- Guild class Bierschuettler
 
-local function enable()
+local Guild  = require 'guild/guild'
+local Bierschuettler = class(Guild)
+
+function Bierschuettler:identifiziere(item)
+  inv.doWithHands(1, 'schuettele '..item)
+end
+
+function Bierschuettler:schaetz(item)
+  client.send('beobachte '..item)
+end
+
+function Bierschuettler:enable()
   -- Standardfunktionen ------------------------------------------------------
   base.statusConfig(statusConf)
-  base.gilde.info = nil
-  base.gilde.schaetz = 'beobachte'
-  base.gilde.identifiziere = function(item) inv.doWithHands(1, 'schuettele '..item) end
 
   pub.setOrderCmd(
     function(id)
@@ -93,6 +102,4 @@ local function enable()
 end
 
 
-return {
-  enable = enable
-}
+return Bierschuettler

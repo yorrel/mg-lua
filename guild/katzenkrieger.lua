@@ -5,9 +5,13 @@ local kampf  = require 'battle'
 
 
 -- ---------------------------------------------------------------------------
--- module definition
+-- Guild class Katzenkrieger
 
-local function enable()
+local class  = require 'class'
+local Guild  = require 'guild/guild'
+local Katzenkrieger = class(Guild)
+
+function Katzenkrieger:enable()
   -- Tasten ------------------------------------------------------------------
   local keymap = base.keymap
   keymap.F5   = kampf.createAttackFunctionWithEnemy('krallenschlag', 1)
@@ -19,6 +23,4 @@ local function enable()
 end
 
 
-return {
-  enable = enable
-}
+return Katzenkrieger

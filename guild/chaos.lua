@@ -465,11 +465,6 @@ trigger[#trigger+1] = client.createRegexTrigger(
 -- ---------------------------------------------------------------------------
 -- Standardfunktionen aller Gilden
 
--- automatische Erkennung Para/Normal
-local function gilden_info()
-  client.send('chaoswer in para')
-end
-
 -- schaetz (intarbir)
 local intarbir_anwesend = false
 local intarbir_trigger_an
@@ -575,14 +570,27 @@ end
 
 
 -- ---------------------------------------------------------------------------
--- module definition
+-- Guild class Chaos
 
-local function enable()
+local class  = require 'class'
+local Guild  = require 'guild/guild'
+local Chaos = class(Guild)
+
+function Chaos:identifiziere(item)
+  chaos_identifiziere(item)
+end
+
+function Chaos:schaetz(item)
+  chaos_schaetz(item)
+end
+
+function Chaos:info()
+  client.send('chaoswer in para')
+end
+
+function Chaos:enable()
   -- Standardfunktionen ------------------------------------------------------
   base.statusConfig(statusConf)
-  base.gilde.info = gilden_info
-  base.gilde.schaetz = chaos_schaetz
-  base.gilde.identifiziere = chaos_identifiziere
 
   -- Trigger -----------------------------------------------------------------
   client.enableTrigger(trigger)
@@ -637,6 +645,4 @@ local function enable()
 end
 
 
-return {
-  enable = enable
-}
+return Chaos

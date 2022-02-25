@@ -139,22 +139,21 @@ client.disableTrigger(trigger)
 
 
 -- ---------------------------------------------------------------------------
--- Standardfunktionen aller Gilden
+-- Guild class Klerus
 
-local function klerus_info()
+local class  = require 'class'
+local Guild  = require 'guild/guild'
+local Klerus = class(Guild)
+
+function Klerus:info()
   client.send('reibe adamantenen ring')
   client.send('reibe eisernen ring kraeftig')
   client.send('unt talisman in mir')
 end
 
-
--- ---------------------------------------------------------------------------
--- module definition
-
-local function enable()
+function Klerus:enable()
   -- Standardfunktionen ------------------------------------------------------
   base.statusConfig(statusConf)
-  base.gilde.info = klerus_info
 
   -- Trigger -----------------------------------------------------------------
   client.enableTrigger(trigger)
@@ -193,6 +192,4 @@ local function enable()
 end
 
 
-return {
-  enable = enable
-}
+return Klerus

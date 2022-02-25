@@ -206,31 +206,15 @@ end
 -- standard funktionen
 -- schaetz, identifiziere, leichen entsorgen
 
--- Objekt fuer gilden-Standardfunktionen:
--- Gilden koennen entsprechende Funktionen definieren
-local gilde = {
-  schaetz = nil,
-  identifiziere = nil,
-  entsorgeLeiche = 'streue pulver ueber leiche',
-}
-
+-- Guild Object
+local gilde
 
 local function gilden_schaetz(objekt)
-  local gildeSchaetz = gilde.schaetz or 'schaetz'
-  if (type(gildeSchaetz) == 'function') then
-    gilde.schaetz(objekt)
-  else
-    client.send(gildeSchaetz..' '..objekt)
-  end
+  gilde:schaetz(objekt)
 end
 
 local function gilden_identifiziere(objekt)
-  local gildeId = gilde.identifiziere or 'identifiziere'
-  if (type(gildeId) == 'function') then
-    gildeId(objekt)
-  else
-    client.send(gildeId..' '..objekt)
-  end
+  gilde:identifiziere(objekt)
 end
 
 
@@ -324,7 +308,8 @@ return {
   getPersistentTable = getPersistentTable,
   getCommonPersistentTable = getCommonPersistentTable,
   setCommonPersistentTableDirty = setCommonPersistentTableDirty,
-  gilde = gilde,
+  setGuild = function(g) gilde = g end,
+  gilde = function() return gilde end,
   statusConfig = statusConfig,
   statusUpdate = statusUpdate,
   getGildenStatusLine = getGildenStatusLine,

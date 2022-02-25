@@ -161,17 +161,8 @@ trigger[#trigger+1] = client.createRegexTrigger(
   {'g'}
 )
 
+
 client.disableTrigger(trigger)
-
-
--- ---------------------------------------------------------------------------
--- Standardfunktionen aller Gilden
-
-local function tanjian_info()
-  logger.info('Kami-Schaden  [#cs] : '..(get_kami_schaden() or ''))
-  logger.info('Akshara-Hdsch.[#akh]: '..(state().akshara_handschuhe or ''))
-  client.send('tanjiantest')
-end
 
 local function createFunctionMitGegner(cmd)
   return
@@ -182,9 +173,31 @@ end
 
 
 -- ---------------------------------------------------------------------------
--- module definition
+-- Guild class Tanjian
 
-local function enable()
+local class  = require 'class'
+local Guild  = require 'guild/guild'
+local Tanjian = class(Guild)
+
+function Tanjian:identifiziere(item)
+  client.send('koryoku '..item)
+end
+
+function Tanjian:schaetz(item)
+  client.send('koryoku '..item)
+end
+
+function Tanjian:info()
+  logger.info('Kami-Schaden  [#cs] : '..(get_kami_schaden() or ''))
+  logger.info('Akshara-Hdsch.[#akh]: '..(state().akshara_handschuhe or ''))
+  client.send('tanjiantest')
+end
+
+function Tanjian:entsorgeLeiche()
+  client.send('entsorge leiche')
+end
+
+function Tanjian:enable()
   -- Standardfunktionen ------------------------------------------------------
   base.addResetHook(
     function()
@@ -195,10 +208,6 @@ local function enable()
     end
   )
   base.statusConfig(tanjianStatusConf)
-  base.gilde.info = tanjian_info
-  base.gilde.schaetz = 'koryoku'
-  base.gilde.identifiziere = 'koryoku'
-  base.gilde.entsorgeLeiche = 'entsorge leiche'
 
   -- Trigger -----------------------------------------------------------------
   client.enableTrigger(trigger)
@@ -234,6 +243,4 @@ local function enable()
 end
 
 
-return {
-  enable = enable
-}
+return Tanjian

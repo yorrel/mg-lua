@@ -160,20 +160,19 @@ client.disableTrigger(trigger)
 
 
 -- ---------------------------------------------------------------------------
--- Standardfunktionen aller Gilden
+-- Guild class Dunkelelfen
 
-local function info()
+local class  = require 'class'
+local Guild  = require 'guild/guild'
+local Dunkelelfen = class(Guild)
+
+function Dunkelelfen:info()
   logger.info('Verkleiden    [#kvw]: '..(verkleidenWaffe() or ''))
 end
 
-
--- ---------------------------------------------------------------------------
--- module definition
-
-local function enable()
+function Dunkelelfen:enable()
   -- Standardfunktionen ------------------------------------------------------
   base.statusConfig(statusConf)
-  base.gilde.info = info
   base.addResetHook(resetVerkleidenWaffe)
 
   -- Trigger -----------------------------------------------------------------
@@ -221,6 +220,4 @@ local function enable()
 end
 
 
-return {
-  enable = enable
-}
+return Dunkelelfen
