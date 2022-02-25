@@ -205,7 +205,7 @@ local aliases = {}
 
 -- Standard-Alias mit n Pflicht-Parametern erzeugen.
 -- Bei Eingabe von #name p1 ... pn wird f(p1,...,pn) aufgerufen.
-local function createStandardAlias(name, n, f)
+local function createStandardAlias(name, n, f, tabCompletion)
   if n > 6 then
     logger.severe('Alias mit '..n..' Parametern werden nicht unterstuetzt!')
   end
@@ -227,6 +227,21 @@ local function createStandardAlias(name, n, f)
     end
   aliases[name..'~'..n] = callback
   alias.add(re, callback)
+  if tabCompletion then
+    blight.on_complete(
+      function(input)
+        if input:sub(1, #name+1) == '#'..name then
+          local arg = string.sub(input, string.len(name)+1)
+          local t = {}
+          for _,v in ipairs(tabCompletion(arg)) do
+            table.insert(t, '#'..name..' '..v)
+          end
+          return t
+        end
+        return {}
+      end
+    )
+  end
 end
 
 local function executeStandardAlias(alias, param)
