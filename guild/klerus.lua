@@ -192,9 +192,6 @@ local function enable()
   client.createStandardAlias('we',  1, kleriker_weihe)
 end
 
-local function enable()
-end
-
 
 return {
   enable = enable
