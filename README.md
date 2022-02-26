@@ -45,6 +45,7 @@ Funktionsumfang:
 Nutzung:
 - #go nachWegpunkt (von einem bekannten Wegpunkt aus)
 - #go vonWegpunkt nachWegpunkt
+- #go -x (bricht aktuellen Weg ab)
 
 Wege müssen programmiert werden. Mit wegdef wird ein einfacher Weg definiert. Mit wegdefx
 wird auch der Rückweg definiert (wenn denn alle einzelnen Schritte umdrehbar sind). Mit

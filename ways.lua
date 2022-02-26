@@ -452,6 +452,10 @@ end
 
 -- args: <wegpunkt>
 local function geheZuWegpunkt(dest)
+  if dest == '-x' then
+    brecheAktuellenWegAb()
+    return
+  end
   local aktWp = ermittleAktuellenStartpunkt()
   if aktWp == nil then
     logger.severe('Aktueller Wegpunkt nicht bekannt!')
@@ -512,7 +516,6 @@ keymap.M_7 = geheZurueck
 client.createStandardAlias('go',  2, geheVonZuWegpunkt)
 client.createStandardAlias('go',  1, geheZuWegpunkt)
 client.createStandardAlias('go',  0, continue)
-client.createStandardAlias('gox', 0, brecheAktuellenWegAb)
 
 
 -- ---------------------------------------------------------------------------
