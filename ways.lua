@@ -176,14 +176,6 @@ local function istWegBeendet()
     and (active_path == nil or #active_path == 0)
 end
 
-local function brecheAktuellenWegAb(silent)
-  active_wp_list = {}
-  active_path = {}
-  if not silent then
-    logger.info('Aktuellen Weg abgebrochen!')
-  end
-end
-
 
 -- ---------------------------------------------------------------------------
 -- Implementierung der Engine
@@ -223,6 +215,15 @@ local function defHandler(id, f)
 end
 
 local continue_stutter_step
+
+local function brecheAktuellenWegAb(silent)
+  active_wp_list = {}
+  active_path = {}
+  continue_stutter_step = nil
+  if not silent then
+    logger.info('Aktuellen Weg abgebrochen!')
+  end
+end
 
 -- Macro fuer einen einzelnen Schritt
 -- args: Einzelschritt aus Wegliste, dieser wird verarbeitet
