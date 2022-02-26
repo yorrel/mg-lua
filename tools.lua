@@ -65,6 +65,23 @@ local function listRemove(list, element)
   end
 end
 
+local function listMap(list, f)
+  local result = {}
+  for _,v in ipairs(list) do
+    table.insert(result, f(v))
+  end
+  return result
+end
+
+local function listFilter(list, f)
+  local result = {}
+  for _,v in ipairs(list) do
+    if f(v) then
+      table.insert(result, v)
+    end
+  end
+  return result
+end
 
 -- ---------------------------------------------------------------------------
 -- div utilities
@@ -136,6 +153,8 @@ return {
   listJoin = listJoin,
   listContains = listContains,
   listRemove = listRemove,
+  listMap = listMap,
+  listFilter = listFilter,
   splitString = splitString,
   splitWords = splitWords,
   capitalize = capitalize,

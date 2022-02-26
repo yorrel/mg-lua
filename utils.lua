@@ -4,6 +4,7 @@ local inv    = require 'inventory'
 local room   = require 'room'
 local ME     = require 'gmcp-data'
 local kampf  = require 'battle'
+local tools  = require 'tools'
 
 local logger = client.createLogger('utils')
 
@@ -154,12 +155,65 @@ local function withLine(cmd)
     end
 end
 
+local directions = {
+  n = 'norden',
+  s = 'sueden',
+  o = 'osten',
+  w = 'westen'
+}
+
+local directions_variants = {
+  'oben',
+  'unten'
+}
+
+local function getDirectionFor(dir)
+  local dirLong = directions[dir]
+  if dirLong == nil then
+    return nil
+  end
+  local dirShort = dirLong:sub(1, -3)
+  local exits = tools.listMap(
+    ME.raum_exits,
+    function(s) return s:lower() end
+  )
+  -- exit exists
+  if tools.listContains(exits, dirLong) then
+    return dir
+  end
+  -- exactly one variant exists
+  local dirVariants = tools.listMap(
+    directions_variants,
+    function(s) return dirShort..s end
+  )
+  local exitsDirVariants = tools.listFilter(
+    dirVariants,
+    function(s) return tools.listContains(exits, s) end
+  )
+  if #exitsDirVariants == 1 then
+    return exitsDirVariants[1]
+  end
+  -- exactly one exit containing dir exists
+  local exitsWithDir = tools.listFilter(
+    exits,
+    function(s) return s:find(dirShort) end
+  )
+  if #exitsWithDir == 1 then
+    logger.info(dir..' -> '..exitsWithDir[1])
+    return exitsWithDir[1]
+  end
+  return nil
+end
+
 local function move(dir)
   return
     function()
       client.line()
-      local raum_dir = room.getCmdForExit(dir)
-      client.send(raum_dir or dir)
+      client.send(
+        room.getCmdForExit(dir)
+        or getDirectionFor(dir)
+        or dir
+      )
     end
 end
 
