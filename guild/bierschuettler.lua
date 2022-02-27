@@ -1,6 +1,5 @@
 -- Bierschuettler
 
-local class  = require 'class'
 local base   = require 'base'
 local inv    = require 'inventory'
 local pub    = require 'pub'
@@ -42,7 +41,8 @@ client.disableTrigger(trigger)
 -- ---------------------------------------------------------------------------
 -- Guild class Bierschuettler
 
-local Guild  = require 'guild/guild'
+local class  = require 'utils.class'
+local Guild  = require 'guild.guild'
 local Bierschuettler = class(Guild)
 
 function Bierschuettler:identifiziere(item)

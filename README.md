@@ -89,10 +89,7 @@ Nutzung:
 # Client-Unterstützung
 
 Alle Skripte nutzen client-spezifische Funktionen nur über einen Adapter. Dieser wird
-global unter `client` erwartet.
-
-- lua/blight/blight-adapter.lua
-- lua/tf/tf-adapter.lua zusammen mit tf/*.tf
+global unter `client` erwartet und von `main.lua` geladen.
 
 API des Adapters:
 

@@ -4,7 +4,7 @@ local inv    = require 'inventory'
 local room   = require 'room'
 local ME     = require 'gmcp-data'
 local kampf  = require 'battle'
-local tools  = require 'tools'
+local tools  = require 'utils.tools'
 
 local logger = client.createLogger('utils')
 

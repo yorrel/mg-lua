@@ -7,8 +7,8 @@ local kampf  = require 'battle'
 -- ---------------------------------------------------------------------------
 -- Guild class Katzenkrieger
 
-local class  = require 'class'
-local Guild  = require 'guild/guild'
+local class  = require 'utils.class'
+local Guild  = require 'guild.guild'
 local Katzenkrieger = class(Guild)
 
 function Katzenkrieger:enable()

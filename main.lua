@@ -1,7 +1,7 @@
 
 if blight then
-  client = require 'blight.blight-adapter'
-  require 'blight.blight-specific'
+  client = require 'client.blight.blight-adapter'
+  require 'client.blight.blight-specific'
 else
   local mg_lua_dir = os.getenv('MG_LUA_DIR')
   package.path = package.path..';'..mg_lua_dir..'/?.lua'
@@ -9,8 +9,8 @@ else
   if mg_custom_dir ~= nil then
     package.path = package.path..';'..mg_custom_dir..'/?.lua'
   end
-  client = require 'tf.tf-adapter'
-  require 'tf.tf-specific'
+  client = require 'client.tf.tf-adapter'
+  require 'client.tf.tf-specific'
 end
 
 local base = require 'base'
@@ -25,8 +25,8 @@ require 'reduce'
 require 'report'
 require 'room'
 require 'timer'
-require 'tools'
-require 'utils'
+require 'utils.tools'
+require 'utils-mg'
 require 'ways'
 require 'ways-extensions'
 
@@ -48,7 +48,7 @@ local allGuilds = {
 local guildClasses = {}
 
 for _,guild in ipairs(allGuilds) do
-  guildClasses[guild] = require('guild/'..guild)
+  guildClasses[guild] = require('guild.'..guild)
 end
 
 local logger = client.createLogger('base')

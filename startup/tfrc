@@ -6,6 +6,7 @@
 ;;
 ;; ausserdem in ~/.tfrc aufnehmen
 
-/eval /load %{MG_LUA_DIR}/tf/init.tf
+/eval /load %{MG_LUA_DIR}/client/tf/init.tf
+/eval /loadlua %{MG_LUA_DIR}/main.lua
 /eval /loadlua %{MG_LUA_CUSTOM_DIR}/main.lua
 /eval /loadlua %{MG_LUA_CUSTOM_DIR}/worlds_mg.lua

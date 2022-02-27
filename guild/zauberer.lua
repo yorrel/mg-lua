@@ -181,8 +181,8 @@ end
 -- ---------------------------------------------------------------------------
 -- Guild class Zauberer
 
-local class  = require 'class'
-local Guild  = require 'guild/guild'
+local class  = require 'utils.class'
+local Guild  = require 'guild.guild'
 local Zauberer = class(Guild)
 
 function Zauberer:info()

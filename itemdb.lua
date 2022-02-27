@@ -1,6 +1,6 @@
 -- db der bekannten items
 
-local tools = require 'tools'
+local tools = require 'utils.tools'
 
 local logger = client.createLogger('itemdb')
 

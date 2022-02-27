@@ -12,7 +12,7 @@
 
 local base   = require 'base'
 local ME     = require 'gmcp-data'
-local tools  = require 'tools'
+local tools  = require 'utils.tools'
 
 local keymap = base.keymap
 local logger = client.createLogger('room')

@@ -7,8 +7,8 @@ local kampf  = require 'battle'
 -- ---------------------------------------------------------------------------
 -- Guild class Urukhai
 
-local class  = require 'class'
-local Guild  = require 'guild/guild'
+local class  = require 'utils.class'
+local Guild  = require 'guild.guild'
 local Urukhai = class(Guild)
 
 function Urukhai:enable()

@@ -162,8 +162,8 @@ client.disableTrigger(trigger)
 -- ---------------------------------------------------------------------------
 -- Guild class Dunkelelfen
 
-local class  = require 'class'
-local Guild  = require 'guild/guild'
+local class  = require 'utils.class'
+local Guild  = require 'guild.guild'
 local Dunkelelfen = class(Guild)
 
 function Dunkelelfen:info()

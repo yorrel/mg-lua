@@ -5,7 +5,7 @@
 local base   = require 'base'
 local itemdb = require 'itemdb'
 local inv    = require 'inventory'
-local tools  = require 'tools'
+local tools  = require 'utils.tools'
 local timer  = require 'timer'
 local kampf  = require 'battle'
 
@@ -572,8 +572,8 @@ end
 -- ---------------------------------------------------------------------------
 -- Guild class Chaos
 
-local class  = require 'class'
-local Guild  = require 'guild/guild'
+local class  = require 'utils.class'
+local Guild  = require 'guild.guild'
 local Chaos = class(Guild)
 
 function Chaos:identifiziere(item)

@@ -2,9 +2,9 @@ local mg_lua_dir = os.getenv('MG_LUA_DIR')
 package.path = package.path..';'..mg_lua_dir..'/lua/?.lua'
 
 
-local tools = require 'tools'
+local tools  = require 'utils.tools'
 local json   = require 'json'
-local regex   = require 'rex_pcre2'
+local regex  = require 'rex_pcre2'
 
 
 -- ---------------------------------------------------------------------------

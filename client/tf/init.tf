@@ -12,7 +12,7 @@
 
 
 ;; Laden weiterer tf-Skripte
-/def kload = /load %{MG_LUA_DIR}/tf/%{*}
+/def kload = /load %{MG_LUA_DIR}/client/tf/%{*}
 
 
 ;; ---------------------------------------------------------------------------
@@ -55,13 +55,6 @@
 ;; regex+substr: %{*} hat die Form ID#full_text# (ohne fuehrende Spaces)
 /def callluaTriggerCmd = \
   /calllua _executeTriggerCmd #%{P1}#%{P2}#%{P3}#%{P4}#%{P5}#%{P6}#%{P7}#%{P8}#%{*}#
-
-
-;; ---------------------------------------------------------------------------
-;; lua starten
-
-/echo >>> starte lua...
-/eval /loadlua %{MG_LUA_DIR}/main.lua
 
 
 ;; ---------------------------------------------------------------------------

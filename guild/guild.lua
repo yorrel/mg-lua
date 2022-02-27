@@ -1,4 +1,4 @@
-local class = require 'class'
+local class = require 'utils.class'
 
 local Guild = class(function(a,name)
     a.name = name

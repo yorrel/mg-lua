@@ -256,8 +256,8 @@ end
 -- ---------------------------------------------------------------------------
 -- Guild class Kaempfer
 
-local class  = require 'class'
-local Guild  = require 'guild/guild'
+local class  = require 'utils.class'
+local Guild  = require 'guild.guild'
 local Kaempfer = class(Guild)
 
 function Kaempfer:info()

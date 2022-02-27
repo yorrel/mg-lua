@@ -1,7 +1,7 @@
 -- Basisfunktionalitaeten
 
 -- die event listener von gmcp-data muessen zuerst geladen werden
-local tools  = require 'tools'
+local tools  = require 'utils.tools'
 local json   = client.json
 
 local logger = client.createLogger('base')

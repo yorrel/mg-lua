@@ -175,8 +175,8 @@ end
 -- ---------------------------------------------------------------------------
 -- Guild class Tanjian
 
-local class  = require 'class'
-local Guild  = require 'guild/guild'
+local class  = require 'utils.class'
+local Guild  = require 'guild.guild'
 local Tanjian = class(Guild)
 
 function Tanjian:identifiziere(item)

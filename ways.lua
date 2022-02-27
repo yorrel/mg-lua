@@ -1,7 +1,7 @@
 -- Wegesystem
 
 local base   = require 'base'
-local tools  = require 'tools'
+local tools  = require 'utils.tools'
 local room   = require 'room'
 local ME     = require 'gmcp-data'
 
