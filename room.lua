@@ -311,7 +311,7 @@ end
 
 local function addRoomInfoHelper(msg, key, data)
   if data ~= nil then
-    if string.len(msg) > 0 then msg = msg .. ' / ' end
+    if msg:len() > 0 then msg = msg .. ' / ' end
     local data_string = data
     if type(data) == 'table' then
       data_string = tools.listJoin(data, '; ')
@@ -333,7 +333,7 @@ local function roomInfo()
   msg = addRoomInfoHelper(msg, 'K', getRaumKraut())
   msg = addRoomInfoHelper(msg, 'N', getRaumNotizen())
   msg = addRoomInfoHelper(msg, 'E', getRaumAusgaengeView())
-  if string.len(msg) > 0 then
+  if msg:len() > 0 then
     logger.info(msg)
   end
 end

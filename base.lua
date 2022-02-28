@@ -18,7 +18,7 @@ local function eval(cmd)
   elseif type(cmd) == 'function' then
     cmd()
   elseif type(cmd) == 'string' then
-    if string.sub(cmd,1,1) == '#' then
+    if cmd:sub(1,1) == '#' then
       cmd = string.gsub(cmd, ' ', ',')
       client.executeStandardAlias(cmd)
     else
@@ -237,8 +237,8 @@ local function statusConfig(conf)
     '({%a+:%d+})',
     function(attr)
       local index = string.find(attr, ':')
-      local key = string.sub(attr, 2, index-1)
-      local length = string.sub(attr, index+1, string.len(attr)-1)
+      local key = attr:sub(2, index-1)
+      local length = attr:sub(index+1, -2)
       attribute_length[key] = tonumber(length)
       return '{'..key..'}'
     end

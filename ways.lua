@@ -110,7 +110,7 @@ local function erzeugeInversenPfad(path)
   while (#steps > 0) do
     local step = steps[1]
     table.remove(steps,1)
-    if string.sub(step,1,8) == '/dopath ' then
+    if step:sub(1,8) == '/dopath ' then
       local cmd,step = dopathExpansion(step)
       while (cmd ~= nil) do
         local reverse_cmd = reverse_steps[cmd]
@@ -153,7 +153,7 @@ end
 local function ermittleAktuellenStartpunkt()
   local wp = room.getRaumWegpunkt()
   if wp ~= nil and string.match(wp, '.*_p[1-9]$') then
-    wp = string.sub(wp, 1, string.len(wp)-3)
+    wp = wp:sub(1, -4)
   end
   return wp
 end
@@ -236,7 +236,7 @@ local function geheSchritt(step)
   end
 
   -- Schritte mit /dopath: ersetzt /dopath ... durch Liste von cmds
-  if string.sub(step,1,8) == '/dopath ' then
+  if step:sub(1,8) == '/dopath ' then
     local step,rest = dopathExpansion(step)
     if step ~= nil then
       table.insert(active_path, 1, rest)
@@ -244,7 +244,7 @@ local function geheSchritt(step)
     end
 
   -- process trigger commands
-  elseif string.sub(step,1,1) == '/' then
+  elseif step:sub(1,1) == '/' then
     local cmd,arg = string.match(step,'(/[a-z_]+) *(.*)')
     local handler = wege_handler[cmd]
     if type(handler) ~= 'function' then

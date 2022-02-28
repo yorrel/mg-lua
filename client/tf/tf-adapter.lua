@@ -97,7 +97,7 @@ end
 local debug_on = false
 
 local function createLogger(komponente)
-  local kmp = '['..string.sub(komponente,1,5)..']'
+  local kmp = '['..komponente:sub(1,5)..']'
   kmp = kmp..string.sub('     ',1,7-#kmp)
   return {
     debug =
@@ -149,16 +149,16 @@ end
 -- Aufruf aus tf
 -- args: aliasName[,params]
 function callLuaAlias(args)
-  local endOfName = string.len(args)
+  local endOfName = args:len()
   local firstKomma = string.find(args,',')
   if firstKomma ~= nil then
     endOfName = firstKomma-1
   end
-  local aliasName = string.sub(args,1,endOfName)
+  local aliasName = args:sub(1,endOfName)
   local paramString = nil
   local params = {}
   if firstKomma ~= nil then
-    paramString = string.sub(args, firstKomma+1)
+    paramString = args:sub(firstKomma+1)
     params = tools.splitString(paramString, ' ')
     logger.debug('Parameter vorhanden, Roh-String \''..paramString..'\' zerlegt in List der Laenge '..#params)
   end
@@ -189,8 +189,8 @@ function callLuaAlias(args)
 end
 
 local function executeStandardAlias(alias, param)
-  if string.sub(alias,1,1) == '#' then
-    callLuaAlias(string.sub(alias,2))
+  if alias:sub(1,1) == '#' then
+    callLuaAlias(alias:sub(2))
   else
     callLuaAlias(alias)
   end
@@ -304,7 +304,7 @@ end
 -- args hat die Form: #match1#match2#...#match8#id#line#
 function _executeTriggerCmd(args)
   logger.debug('aufruf trigger mit args: \''..args..'\'')
-  args = string.sub(args,2,#args-2)
+  args = args:sub(2,-3)
   local matches = tools.splitString(args, '#')
   local id = matches[9]
   local line = matches[10]
@@ -406,11 +406,11 @@ local function matcheText(t, pattern, f)
 end
 
 local function improveAnchors(pattern)
-  if string.sub(pattern,1,2) == '(^' then
-    pattern = '^('..string.sub(pattern,3)
+  if pattern:sub(1,2) == '(^' then
+    pattern = '^('..pattern:sub(3)
   end
-  if string.sub(pattern,-2) == '$)' then
-    pattern = string.sub(pattern,1,-3)..')$'
+  if pattern:sub(-2) == '$)' then
+    pattern = pattern:sub(1,-3)..')$'
   end
   return pattern
 end

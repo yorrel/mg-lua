@@ -13,8 +13,8 @@ local logger = client.createLogger('tf')
 -- wird direkt von tf aufgerufen
 function parseGmcpData(data)
   local endOfName = string.find(data, ' ')
-  local name = string.sub(data, 1, endOfName-1)
-  local jsonString = string.sub(data, endOfName)
+  local name = data:sub(1, endOfName-1)
+  local jsonString = data:sub(endOfName)
   local acceptFunc = ME.accept[name]
   if acceptFunc ~= nil then
     acceptFunc(jsonString)

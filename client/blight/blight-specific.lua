@@ -110,7 +110,7 @@ local function updateRoomStatus()
     paraString = 'P'..para
   end
   local wp = room.getRaumWegpunkt()
-  wp = wp and '('..string.sub(wp, 1, 11)..')' or ' '
+  wp = wp and '('..wp:sub(1, 11)..')' or ' '
   local raum_kurz = string.sub(ME.raum_kurz or '', 1, 24)
   local region = string.sub(ME.raum_region or '', 1, 9)
   roomStatus = string.format(
@@ -144,7 +144,7 @@ local vsfrFormat = C_BOLD..C_BBLUE..'VS:%3d  FR:%-20s'..C_RESET
 local function updateVSFR()
   local vs = state().vorsicht or 0
   local flucht = tools.listJoin(room.getEscape(), ';') or state().fluchtrichtung or ''
-  flucht = string.sub(flucht, 1, 24)
+  flucht = flucht:sub(1, 24)
   vsfrStatus = string.format(vsfrFormat, vs, flucht)
   status_update2()
 end

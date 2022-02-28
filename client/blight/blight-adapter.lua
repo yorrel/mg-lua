@@ -28,8 +28,8 @@ end
 
 local all_keys = 'abcdefghijklmnopqrstuvwxyz'
 local i = 1
-while i <= string.len(all_keys) do
-  local k = string.sub(all_keys, i, i)
+while i <= all_keys:len() do
+  local k = all_keys:sub(i, i)
   key('C-'..k)
   key('M-'..k)
   i = i + 1
@@ -137,7 +137,7 @@ end
 local debug_on = false
 
 local function createLogger(komponente)
-  local kmp = '['..string.sub(komponente,1,5)..']'
+  local kmp = '['..komponente:sub(1,5)..']'
   kmp = kmp..string.sub('     ',1,7-#kmp)
   return {
     debug =
@@ -231,7 +231,7 @@ local function createStandardAlias(name, n, f, tabCompletion)
     blight.on_complete(
       function(input)
         if input:sub(1, #name+1) == '#'..name then
-          local arg = string.sub(input, string.len(name)+1)
+          local arg = input:sub(name:len()+1)
           local t = {}
           for _,v in ipairs(tabCompletion(arg)) do
             table.insert(t, '#'..name..' '..v)
@@ -245,8 +245,8 @@ local function createStandardAlias(name, n, f, tabCompletion)
 end
 
 local function executeStandardAlias(alias, param)
-  if string.sub(alias,1,1) == '#' then
-    alias = string.sub(alias,2)
+  if alias:sub(1,1) == '#' then
+    alias = alias:sub(2)
   end
   param = param or ''
   local t = tools.splitString(param, ' ')

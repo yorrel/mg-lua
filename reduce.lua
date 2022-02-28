@@ -234,7 +234,7 @@ end
 local function pad(s, length)
   s = s or ''
   local s_without_color = string.gsub(s, '<[^>]*>', '')
-  local n = length - string.len(s_without_color)
+  local n = length - s_without_color:len()
   return string.rep('_', n)
 end
 
@@ -270,7 +270,7 @@ local function re_genitiv_loeschen(name)
     return 'Du'
   end
   if string.match(name, '.*s$') or string.match(name, '.*\'$') then
-    name = string.sub(name, 1, string.len(name)-1)
+    name = name:sub(1, -2)
   end
   return name
 end
@@ -290,16 +290,16 @@ local function re_namekuerzen(name, length)
       return name
     end
   end
-  if string.len(name) > length+3 then
+  if name:len() > length+3 then
     local teilname_gross = string.match(name, '[A-Z].*')
     if teilname_gross ~= nil then
       name = teilname_gross
     end
-    if string.len(name) > length+3 then
+    if name:len() > length+3 then
       name = re_leerzeichenkuerzen(name)
     end
   end
-  return string.sub(name, 1, length)
+  return name:sub(1, length)
 end
 
 local function abwehr(typ, is_eigener_schaden)
@@ -317,9 +317,9 @@ end
 local function getAbwehr(is_eigener_schaden)
   local mitte = ''
   if RE_KARATE > 0 then
-    local abwehr_karate = string.sub(RE_KARATE_ABWEHR,1,5)
-    local abwehr_karate = string.sub(abwehr_karate,1,5) .. '<reset>'
-      .. string.rep('*', 5-string.len(abwehr_karate))
+    local abwehr_karate = RE_KARATE_ABWEHR:sub(1,5)
+    local abwehr_karate = abwehr_karate:sub(1,5) .. '<reset>'
+      .. string.rep('*', 5-abwehr_karate:len())
     local color = ''
     if RE_KARATE == 4 then
       color = '<magenta>'  -- eigene Abwehr gelungen
@@ -351,10 +351,10 @@ local function getSchaden()
     RE_SCHADEN_OUT = RE_SCHADENLISTE[RE_SCHADEN]
     local RE_SUBSCHADEN = ''
     if RE_SCHADEN_SUB < 0 then
-      RE_SCHADEN_OUT = string.sub(RE_SCHADEN_OUT,1,7)
+      RE_SCHADEN_OUT = RE_SCHADEN_OUT:sub(1,7)
       RE_SUBSCHADEN = '(-)'
     elseif RE_SCHADEN_SUB > 0 then
-      RE_SCHADEN_OUT = string.sub(RE_SCHADEN_OUT,1,7)
+      RE_SCHADEN_OUT = RE_SCHADEN_OUT:sub(1,7)
       RE_SUBSCHADEN = '(+)'
     end
     RE_SCHADEN_OUT = RE_SCHADEN_OUT..RE_SUBSCHADEN
@@ -533,7 +533,7 @@ local function re_karatekuerzen(technik)
   abkuerzung = ''
   local index = 0
   while index ~= nil do
-    abkuerzung = abkuerzung .. string.sub(technik, index+1, index+1)
+    abkuerzung = abkuerzung .. technik:sub(index+1, index+1)
     index = string.find(technik, '-', index+1)
   end
   KARATE_ABKUERZUNGEN[technik] = abkuerzung
@@ -599,7 +599,7 @@ local RE_STATUS_ATTR = {
 local function substring_ab(s, pattern)
   local index = string.find(s, pattern)
   if index then
-    return string.sub(s, index+2)
+    return s:sub(index+2)
   else
     return s
   end
@@ -615,7 +615,7 @@ local function ermittle_status(status_meldung)
   for pattern,status in pairs(status_map) do
     local index = string.find(status_meldung, pattern, 1, true)
     if index then
-      local name = string.sub(status_meldung, 1, index-2)
+      local name = status_meldung:sub(1, index-2)
       ausgabe_status(name, status)
       return
     end
@@ -3426,11 +3426,11 @@ local function match_normalen_angriff(m)
     else
       RE_WAFFE_P = '(-)'
     end
-    RE_WAFFE = string.sub(RE_WAFFE, string.find(RE_WAFFE, 'misslungenen ')+13)
+    RE_WAFFE = RE_WAFFE:sub(string.find(RE_WAFFE, 'misslungenen ')+13)
     RE_ART = 'Karate'
     RE_ART_COLOR = '<yellow>'
     RE_WAFFE = re_karatekuerzen(RE_WAFFE)
-    RE_WAFFE = RE_WAFFE .. string.rep('_', 5-string.len(RE_WAFFE)) .. RE_WAFFE_P
+    RE_WAFFE = RE_WAFFE .. string.rep('_', 5-RE_WAFFE:len()) .. RE_WAFFE_P
   elseif string.match(RE_WAFFE, 'gelungenen ') then
     local RE_WAFFE_P
     if string.match(RE_WAFFE, 'sehr ') then
@@ -3438,11 +3438,11 @@ local function match_normalen_angriff(m)
     else
       RE_WAFFE_P = '(+)'
     end
-    RE_WAFFE = string.sub(RE_WAFFE, string.find(RE_WAFFE, 'gelungenen ')+11)
+    RE_WAFFE = RE_WAFFE:sub(string.find(RE_WAFFE, 'gelungenen ')+11)
     RE_ART = 'Karate'
     RE_ART_COLOR = '<yellow>'
     RE_WAFFE = re_karatekuerzen(RE_WAFFE)
-    RE_WAFFE = RE_WAFFE .. string.rep('_', 5-string.len(RE_WAFFE)) .. RE_WAFFE_P
+    RE_WAFFE = RE_WAFFE .. string.rep('_', 5-RE_WAFFE:len()) .. RE_WAFFE_P
   else
     local m_kombi = rex.match(RE_WAFFE, RE_REGEXP_KARATEKOMBI) or {}
     local k1 = m_kombi[1]
@@ -3488,7 +3488,7 @@ local function suche_name_und_schaden_extra(rest)
     or string.find(rest, ' in kleine Stueckchen')
     or string.find(rest, ' zu Brei')
   if i ~= nil then
-    return string.sub(rest, 1, i-1), string.sub(rest, i+1)
+    return rest:sub(1, i-1), rest:sub(i+1)
   end
   return rest, ''
 end

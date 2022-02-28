@@ -39,8 +39,8 @@ local function listJoin(t, separator)
   for _,e in ipairs(t) do
     s = s .. e .. separator
   end
-  if string.len(s) > 0 then
-    s = string.sub(s, 1, string.len(s)-string.len(separator))
+  if s:len() > 0 then
+    s = s:sub(1, -separator:len()-1)
   end
   return s
 end
@@ -92,13 +92,13 @@ local function splitString(s, pattern)
   while true do
     local next = string.find(s, pattern, i, true)
     if next == nil then
-      if i <= string.len(s) then
-        t[#t+1] = string.sub(s,i)
+      if i <= s:len() then
+        t[#t+1] = s:sub(i)
       end
       return t
     else
-      t[#t+1] = string.sub(s,i,next-1)
-      i = next + string.len(pattern)
+      t[#t+1] = s:sub(i,next-1)
+      i = next + pattern:len()
     end
   end
 end
@@ -108,22 +108,22 @@ local function splitWords(s)
   local t = {}
   local i = 1
   local start = nil
-  while i <= string.len(s) do
-    local c = string.sub(s,i,i)
+  while i <= s:len() do
+    local c = s:sub(i,i)
     if start == nil then
       if c ~= ' ' then
         start = i
       end
     else
       if c == ' ' then
-        t[#t+1] = string.sub(s,start,i-1)
+        t[#t+1] = s:sub(start,i-1)
         start = nil
       end
     end
     i = i + 1
   end
   if start ~= nil then
-    t[#t+1] = string.sub(s,start)
+    t[#t+1] = s:sub(start)
   end
   return t
 end

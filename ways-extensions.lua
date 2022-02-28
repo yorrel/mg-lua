@@ -80,8 +80,8 @@ client.disableTrigger(defaultBlockerTrigger)
 local function handle_blocker(npc)
   local msgSeparator = string.find(npc,'/')
   if msgSeparator ~= nil then
-    local notPresentMsg = string.sub(npc,msgSeparator+1)
-    npc = string.sub(npc,1,msgSeparator-1)
+    local notPresentMsg = npc:sub(msgSeparator+1)
+    npc = npc:sub(1,msgSeparator-1)
     aktiverSpezialTrigger = spezialBlockerTrigger[notPresentMsg]
     if aktiverSpezialTrigger == nil then
       spezialBlockerTrigger[notPresentMsg] = client.createSubstrTrigger(
