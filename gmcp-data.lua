@@ -64,6 +64,18 @@ local function process_MG_room_info(s)
   base.raiseEvent('gmcp.MG.room.info')
 end
 
+local function room_unknown()
+  ME.raum_kurz     = 'unbekannt'
+  ME.raum_region   = ''
+  ME.raum_id       = ''
+  ME.raum_exits    = {}
+  ME.raum_id_short = ''
+  base.raiseEvent('gmcp.MG.room.info')
+end
+
+client.createRegexTrigger('^Finsternis.$', room_unknown)
+
+
 ME.accept = {}
 ME.accept['MG.char.base'] = process_MG_char_base
 ME.accept['MG.char.info'] = process_MG_char_info
