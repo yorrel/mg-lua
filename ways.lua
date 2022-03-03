@@ -402,7 +402,7 @@ local function geheWeg(wp_list)
     active_path = {}
     return
   end
-  
+  base.raiseEvent('ways.start.way')
   logger.info('Ermittelter Weg: '..table.concat(active_wp_list, ','))
   
   continue()
