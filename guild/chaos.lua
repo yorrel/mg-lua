@@ -8,6 +8,7 @@ local inv    = require 'inventory'
 local tools  = require 'utils.tools'
 local timer  = require 'timer'
 local kampf  = require 'battle'
+local gmcp   = require 'gmcp-data'
 
 local logger = client.createLogger('chaos')
 local trigger = {}
@@ -603,7 +604,11 @@ function Chaos:enable()
   keymap.S_F6 = chaos_friss_leiche
   keymap.F7   = createFunctionMitGegner('verbanne')
   keymap.S_F7 = 'dimensionsriss'
-  keymap.F8   = createFunctionMitGegner('chaosball')
+  keymap.F8   =
+    function()
+      local cmd = gmcp.guild_level >= 5 and 'chaosball' or 'chaoswolke'
+      client.send(cmd..' '..kampf.getGegner())
+    end
   keymap.S_F8 = chaoskontrolle_auto
 
   keymap.M_k = chaos_unt_daemon
