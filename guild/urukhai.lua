@@ -23,7 +23,9 @@ function Urukhai:enable()
   keymap.M_x = 'wirbelwind'
 
   -- Aliases -----------------------------------------------------------------
-  client.createStandardAlias('skills', 0, 'tm hragznor faehigkeiten')
+  client.createStandardAlias(
+    'skills', 0, function() client.send('tm hragznor faehigkeiten') end
+  )
 end
 
 return Urukhai

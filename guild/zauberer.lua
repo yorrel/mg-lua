@@ -234,8 +234,12 @@ function Zauberer:enable()
   keymap.M_z = 'erschoepfung'
 
   -- Aliases -----------------------------------------------------------------
-  client.createStandardAlias('skills', 0, 'tm llystrathe faehigkeiten')
-  client.createStandardAlias('quests', 0, 'tm llystrathe anforderungen')
+  client.createStandardAlias(
+    'skills', 0, function() client.send('tm llystrathe faehigkeiten') end
+  )
+  client.createStandardAlias(
+    'quests', 0, function() client.send('tm llystrathe anforderungen') end
+  )
 
   client.createStandardAlias('ruesten', 0, ruesten)
   client.createStandardAlias('cs', 1, verletzeSchaden)

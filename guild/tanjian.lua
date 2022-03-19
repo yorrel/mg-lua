@@ -236,7 +236,9 @@ function Tanjian:enable()
       client.send('tm siamil faehigkeiten', 'tm siamil waffenfaehigkeiten')
     end
   )
-  client.createStandardAlias('quests', 0, 'tm siamil aufgaben')
+  client.createStandardAlias(
+    'quests', 0, function() client.send('tm siamil aufgaben') end
+  )
   client.createStandardAlias('cs', 1, tanjian_set_kamischaden)
   client.createStandardAlias('cs', 0, tanjian_set_kamischaden)
   client.createStandardAlias('akh', 1, setAksharaHandschuhe)

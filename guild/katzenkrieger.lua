@@ -19,7 +19,9 @@ function Katzenkrieger:enable()
   keymap.M_l = 'nachtsicht'
 
   -- Aliases -----------------------------------------------------------------
-  client.createStandardAlias('skills', 0, 'tm xelonir faehigkeiten')
+  client.createStandardAlias(
+    'skills', 0, function() client.send('tm xelonir faehigkeiten') end
+  )
 end
 
 

@@ -629,9 +629,12 @@ function Chaos:enable()
   keymap.M_e = function() chaos_druest('-') end
 
   -- Aliases -----------------------------------------------------------------
-  client.createStandardAlias('skills', 0, 'tm kruuolq faehigkeiten')
-  client.createStandardAlias('quests', 0, 'tm hutschat aufgaben')
-
+  client.createStandardAlias(
+    'skills', 0, function() client.send('tm kruuolq faehigkeiten') end
+  )
+  client.createStandardAlias(
+    'quests', 0, function() client.send('tm hutschat aufgaben') end
+  )
   client.createStandardAlias('cs', 1, chaos_chaosschaden)
   client.createStandardAlias('ck', 2, chaos_chaoskontrolle)
 
