@@ -103,7 +103,6 @@ local function splitString(s, pattern)
   end
 end
 
-
 local function splitWords(s)
   local t = {}
   local i = 1
@@ -132,6 +131,20 @@ local function capitalize(word)
   return word:sub(1,1):upper()..word:sub(2)
 end
 
+local function parseArgs(s)
+  local words = splitWords(s)
+  local flags = {}
+  local args = {}
+  for _,w in ipairs(words) do
+    if w:sub(1,1) == '-' then
+      table.insert(flags, w)
+    else
+      table.insert(args, w)
+    end
+  end
+  return args, flags
+end
+
 local function varargCallClosure(f)
   return
     function(args)
@@ -158,5 +171,6 @@ return {
   splitString = splitString,
   splitWords = splitWords,
   capitalize = capitalize,
+  parseArgs = parseArgs,
   varargCallClosure = varargCallClosure,
 }
