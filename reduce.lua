@@ -2269,7 +2269,7 @@ createRegexTrigger(
     RE_TAN_OPFER = m[3]
   end,
   PRIO_AKT-1,   -- Prio < als verletze feuer
-  {}
+  {'F'}
 )
 local function setzeKamiOpferAngreifer()
   RE_ANGREIFER = '???'
