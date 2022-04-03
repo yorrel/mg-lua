@@ -81,8 +81,29 @@ client.useKeyListener(dokey)
 
 local global_save_dir = MG_LUA_SAVE_DIR or os.getenv('MG_LUA_SAVE_DIR')
 
+local saveFiles = {}
+
+-- contentProvider - returns String, nil means "do not save"
+local function registerSaveFile(filename, contentProvider)
+  saveFiles[filename] = contentProvider
+end
+
+local function saveChar()
+  for name,contentProvider in pairs(saveFiles) do
+    local content = contentProvider()
+    if content ~= nil then
+      local filename = global_save_dir..'/'..name
+      local f = io.open(filename, 'w')
+      f:write(content)
+      f:close()
+      logger.info('file written: ' .. filename)
+    end
+  end
+end
+
 local char_state
 local common_state
+local common_dirty_flag = false
 
 local function readFile(filename)
   local f = assert(io.open(filename, 'r'))
@@ -108,6 +129,26 @@ local function readCommonState()
   logger.info('Gemeinsame Daten von \''..filename..'\' eingelesen')
 end
 
+local function registerStandardSaveFiles(name)
+  registerSaveFile(
+    name..'.json',
+    function()
+      return json.encode(char_state)
+    end
+  )
+  registerSaveFile(
+    'common.json',
+    function()
+      if common_dirty_flag then
+        common_dirty_flag = false
+        return json.encode(common_state)
+      else
+        return nil
+      end
+    end
+  )
+end
+
 local character_name
 local character_guild
 local character_wizlevel
@@ -131,6 +172,7 @@ local function initCharakter(name, guild, race, wizlevel)
   pcall(readCharState, name)
   -- Charakter-uebergreifende Daten einlesen
   pcall(readCommonState)
+  registerStandardSaveFiles(name)
   raiseEvent('base.char.init.done')
 end
 
@@ -147,27 +189,10 @@ local function getCommonPersistentTable(id)
   return common_state[id]
 end
 
-local dirtyflag = false
-
 local function setCommonPersistentTableDirty()
-  dirtyflag = true
+  common_dirty_flag = true
 end
 
-local function saveTable(filename, tableObject)
-  local encoded = json.encode(tableObject)
-  local f = io.open(filename, 'w')
-  f:write(encoded)
-  f:close()
-  logger.info('file written: ' .. filename)
-end
-
-local function saveChar()
-  saveTable(global_save_dir..'/'..character_name..'.json', char_state)
-  if dirtyflag then
-    dirtyflag = false
-    saveTable(global_save_dir..'/common.json', common_state)
-  end
-end
 
 local function save_and_sleep()
   saveChar()
@@ -308,6 +333,7 @@ return {
   getPersistentTable = getPersistentTable,
   getCommonPersistentTable = getCommonPersistentTable,
   setCommonPersistentTableDirty = setCommonPersistentTableDirty,
+  registerSaveFile = registerSaveFile,
   setGuild = function(g) gilde = g end,
   gilde = function() return gilde end,
   statusConfig = statusConfig,
