@@ -261,5 +261,5 @@ keymap.C_y = toggle_ohrenschuetzer
 client.createStandardAlias('haus', 1, betrete_haus)
 client.createStandardAlias('scoreamu', 0, toggleScoreamu)
 
-client.createStandardAlias('rk', 0, kerbholz)
-client.createStandardAlias('rk', 1, kerbholz)
+client.createStandardAlias('kerbe', 0, kerbholz)
+client.createStandardAlias('kerbe', 1, kerbholz)

@@ -88,16 +88,40 @@ local function registerSaveFile(filename, contentProvider)
   saveFiles[filename] = contentProvider
 end
 
-local function saveChar()
+local function readSaveFile(filename)
+  local fullname = global_save_dir..'/'..filename
+  local f = io.open(fullname, 'r')
+  if f then
+    local content = f:read('*all')
+    f:close()
+    return content
+  end
+  return nil
+end
+
+local function save(filename, contentProvider)
+  local content = contentProvider()
+  if content ~= nil then
+    local fullname = global_save_dir..'/'..filename
+    local f = io.open(fullname, 'w')
+    f:write(content)
+    f:close()
+    logger.info('file written: ' .. fullname)
+  end
+end
+
+local function persistSaveFile(filename)
   for name,contentProvider in pairs(saveFiles) do
-    local content = contentProvider()
-    if content ~= nil then
-      local filename = global_save_dir..'/'..name
-      local f = io.open(filename, 'w')
-      f:write(content)
-      f:close()
-      logger.info('file written: ' .. filename)
+    if name == filename then
+      save(name, contentProvider)
+      return
     end
+  end
+end
+
+local function saveChar()
+  for filename,contentProvider in pairs(saveFiles) do
+    save(filename, contentProvider)
   end
 end
 
@@ -334,6 +358,8 @@ return {
   getCommonPersistentTable = getCommonPersistentTable,
   setCommonPersistentTableDirty = setCommonPersistentTableDirty,
   registerSaveFile = registerSaveFile,
+  readSaveFile = readSaveFile,
+  persistSaveFile = persistSaveFile,
   setGuild = function(g) gilde = g end,
   gilde = function() return gilde end,
   statusConfig = statusConfig,
