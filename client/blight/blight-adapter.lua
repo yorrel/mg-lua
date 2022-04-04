@@ -357,7 +357,7 @@ local function matcheText(t, pattern, f)
     f(matches)
   else
     logger.debug('multi line trigger: \'' .. t .. '\' passt nicht zu Pattern \'' .. pattern2log(pattern) .. '\'')
-    echo(t)
+    blight.output(t)
   end
 end
 
