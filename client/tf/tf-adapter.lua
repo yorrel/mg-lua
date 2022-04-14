@@ -189,10 +189,11 @@ function callLuaAlias(args)
 end
 
 local function executeStandardAlias(alias, param)
+  local paramSuffix = param and ','..param or ''
   if alias:sub(1,1) == '#' then
-    callLuaAlias(alias:sub(2))
+    callLuaAlias(alias:sub(2)..paramSuffix)
   else
-    callLuaAlias(alias)
+    callLuaAlias(alias..paramSuffix)
   end
 end
 

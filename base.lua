@@ -19,8 +19,10 @@ local function eval(cmd)
     cmd()
   elseif type(cmd) == 'string' then
     if cmd:sub(1,1) == '#' then
-      cmd = string.gsub(cmd, ' ', ',')
-      client.executeStandardAlias(cmd)
+      local index = cmd:find(' ')
+      local aliasName = index and cmd:sub(1, index-1) or cmd
+      local paramString = index and cmd:sub(index+1)
+      client.executeStandardAlias(aliasName, paramString)
     else
       client.send(cmd)
     end
