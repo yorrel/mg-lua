@@ -231,12 +231,12 @@ local function createStandardAlias(name, n, f, tabCompletion)
     blight.on_complete(
       function(input)
         if input:sub(1, #name+1) == '#'..name then
-          local arg = input:sub(name:len()+1)
+          local arg = input:sub(name:len()+3)
           local t = {}
           for _,v in ipairs(tabCompletion(arg)) do
             table.insert(t, '#'..name..' '..v)
           end
-          return t
+          return t, true
         end
         return {}
       end

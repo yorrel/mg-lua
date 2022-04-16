@@ -1,14 +1,15 @@
 -- room.lua - raumspezifische Funktionen
 --
--- #rid      : ID für Raum global setzen
--- #ralias   : Char-spezifischen Raum-Alias setzen
--- #rnote    : In-Game-Notizen
--- #rnpc     : Default-NPC
--- #rkraut   : pflueckbares Kraut (M-6)
--- #raktion1 : Aktion (M-5)
--- #raktion2 : Aktion (M-6)
--- #rexit    : Kommando statt o/w/n/s/ob/u
--- #rfr      : raumspezifische Fluchtrichtung
+-- #room sub_cmd
+--   id <id>          : globale ID für Raum setzen
+--   alias <name>     : Char-spezifischen Raum-Alias setzen
+--   note <text>      : In-Game-Notizen
+--   npc <name>       : Default-NPC
+--   kraut <name>     : pflueckbares Kraut (M-6)
+--   action1 <cmd>    : Aktion (M-5)
+--   action2 <cmd>    : Aktion (M-6)
+--   exit <dir> <cmd> : Kommando statt o/w/n/s/ob/u
+--   fr <cmd>         : raumspezifische Fluchtrichtung
 
 local base   = require 'base'
 local ME     = require 'gmcp-data'
@@ -36,14 +37,6 @@ local function setRoomProperty(key, val)
   base.setCommonPersistentTableDirty()
 end
 
-local function addToRoomProperty(key, val)
-  local props = getOrCreateRoomProperties()
-  props[key] = props[key] or {}
-  local values = props[key]
-  values[#values+1] = val
-  base.setCommonPersistentTableDirty()
-end
-
 local function getRoomProperty(key)
   local state = base.getCommonPersistentTable('room')
   local props = state[ME.raum_id]
@@ -61,40 +54,51 @@ local function charSpecificState()
   return base.getPersistentTable('room')
 end
 
-local function definiereRaumAlias(alias, original)
+local function setPersonalRoomAlias(alias, original)
   wp_alias[alias] = original
 end
 
-local function getPersonalWpAliases()
+local function getPersonalRoomAliases()
   charSpecificState().aliases = charSpecificState().aliases or {}
   return charSpecificState().aliases
 end
 
-local function getRaumWegpunkt()
+local function getRoomName()
   return getRoomProperty('wp')
 end
 
-local function createPersoenlichenWegpunktAlias(alias)
-  local wp = getRaumWegpunkt()
-  if wp == nil then
-    logger.severe('Aktueller Wegpunkt nicht bekannt!')
+local function roomAlias(args, flags)
+  local alias = args[1]
+  if not alias then
+    logger.severe('Aliasname muss angegeben werden!')
     return
   end
   local wegesystemState = charSpecificState()
   wegesystemState.aliases = wegesystemState.aliases or {}
+  if flags[1] == '-rm' then
+    logger.info('Entferne persoenlichen Alias '..alias)
+    wegesystemState.aliases[alias] = nil
+    return
+  end
+  local wp = getRoomName()
+  if wp == nil then
+    logger.severe('Aktueller Wegpunkt nicht bekannt!')
+    return
+  end
   wegesystemState.aliases[alias] = wp
   logger.info('Setze persoenlichen Alias '..alias..' fuer Wegpunkt '..wp)
 end
 
+
 -- sorgt fuer alias-Ersetzung, alle von aussen kommenden Wegpunkte muessen ueber
 -- diese Funktion ersetzt werden
 local function getWegpunktNachAliasErsetzung(wp)
-  local personalAliases = getPersonalWpAliases()
+  local personalAliases = getPersonalRoomAliases()
   wp = personalAliases[wp] or wp
   return wp_alias[wp] or wp
 end
 
-local function getRaumIdZuWP(wegpunkt)
+local function getRoomIdForRoomName(wegpunkt)
   local state = base.getCommonPersistentTable('room')
   for raumId,props in pairs(state) do
     if wegpunkt == props['wp'] then
@@ -105,7 +109,7 @@ local function getRaumIdZuWP(wegpunkt)
 end
 
 -- Speichert die RaumId fuer den angegebenen Wegpunkt
-local function speichereRaumId(wp)
+local function saveRoomId(wp)
   if wp == nil then
     logger.info('Loesche Wegpunkt fuer aktuellen Raum!')
     setRoomProperty('wp', nil)
@@ -113,8 +117,8 @@ local function speichereRaumId(wp)
   end
   -- RaumID zum Wegpunkt speichern
   local raumId = ME.raum_id
-  local alterRaumName = getRaumWegpunkt()
-  local vorhandenerRaumMitWp = getRaumIdZuWP(wp)
+  local alterRaumName = getRoomName()
+  local vorhandenerRaumMitWp = getRoomIdForRoomName(wp)
   if raumId == vorhandenerRaumMitWp then
     logger.info('Wegpunkt '..wp..' ist bereits fuer diesen Raum gesetzt.')
     return
@@ -133,11 +137,20 @@ local function speichereRaumId(wp)
   end
 end
 
+local function roomID(args, flags)
+  if flags[1] == '-rm' then
+    saveRoomId(nil)
+  else
+    saveRoomId(args[1])
+  end
+end
+
+
 -- ausloggen der RaumIds aktivieren
-local boolean logRaumIdsAktiv = false
-local function logRaumIds()
-  if not logRaumIdsAktiv then
-    logRaumIdsAktiv = true
+local boolean logRoomIdsAktiv = false
+local function logRoomIds()
+  if not logRoomIdsAktiv then
+    logRoomIdsAktiv = true
     base.registerEventHandler(
       'gmcp.MG.room.info',
       function()
@@ -147,65 +160,69 @@ local function logRaumIds()
   end
 end
 
-
--- ---------------------------------------------------------------------------
--- raumabhaengiger Standard-NPC
-
-local function setzeRaumNPC(npc)
-  setRoomProperty('npc', npc)
+local function args2lines(args)
+  local s = tools.listJoin(args, ' ')
+  local lines = tools.splitString(s, ';')
+  return lines
 end
 
-local function getRaumNPC()
+
+-- ---------------------------------------------------------------------------
+-- room default npc
+
+local function getRoomNPC()
   return getRoomProperty('npc')
 end
 
-
--- ---------------------------------------------------------------------------
--- raumabhaengiges Label
-
-local function setzeRaumLabel(label)
-  setRoomProperty('label', label)
+local function roomNPC(args, flags)
+  if flags[1] == '-rm' then
+    setRoomProperty('npc', nil)
+  else
+    local npc = tools.listJoin(args, ' ')
+    setRoomProperty('npc', npc)
+  end
 end
 
-local function getRaumLabel()
+
+-- ---------------------------------------------------------------------------
+-- room label
+
+local function getRoomLabel()
   return getRoomProperty('label')
 end
 
+local function roomLabel(args, flags)
+  if flags[1] == '-rm' then
+    setRoomProperty('label', nil)
+  else
+    setRoomProperty('label', args[1])
+  end
+end
+
 
 -- ---------------------------------------------------------------------------
--- raumabhaengige Fluchtrichtung
+-- room specific escape cmd
 
-local function ergaenzeFlucht(flucht)
-  addToRoomProperty('fr', flucht)
-end
-
-local function loescheFlucht()
-  setRoomProperty('fr', nil)
-end
-
-local function getRaumFlucht()
+local function getRoomEscape()
   return getRoomProperty('fr')
 end
 
+local function roomEscape(args, flags)
+  if flags[1] == '-rm' then
+    setRoomProperty('fr', nil)
+  else
+    local lines = args2lines(args)
+    if #lines > 0 then
+      setRoomProperty('fr', lines)
+    end
+  end
+end
+
 
 -- ---------------------------------------------------------------------------
--- raumabhaengige Ausgaenge
+-- room specific exits
 
-local function setzeRaumSpezifischenAusgang(dir, cmd)
-  local exitTable = getRoomProperty('e')
-  if exitTable == nil then
-    exitTable = {}
-    setRoomProperty('e', exitTable)
-  end
-  exitTable[dir] = cmd
-  base.setCommonPersistentTableDirty()
-end
-
-local function loescheRaumSpezifischeAusgaenge()
-  setRoomProperty('e', nil)
-end
-
-local function getRaumspezifischenAusgang(dir)
+local function getRoomSpecificExit(dir)
   local exitTable = getRoomProperty('e')
   if exitTable ~= nil then
     return exitTable[dir]
@@ -214,7 +231,7 @@ local function getRaumspezifischenAusgang(dir)
   end
 end
 
-local function getRaumAusgaengeView()
+local function getRoomExitsView()
   local exitTable = getRoomProperty('e')
   if exitTable == nil then
     return nil
@@ -229,80 +246,92 @@ local function getRaumAusgaengeView()
   return v
 end
 
+local function roomExit(args, flags)
+  if flags[1] == '-rm' then
+    setRoomProperty('e', nil)
+  else
+    local exitTable = getRoomProperty('e')
+    if exitTable == nil then
+      exitTable = {}
+      setRoomProperty('e', exitTable)
+    end
+    local dir = table.remove(args, 1)
+    local cmd = tools.listJoin(args, ' ')
+    exitTable[dir] = cmd
+    base.setCommonPersistentTableDirty()
+  end
+end
+
 
 -- ---------------------------------------------------------------------------
--- in-game Raumnotizen
+-- in-game room notes
 
-local function ergaenzeRaumNotiz(notiz)
-  addToRoomProperty('n', notiz)
-end
-
-local function loescheRaumNotizen()
-  setRoomProperty('n', nil)
-end
-
-local function getRaumNotizen()
+local function getRoomNotes()
   return getRoomProperty('n')
 end
 
+local function roomNotes(args, flags)
+  if flags[1] == '-rm' then
+    setRoomProperty('n', nil)
+  else
+    local lines = args2lines(args)
+    if #lines > 0 then
+      setRoomProperty('n', lines)
+    end
+  end
+end
+
 
 -- ---------------------------------------------------------------------------
--- in-game Raumaktionen
+-- room specific actions
 
-local function execAktionen(aktionen)
-  if aktionen ~= nil then
-    base.eval(aktionen)
+local function getRoomActions(nr)
+  return getRoomProperty(nr)
+end
+
+local function execActions(nr)
+  local actions = getRoomProperty(nr)
+  if actions ~= nil then
+    base.eval(actions)
   else
     logger.info('Keine Raumaktion fuer diesen Raum vorhanden.')
   end
 end
 
-local function ergaenzeRaumAktion1(aktion)
-  addToRoomProperty('a1', aktion)
+local function executeRoomActions1()
+  execActions('a1')
 end
 
-local function loescheRaumAktionen1()
-  setRoomProperty('a1', nil)
+local function executeRoomActions2()
+  execActions('a2')
 end
 
-local function getRaumAktionen1()
-  return getRoomProperty('a1')
-end
-
-local function executeRaumAktionen1()
-  execAktionen(getRaumAktionen1())
-end
-
-local function ergaenzeRaumAktion2(aktion)
-  addToRoomProperty('a2', aktion)
-end
-
-local function loescheRaumAktionen2()
-  setRoomProperty('a2', nil)
-end
-
-local function getRaumAktionen2()
-  return getRoomProperty('a2')
-end
-
-local function executeRaumAktionen2()
-  execAktionen(getRaumAktionen2())
+local function roomActions(nr, args, flags)
+  if flags[1] == '-rm' then
+    setRoomProperty(nr, nil)
+  else
+    local lines = args2lines(args)
+    if #lines > 0 then
+      setRoomProperty(nr, lines)
+    end
+  end
 end
 
 
 -- ---------------------------------------------------------------------------
--- in-game Kraeuter-Infos
+-- room herb
 
-local function setzeRaumKraut(kraut)
-  setRoomProperty('k', kraut)
-end
-
-local function loescheRaumKraut()
-  setRoomProperty('k', nil)
-end
-
-local function getRaumKraut()
+local function getRoomHerb()
   return getRoomProperty('k')
+end
+
+local function roomHerb(args, flags)
+  if flags[1] == '-rm' then
+    setRoomProperty('k', nil)
+  else
+    local kraut = tools.listJoin(args, ' ')
+    setRoomProperty('k', kraut)
+  end
 end
 
 
@@ -323,16 +352,16 @@ end
 
 local function roomInfo()
   local msg = ''
-  local wp = getRaumWegpunkt()
+  local wp = getRoomName()
   if wp ~= nil then
     msg = 'WP \''..wp..'\''
   end
-  msg = addRoomInfoHelper(msg, 'FR', getRaumFlucht())
-  msg = addRoomInfoHelper(msg, 'A1', getRaumAktionen1())
-  msg = addRoomInfoHelper(msg, 'A2', getRaumAktionen2())
-  msg = addRoomInfoHelper(msg, 'K', getRaumKraut())
-  msg = addRoomInfoHelper(msg, 'N', getRaumNotizen())
-  msg = addRoomInfoHelper(msg, 'E', getRaumAusgaengeView())
+  msg = addRoomInfoHelper(msg, 'FR', getRoomEscape())
+  msg = addRoomInfoHelper(msg, 'A1', getRoomActions('a1'))
+  msg = addRoomInfoHelper(msg, 'A2', getRoomActions('a2'))
+  msg = addRoomInfoHelper(msg, 'K', getRoomHerb())
+  msg = addRoomInfoHelper(msg, 'N', getRoomNotes())
+  msg = addRoomInfoHelper(msg, 'E', getRoomExitsView())
   if msg:len() > 0 then
     logger.info(msg)
   end
@@ -343,12 +372,12 @@ base.registerEventHandler('gmcp.MG.room.info', roomInfo)
 
 local function showStatus()
   local msg = 'Region: '..ME.raum_region..' / Raum-Id: '..(ME.raum_id_short or '')
-  local label = getRaumLabel()
+  local label = getRoomLabel()
   if label ~= nil then
     msg = msg..' / Label: '..label
   end
   logger.info(msg)
-  local notizen = getRaumNotizen()
+  local notizen = getRoomNotes()
   if notizen ~= nil then
     local notizenMsg = addRoomInfoHelper('', 'Notiz', notizen)
     logger.info(notizenMsg)
@@ -357,45 +386,52 @@ end
 
 
 -- ---------------------------------------------------------------------------
--- Tastenbelegung
+-- Keys
 
-keymap.M_5 = executeRaumAktionen1
-keymap.M_6 = executeRaumAktionen2
+keymap.M_5 = executeRoomActions1
+keymap.M_6 = executeRoomActions2
 
 
 -- ---------------------------------------------------------------------------
 -- Aliases
 
--- Raum-ID setzen
-client.createStandardAlias('rid', 1, speichereRaumId)
-client.createStandardAlias('ridrm', 0, speichereRaumId)
--- persoenlichen Raum-Alias für aktuellen Raum setzen
-client.createStandardAlias('ralias', 1, createPersoenlichenWegpunktAlias)
--- raumspezifische Ausgaenge
-client.createStandardAlias('rexit', 2, setzeRaumSpezifischenAusgang)
-client.createStandardAlias('rexitrm', 0, loescheRaumSpezifischeAusgaenge)
--- raumspezifische Fluchtrichtung
-client.createStandardAlias('rfr', 1, ergaenzeFlucht)
-client.createStandardAlias('rfrrm', 0, loescheFlucht)
--- NPC
-client.createStandardAlias('rnpc', 1, setzeRaumNPC)
-client.createStandardAlias('rnpcrm', 0, setzeRaumNPC)
--- Label
-client.createStandardAlias('rlabel', 1, setzeRaumLabel)
-client.createStandardAlias('rlabelrm', 0, setzeRaumLabel)
--- Raumnotiz
-client.createStandardAlias('rnote', 1, ergaenzeRaumNotiz)
-client.createStandardAlias('rnoterm', 0, loescheRaumNotizen)
--- Raumaktion
-client.createStandardAlias('raktion1', 1, ergaenzeRaumAktion1)
-client.createStandardAlias('raktion1rm', 0, loescheRaumAktionen1)
-client.createStandardAlias('raktion2', 1, ergaenzeRaumAktion2)
-client.createStandardAlias('raktion2rm', 0, loescheRaumAktionen2)
--- Raum-Kraut
-client.createStandardAlias('rkraut', 1, setzeRaumKraut)
-client.createStandardAlias('rkrautrm', 0, loescheRaumKraut)
--- RaumIds ausloggen
-client.createStandardAlias('rlog', 0, logRaumIds)
+local room_sub_cmds = {
+  id = roomID,
+  alias = roomAlias,
+  exit = roomExit,
+  fr = roomEscape,
+  npc = roomNPC,
+  label = roomLabel,
+  note = roomNotes,
+  action1 = function(args, flags) roomActions('a1', args, flags) end,
+  action2 = function(args, flags) roomActions('a2', args, flags) end,
+  kraut = roomHerb,
+  log = logRoomIds,
+}
+
+client.createStandardAlias(
+  'room',
+  1,
+  function(s)
+    local args, flags = tools.parseArgs(s)
+    local cmd = table.remove(args, 1)
+    local sub_cmd = room_sub_cmds[cmd]
+    if not sub_cmd then
+      logger.severe('unbekanntes Subcommand '..cmd)
+      return
+    end
+    sub_cmd(args, flags)
+  end,
+  function(arg)
+    local cmds = {}
+    for cmd,_ in pairs(room_sub_cmds) do
+      if cmd:sub(1,#arg) == arg then
+        table.insert(cmds, cmd)
+      end
+    end
+    return cmds
+  end
+)
 
 
 -- ---------------------------------------------------------------------------
@@ -403,15 +439,15 @@ client.createStandardAlias('rlog', 0, logRaumIds)
 
 return {
   getWegpunktNachAliasErsetzung = getWegpunktNachAliasErsetzung,
-  getRaumWegpunkt = getRaumWegpunkt,
-  getRaumIdZuWP = getRaumIdZuWP,
-  roomAlias = definiereRaumAlias,
-  execAction1 = executeRaumAktionen1,
-  execAction2 = executeRaumAktionen2,
-  getCmdForExit = getRaumspezifischenAusgang,
-  getEscape = getRaumFlucht,
-  getHerb = getRaumKraut,
-  getLabel = getRaumLabel,
-  getNPC = getRaumNPC,
+  getRaumWegpunkt = getRoomName,
+  getRaumIdZuWP = getRoomIdForRoomName,
+  roomAlias = setPersonalRoomAlias,
+  execAction1 = executeRoomActions1,
+  execAction2 = executeRoomActions2,
+  getCmdForExit = getRoomSpecificExit,
+  getEscape = getRoomEscape,
+  getHerb = getRoomHerb,
+  getLabel = getRoomLabel,
+  getNPC = getRoomNPC,
   showStatus = showStatus,
 }
