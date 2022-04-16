@@ -14,6 +14,7 @@
 
 local base   = require 'base'
 local itemdb = require 'itemdb'
+local tools  = require 'utils.tools'
 
 local logger = client.createLogger('inv')
 local keymap = base.keymap
@@ -460,6 +461,13 @@ local function wechselWaffe(id, optHaende)
   end
 end
 
+local function wechselWaffeUI(s)
+  local args, flags = tools.parseArgs(s)
+  local haende = flags[1] == '-1' and 1 or flags[1] == '-2' and 2
+  local waffe = tools.listJoin(args, ' ')
+  wechselWaffe(waffe, haende)
+end
+
 -- wechsel ruestungsteil
 -- args: typ new_val
 local function wechselItem(typ, item)
@@ -554,6 +562,21 @@ local function itemConfigShow()
   logger.info('Kampfkonfiguration-Keys: '..table.concat(state().configkeys, ','))
 end
 
+local function itemConfigUI(s)
+  local args, flags = tools.parseArgs(s)
+  local configName = tools.listJoin(args, ' ')
+  local cmd = flags[1]
+  if not cmd then
+    itemConfigSwitch(configName)
+  elseif cmd == '-w' then
+    itemConfigSave(configName)
+  elseif cmd == '-rm' then
+    itemConfigRemove(configName)
+  elseif cmd == '-l' then
+    itemConfigShow()
+  end
+end
+
 
 -- ---------------------------------------------------------------------------
 -- Zugriff auf aktuelle Items
@@ -626,10 +649,8 @@ keymap.F11 = haendeToggle
 -- Aliases
 
 -- waffe und ruestungen
-client.createStandardAlias('ww', 1,  wechselWaffe)
+client.createStandardAlias('ww', 1,  wechselWaffeUI)
 client.createStandardAlias('ww', 0,  wechselWaffe)
-client.createStandardAlias('ww1', 1, function(id) wechselWaffe(id, 1) end)
-client.createStandardAlias('ww2', 1, function(id) wechselWaffe(id, 2) end)
 client.createStandardAlias('ws', 1,  wechselSchild)
 client.createStandardAlias('ws', 0,  entferneSchild)
 client.createStandardAlias('w', 2,  wechselItem)
@@ -637,10 +658,7 @@ client.createStandardAlias('w', 1,  wechselItem)
 client.createStandardAlias('wi', 0,  printItemStatus)
 
 -- konfigs
-client.createStandardAlias('k', 1,   itemConfigSwitch)
-client.createStandardAlias('kw', 1,  itemConfigSave)
-client.createStandardAlias('krm', 1, itemConfigRemove)
-client.createStandardAlias('kl', 0,  itemConfigShow)
+client.createStandardAlias('k', 1, itemConfigUI)
 
 -- container-handling
 client.createStandardAlias('c', 3,   moveItem)
