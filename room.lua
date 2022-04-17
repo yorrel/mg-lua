@@ -70,7 +70,7 @@ end
 local function roomAlias(args, flags)
   local alias = args[1]
   if not alias then
-    logger.severe('Aliasname muss angegeben werden!')
+    logger.error('Aliasname muss angegeben werden!')
     return
   end
   local wegesystemState = charSpecificState()
@@ -82,7 +82,7 @@ local function roomAlias(args, flags)
   end
   local wp = getRoomName()
   if wp == nil then
-    logger.severe('Aktueller Wegpunkt nicht bekannt!')
+    logger.error('Aktueller Wegpunkt nicht bekannt!')
     return
   end
   wegesystemState.aliases[alias] = wp
@@ -417,7 +417,7 @@ client.createStandardAlias(
     local cmd = table.remove(args, 1)
     local sub_cmd = room_sub_cmds[cmd]
     if not sub_cmd then
-      logger.severe('unbekanntes Subcommand '..cmd)
+      logger.error('unbekanntes Subcommand '..cmd)
       return
     end
     sub_cmd(args, flags)

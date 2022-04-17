@@ -8,28 +8,6 @@ function debugLevel(level)
   debug_level = level
 end
 
-local function debug(module, msg)
-  if debug_level <= 0 then
-    cecho('<grey>DEBUG '..module..' '..msg..'\n')
-  end
-end
-
-local function info(module, msg)
-  if debug_level <= 1 then
-    cecho('<cyan>>>>  '..module..' '..msg..'\n')
-  end
-end
-
-local function warn(module, msg)
-  if debug_level <= 2 then
-    cecho('<yellow>>>>  '..module..' '..msg..'\n')
-  end
-end
-
-local function severe(module, msg)
-  cecho('<red>>>> '..module..' '..msg..'\n')
-end
-
 local function cecho_tfcolors(msg)
   msg = string.gsub(tf_text, '@{n}', '<reset>')
   msg = string.gsub(tf_text, '@{Cbg([^}]*)}', '<:%1>')
@@ -45,10 +23,28 @@ local function createLogger(komponente)
   local kmp = '['..string.sub(komponente,1,5)..']'
   kmp = kmp..string.sub('     ',1,7-#kmp)
   return {
-    debug = function(msg) debug(kmp,msg) end,
-    info = function(msg) info(kmp,msg) end,
-    warn = function(msg) warn(kmp,msg) end,
-    severe = function(msg) severe(kmp,msg) end,
+    debug =
+      function(msg)
+        if debug_level <= 0 then
+          cecho('<grey>DEBUG '..kmp..' '..msg..'\n')
+        end
+      end,
+    info =
+      function(msg)
+        if debug_level <= 1 then
+          cecho('<cyan>>>>  '..kmp..' '..msg..'\n')
+        end
+      end,
+    warn =
+      function(msg)
+        if debug_level <= 2 then
+          cecho('<yellow>>>>  '..kmp..' '..msg..'\n')
+        end
+      end,
+    error =
+      function(msg)
+        cecho('<red>>>> '..kmp..' '..msg..'\n')
+      end
   }
 end
 
@@ -142,7 +138,7 @@ local function callStyleFunctions(style)
   for _,s in ipairs(style) do
     local f = styles[s]
     if f == nil then
-      logger.severe('Style \''..s..'\' kann nicht uebersetzt werden!')
+      logger.error('Style \''..s..'\' kann nicht uebersetzt werden!')
     else
       f()
     end

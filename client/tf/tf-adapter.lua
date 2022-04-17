@@ -115,7 +115,7 @@ local function createLogger(komponente)
       function(msg)
         tf_eval('/echo -aCbgyellow >>> '..kmp..' '..msg)
       end,
-    severe =
+    error =
       function(msg)
         tf_eval('/echo -aCbgred >>> '..kmp..' '..msg)
       end
@@ -180,12 +180,12 @@ function callLuaAlias(args)
       if i <= 4 then
         f(mergedParams[1], mergedParams[2], mergedParams[3], mergedParams[4])
       else
-        logger.severe('Alias mit '..i..' Parametern kann nicht aufgerufen werden!')
+        logger.error('Alias mit '..i..' Parametern kann nicht aufgerufen werden!')
       end
       return
     end
   end
-  logger.severe('Alias \''..aliasName..'\' nicht gefunden!')
+  logger.error('Alias \''..aliasName..'\' nicht gefunden!')
 end
 
 local function executeStandardAlias(alias, param)
@@ -257,7 +257,7 @@ local function getStyleSwitches(style)
     if switch ~= nil then
       switches = switches..' '..switch
     else
-      logger.severe('Style \''..s..'\' kann nicht uebersetzt werden!')
+      logger.error('Style \''..s..'\' kann nicht uebersetzt werden!')
     end
   end
   return switches

@@ -154,7 +154,7 @@ local function createLogger(komponente)
       function(msg)
         cecho('<bgyellow>>>> '..kmp..' '..msg..'<reset>')
       end,
-    severe =
+    error =
       function(msg)
         cecho('<bgred>>>> '..kmp..' '..msg..'<reset>')
       end
@@ -207,7 +207,7 @@ local aliases = {}
 -- Bei Eingabe von #name p1 ... pn wird f(p1,...,pn) aufgerufen.
 local function createStandardAlias(name, n, f, tabCompletion)
   if n > 6 then
-    logger.severe('Alias mit '..n..' Parametern werden nicht unterstuetzt!')
+    logger.error('Alias mit '..n..' Parametern werden nicht unterstuetzt!')
   end
   local re = '^#'..name
   for i=1,n-1 do re = re..'\\s+(\\S+)' end
@@ -256,7 +256,7 @@ local function executeStandardAlias(alias, param)
   if callback ~= nil then
     callback({nil, t[1], t[2], t[3], t[4], t[5], t[6]}, nil)
   else
-    logger.severe('Alias '..alias..' mit '..n..' Parametern nicht gefunden!')
+    logger.error('Alias '..alias..' mit '..n..' Parametern nicht gefunden!')
   end
 end
 

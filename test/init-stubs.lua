@@ -18,7 +18,7 @@ local function warn(komponente, msg)
   print("WARN  "..komponente.." "..msg)
 end
 
-local function severe(komponente, msg)
+local function error(komponente, msg)
   print("ERROR "..komponente.." "..msg)
 end
 
@@ -33,7 +33,7 @@ local function createLogger(komponente)
     debug = function(msg) debug(kmp,msg) end,
     info = function(msg) info(kmp,msg) end,
     warn = function(msg) warn(kmp,msg) end,
-    severe = function(msg) severe(kmp,msg) end,
+    error = function(msg) error(kmp,msg) end,
   }
 end
 

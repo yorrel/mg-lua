@@ -551,7 +551,7 @@ local function itemConfigSwitch(id)
       wechselItemFallsNoetig(typ, value)
     end
   else
-    logger.severe('Kampfkonfiguration '..id..' nicht vorhanden!')
+    logger.error('Kampfkonfiguration '..id..' nicht vorhanden!')
   end
 end
 

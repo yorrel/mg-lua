@@ -115,7 +115,7 @@ local function erzeugeInversenPfad(path)
       while (cmd ~= nil) do
         local reverse_cmd = reverse_steps[cmd]
         if reverse_cmd == nil then
-          logger.severe('step nicht invertierbar: '..cmd)
+          logger.error('step nicht invertierbar: '..cmd)
           return nil
         end
         table.insert(back, 1, reverse_cmd)
@@ -124,7 +124,7 @@ local function erzeugeInversenPfad(path)
     else
       local reverse_cmd = reverse_steps[step]
       if reverse_cmd == nil then
-        logger.severe('step nicht invertierbar: '..step)
+        logger.error('step nicht invertierbar: '..step)
         return nil
       end
       table.insert(back, 1, reverse_cmd)
@@ -139,7 +139,7 @@ local function definiereWegUndRueckweg(src, dest, path)
   definiereWeg(src, dest, path)
   local path_back = erzeugeInversenPfad(path)
   if path_back == nil then
-    logger.severe('path '..src..'-'..dest..' is not reversible!')
+    logger.error('path '..src..'-'..dest..' is not reversible!')
   else
     definiereWeg(dest, src, path_back)
   end
@@ -193,7 +193,7 @@ local function erzeugeNaechstenTeilweg(from)
       path = path()
     end
     if path == nil then
-      logger.severe('Weg \''.._ref..'\' unbekannt!')
+      logger.error('Weg \''.._ref..'\' unbekannt!')
       return false
     end
     active_path = tools.splitString(path, ';')
@@ -248,7 +248,7 @@ local function geheSchritt(step)
     local cmd,arg = string.match(step,'(/[a-z_]+) *(.*)')
     local handler = wege_handler[cmd]
     if type(handler) ~= 'function' then
-      logger.severe('Handler fehlt fuer: '..cmd)
+      logger.error('Handler fehlt fuer: '..cmd)
     else
       logger.debug('starte trigger typ \''..cmd..'\' mit arg: '..arg)
       if handler(arg) then
@@ -378,7 +378,7 @@ local function sucheWegUeberWegpunkte(wp_list)
     logger.debug('Wegsuche von '.._start..' nach '.._ziel)
     local teilweg = sucheWegpunktListeZwischen(_start, _ziel)
     if teilweg == nil then
-      logger.severe('Weg nicht gefunden (von \''.._start..'\' nach \''.._ziel..'\').')
+      logger.error('Weg nicht gefunden (von \''.._start..'\' nach \''.._ziel..'\').')
       return nil
     end
     tools.tableConcat(weg, teilweg)
@@ -398,7 +398,7 @@ local function geheWeg(wp_list)
   -- vollstaendige wp-liste erzeugen ausgehend von active_wp
   active_wp_list = sucheWegUeberWegpunkte(wp_list)
   if active_wp_list == nil then
-    logger.severe('Keinen Weg ueber Wegpunkte gefunden!')
+    logger.error('Keinen Weg ueber Wegpunkte gefunden!')
     active_path = {}
     return
   end
@@ -411,7 +411,7 @@ end
 -- args: src pfad_als_wp_liste
 local function geheWegpunkteAb(src, wp_list)
   if src == nil then
-    logger.severe('Fehlender Startpunkt, Abbruch!')
+    logger.error('Fehlender Startpunkt, Abbruch!')
     return
   end
   last_start_wp = src
@@ -426,7 +426,7 @@ end
 local function geheWegpunkte(wp_list)
   local aktWp = ermittleAktuellenStartpunkt()
   if aktWp == nil then
-    logger.severe('Aktueller Wegpunkt unbekannt, Abbruch!')
+    logger.error('Aktueller Wegpunkt unbekannt, Abbruch!')
     return
   end
   geheWegpunkteAb(aktWp, wp_list)
@@ -438,11 +438,11 @@ local function geheVonZuWegpunkt(src, dest)
     brecheAktuellenWegAb()
   end
   if src == nil then
-    logger.severe('Fehlender Startpunkt, Abbruch!')
+    logger.error('Fehlender Startpunkt, Abbruch!')
     return
   end
   if dest == nil then
-    logger.severe('Fehlendes Ziel, Abbruch!')
+    logger.error('Fehlendes Ziel, Abbruch!')
     return
   end
   logger.debug('gehe von '..src..' nach '..dest)
@@ -458,7 +458,7 @@ local function geheZuWegpunkt(dest)
   end
   local aktWp = ermittleAktuellenStartpunkt()
   if aktWp == nil then
-    logger.severe('Aktueller Wegpunkt nicht bekannt!')
+    logger.error('Aktueller Wegpunkt nicht bekannt!')
     return
   end
   geheVonZuWegpunkt(aktWp, dest)

@@ -51,7 +51,7 @@ local function raiseEvent(event)
     logger.debug('event handler aufrufen fuer event '..event)
     local ok, err = pcall(f)
     if not ok then
-      logger.severe('Fehler bei Aufruf eines Handlers von event '..event..': '..err)
+      logger.error('Fehler bei Aufruf eines Handlers von event '..event..': '..err)
     end
   end
 end

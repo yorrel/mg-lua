@@ -50,7 +50,7 @@ end
 -- Sonnenschutz
 local function autoSonnenschutz()
   if ME.lp <= 20 then
-    logger.severe('Sonnenschaden bei niedrigen LP -> Auto-Logout!')
+    logger.error('Sonnenschaden bei niedrigen LP -> Auto-Logout!')
     client.send('schlaf ein')
   else
     inv.doWithHands(1, 'schutz')

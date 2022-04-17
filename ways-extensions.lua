@@ -50,7 +50,7 @@ local defaultBlockerTrigger = {}
 defaultBlockerTrigger[#defaultBlockerTrigger+1] = client.createSubstrTrigger(
   'Du verwuschelst',
   function()
-    logger.severe('Blocker!  - '..lastBlocker)
+    logger.error('Blocker!  - '..lastBlocker)
     client.disableTrigger(defaultBlockerTrigger)
     if aktiverSpezialTrigger ~= nil then
       client.disableTrigger(aktiverSpezialTrigger)
