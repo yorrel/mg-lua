@@ -468,12 +468,6 @@ local function wechselWaffeUI(s)
   wechselWaffe(waffe, haende)
 end
 
--- wechsel ruestungsteil
--- args: typ new_val
-local function wechselItem(typ, item)
-  wechselItemFallsNoetig(typ, item, true)
-end
-
 
 -- ---------------------------------------------------------------------------
 -- Info
@@ -513,6 +507,21 @@ local function printItemStatus()
   end
   logger.info('  Item-Konfigs: '..table.concat(state().configkeys, ','))
   logger.info('  [#k waehlen / #wi diese Anzeige / #kl Konfigs zeigen]')
+end
+
+local function wechselItemUI(s)
+  local args, flags = tools.parseArgs(s)
+  if flags[1] == '-l' then
+    printItemStatus()
+  else
+    local typ = table.remove(args, 1) or ''
+    if not itemdb.typLangname(typ) then
+      logger.warn('Typ \''..typ..'\' unbekannt!')
+    else
+      local item = tools.listJoin(args, ' ')
+      wechselItemFallsNoetig(typ, item, true)
+    end
+  end
 end
 
 
@@ -653,9 +662,7 @@ client.createStandardAlias('ww', 1,  wechselWaffeUI)
 client.createStandardAlias('ww', 0,  wechselWaffe)
 client.createStandardAlias('ws', 1,  wechselSchild)
 client.createStandardAlias('ws', 0,  entferneSchild)
-client.createStandardAlias('w', 2,  wechselItem)
-client.createStandardAlias('w', 1,  wechselItem)
-client.createStandardAlias('wi', 0,  printItemStatus)
+client.createStandardAlias('w', 1,  wechselItemUI)
 
 -- konfigs
 client.createStandardAlias('k', 1, itemConfigUI)

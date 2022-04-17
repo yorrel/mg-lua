@@ -3,12 +3,19 @@
 ## inventory.lua
 
 Ausrüstung:
-- #ww id       - wechselt Waffe
+- #ww id       - wechselt Waffe; flags -1 und -2 für abweichend ein-/zweihändig
 - #ws id       - wechselt Schild
 - #w typ id    - wechselt Ausrüstung vom Typ typ in id
+- #w -l        - Liste aller aktuellen Items
 
-id kann dabei ein Kürzel aus der itemdb sein, ansonsten wird einfach die id als Name
-verwendet.
+Ausrüstung speichern:
+- #k -w id     - speichert aktuelle Ausrüstung unter dem Namen id
+- #k -rm id    - löscht Ausrüstungskonfiguration id
+- #k id        - wechselt auf Ausrüstungskonfiguration id
+- #k -l        - Liste alle Ausrüstungskonfigurationen
+
+id kann dabei ein Kürzel aus der itemdb sein, ansonsten wird einfach die id als
+Name verwendet.
 
 Container:
 - #ci id                - untersucht container
