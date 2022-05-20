@@ -307,11 +307,12 @@ local function abwehr(typ, is_eigener_schaden)
   if val == nil then
     return '*'
   end
-  local color = 'n'
   if is_eigener_schaden then
-    color = RE_ABWEHR_COLOR[typ] or 'n'
+    local color = RE_ABWEHR_COLOR[typ] or '<reset>'
+    return color..val..'<reset>'
+  else
+    return val
   end
-  return color..val..'<reset>'
 end
 
 local function getAbwehr(is_eigener_schaden)
