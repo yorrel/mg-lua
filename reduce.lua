@@ -3112,66 +3112,50 @@ createRegexTrigger(
 )
 
 -- Wurfsterne
-local wurfstern_schaden_trigger_id
+local wurfstern_dmg_trigger = {}
 local function wurfstern(m)
-  local schaden = m[3]
-  local opfer = m[4]
+  local schaden = m[1]
+  local schaden2 = m[2]
   artillerie('Wurfstern')
-  local RE_WSCHADEN_1 = m[5]
-  if m[2] ~= '' then
-    RE_ANGREIFER = m[2]
-  else
-    RE_ANGREIFER = m[1]
-  end
-  RE_OPFER = opfer
-  if string.match(RE_OPFER, ' Ohr') then
-    RE_OPFER = 'TODO: m.L?'
-  end
-  if RE_OPFER == 'Dich' or RE_OPFER == 'Deinem' or RE_OPFER == 'Dir'
-     or RE_OPFER == 'Dein' or RE_OPFER == 'Deiner' then
-    RE_OPFER = 'Dich'
-  end
-  if RE_ANGREIFER ~= 'Du' and RE_ANGREIFER ~= 'Dein'
-      and RE_ANGREIFER ~= 'Du wirfst den' and RE_ANGREIFER ~= 'Der' then
-    RE_ANGREIFER = re_genitiv_loeschen(RE_ANGREIFER)
-  else
-    RE_ANGREIFER = 'Du'
-  end
   if schaden == 'verfehlt' or schaden == 'meilenweit an' then
     RE_SCHADEN = 1
   elseif string.match(schaden, '^zischt ') then
-    RE_OPFER = re_genitiv_loeschen(RE_OPFER)
     RE_SCHADEN = 3
   elseif schaden == 'kratzt' then
     RE_SCHADEN = 5
   elseif string.match(schaden, '^triff.*t$') or schaden == 'verpasst' or schaden == 'schneidet' then
     RE_SCHADEN = 6
-  elseif RE_WSCHADEN_1 == 'Bein' then
-    RE_OPFER = re_genitiv_loeschen(RE_OPFER)
+  elseif schaden2 == 'Bein' then
     RE_SCHADEN = 7
   elseif schaden == 'schlaegt' or schaden == 'enthauptet' then
     RE_SCHADEN = 7
   elseif schaden == 'bleibt in' then
-    RE_OPFER = re_genitiv_loeschen(RE_OPFER)
     RE_SCHADEN = 8
-  elseif RE_WSCHADEN_1 == 'die Eingeweide' then
+  elseif schaden2 == 'die Eingeweide' then
     RE_SCHADEN = 108
   else
     logger.warn('Fehler bei Wurfsternschaden, schaden: '..schaden)
     RE_SCHADEN = 15
   end
-  disableTrigger(wurfstern_schaden_trigger_id)
+  disableTrigger(wurfstern_dmg_trigger)
   re_ausgabe()
 end
-wurfstern_schaden_trigger_id = createRegexTrigger(
-  '^  (Du|([^ ].*) Wurfstern) (verfehlt|meilenweit an|zischt an|zischt knapp an|kratzt|triffs?t|verpasst|schneidet|schlaegt|enthauptet|bleibt in|zerfetzt) (.*) (meilenweit|vorbei|leicht|am Arm|einen radikalen Kurzhaarschnitt|fast die Hand ab|Bein|fast den Kopf ab|fast|Brust stecken|die Eingeweide)\\.',
+
+wurfstern_dmg_trigger[#wurfstern_dmg_trigger+1] = createMultiLineRegexTrigger(
+  '^  [^ ].* (triffs?t) ><.* (am Arm)\\.',
   wurfstern
 )
-disableTrigger(wurfstern_schaden_trigger_id)
-createRegexTrigger(
-  ' nimms?t einen Wurfstern in die Hand und wirfs?t ihn nach ',
-  function()
-    enableTrigger(wurfstern_schaden_trigger_id)
+wurfstern_dmg_trigger[#wurfstern_dmg_trigger+1] = createMultiLineRegexTrigger(
+  '^  [^ ].* Wurfstern ><(verfehlt|meilenweit an|zischt an|zischt knapp an|kratzt|triffs?t|verpasst|schneidet|zerfetzt|schlaegt|bleibt in|enthauptet) .* (meilenweit|vorbei|leicht|am Arm|einen radikalen Kurzhaarschnitt|fast die Hand ab|Bein|fast den Kopf ab|fast|Brust stecken|die Eingeweide)\\.$',
+  wurfstern
+)
+disableTrigger(wurfstern_dmg_trigger)
+createMultiLineRegexTrigger(
+  '^(.*) nimms?t einen Wurfstern in die Hand und wirfs?t ><ihn nach (.*)\\.$',
+  function(m)
+    RE_ANGREIFER = re_artikelkuerzen(m[1])
+    RE_OPFER = re_artikelkuerzen(m[2])
+    enableTrigger(wurfstern_dmg_trigger)
   end
 )
 
