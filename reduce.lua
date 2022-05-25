@@ -182,7 +182,7 @@ end
 
 local function remove_reduce()
   client.killTrigger(reduce_trigger)
-  client.cecho('<red>>>> Entferne Paket: <yellow>reduce.lua')
+  client.cecho('<red>>>> Entferne Paket: <yellow>reduce.lua<reset>')
 end
 
 -- Variablen, die jede Kampfrunde geloescht werden
