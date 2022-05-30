@@ -109,7 +109,7 @@ local function updateRoomStatus()
   if para and para > 0 then
     paraString = 'P'..para
   end
-  local wp = room.getRaumWegpunkt()
+  local wp = room.getRoomName()
   wp = wp and '('..wp:sub(1, 11)..')' or ' '
   local raum_kurz = string.sub(ME.raum_kurz or '', 1, 24)
   local region = string.sub(ME.raum_region or '', 1, 9)

@@ -19,7 +19,7 @@ local function defPub(wegpunkt, bestellungen, toilettengang)
 end
 
 local function getAktuelleKneipe()
-  local wp = room.getRaumWegpunkt()
+  local wp = room.getRoomName()
   if wp == nil then
     return nil
   end

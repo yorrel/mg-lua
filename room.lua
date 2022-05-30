@@ -1,7 +1,8 @@
 -- room.lua - raumspezifische Funktionen
 --
 -- #room sub_cmd
---   id <id>          : globale ID für Raum setzen
+--   name <name>      : globalen Namen für Raum setzen
+--   alias -g <name>  : globalen Alias für den Raumnamen setzen
 --   alias <name>     : Char-spezifischen Raum-Alias setzen
 --   note <text>      : In-Game-Notizen
 --   npc <name>       : Default-NPC
@@ -17,8 +18,6 @@ local tools  = require 'utils.tools'
 
 local keymap = base.keymap
 local logger = client.createLogger('room')
-
-local wp_alias = {}
 
 
 -- ---------------------------------------------------------------------------
@@ -46,16 +45,16 @@ local function getRoomProperty(key)
   return props[key]
 end
 
+local function getGlobalRoomAliases()
+  return base.getCommonPersistentTable('room_alias')
+end
+
 
 -- ---------------------------------------------------------------------------
 -- char specific state
 
 local function charSpecificState()
   return base.getPersistentTable('room')
-end
-
-local function setPersonalRoomAlias(alias, original)
-  wp_alias[alias] = original
 end
 
 local function getPersonalRoomAliases()
@@ -75,9 +74,18 @@ local function roomAlias(args, flags)
   end
   local wegesystemState = charSpecificState()
   wegesystemState.aliases = wegesystemState.aliases or {}
-  if flags[1] == '-rm' then
-    logger.info('Entferne persoenlichen Alias '..alias)
-    wegesystemState.aliases[alias] = nil
+  local global = tools.listContains(flags, '-g')
+  local rm_flag = tools.listContains(flags, '-rm')
+  if rm_flag then
+    if global then
+      local global_aliases = getGlobalRoomAliases()
+      logger.info('Entferne globalen Alias '..alias)
+      global_aliases[alias] = nil
+      base.setCommonPersistentTableDirty()
+    else
+      logger.info('Entferne persoenlichen Alias '..alias)
+      wegesystemState.aliases[alias] = nil
+    end
     return
   end
   local wp = getRoomName()
@@ -85,17 +93,24 @@ local function roomAlias(args, flags)
     logger.error('Aktueller Wegpunkt nicht bekannt!')
     return
   end
-  wegesystemState.aliases[alias] = wp
-  logger.info('Setze persoenlichen Alias '..alias..' fuer Wegpunkt '..wp)
+  if global then
+    local global_aliases = getGlobalRoomAliases()
+    global_aliases[alias] = wp
+    logger.info('Setze globalen Alias '..alias..' fuer Wegpunkt '..wp)
+    base.setCommonPersistentTableDirty()
+  else
+    wegesystemState.aliases[alias] = wp
+    logger.info('Setze persoenlichen Alias '..alias..' fuer Wegpunkt '..wp)
+  end
 end
 
 
 -- sorgt fuer alias-Ersetzung, alle von aussen kommenden Wegpunkte muessen ueber
 -- diese Funktion ersetzt werden
 local function getWegpunktNachAliasErsetzung(wp)
-  local personalAliases = getPersonalRoomAliases()
-  wp = personalAliases[wp] or wp
-  return wp_alias[wp] or wp
+  local personal_aliases = getPersonalRoomAliases()
+  local global_aliases = getGlobalRoomAliases()
+  return personal_aliases[wp] or global_aliases[wp] or wp
 end
 
 local function getRoomIdForRoomName(wegpunkt)
@@ -137,7 +152,7 @@ local function saveRoomId(wp)
   end
 end
 
-local function roomID(args, flags)
+local function roomName(args, flags)
   if flags[1] == '-rm' then
     saveRoomId(nil)
   else
@@ -396,7 +411,7 @@ keymap.M_6 = executeRoomActions2
 -- Aliases
 
 local room_sub_cmds = {
-  id = roomID,
+  name = roomName,
   alias = roomAlias,
   exit = roomExit,
   fr = roomEscape,
@@ -439,9 +454,7 @@ client.createStandardAlias(
 
 return {
   getWegpunktNachAliasErsetzung = getWegpunktNachAliasErsetzung,
-  getRaumWegpunkt = getRoomName,
-  getRaumIdZuWP = getRoomIdForRoomName,
-  roomAlias = setPersonalRoomAlias,
+  getRoomName = getRoomName,
   execAction1 = executeRoomActions1,
   execAction2 = executeRoomActions2,
   getCmdForExit = getRoomSpecificExit,

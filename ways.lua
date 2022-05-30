@@ -151,22 +151,11 @@ end
 
 -- Hilfsfunktion: liefert den vermutlichen Ausgangspunkt
 local function ermittleAktuellenStartpunkt()
-  local wp = room.getRaumWegpunkt()
+  local wp = room.getRoomName()
   if wp ~= nil and string.match(wp, '.*_p[1-9]$') then
     wp = wp:sub(1, -4)
   end
   return wp
-end
-
-local function zeigeWegpunkteOhneRaumId()
-  -- alle Wegpunkte ermitteln, die keine RaumId besitzen
-  local wpOhneRaumId = {}
-  for n,_ in pairs(pre) do
-    if room.getRaumIdZuWP(n) == nil then
-      wpOhneRaumId[#wpOhneRaumId+1] = n
-    end
-  end
-  logger.info('Wegpunkte ohne RaumID: '..table.concat(wpOhneRaumId, ','))
 end
 
 -- Hilfsfunktion: pruefung ob noch ein weg zu gehen ist
@@ -368,11 +357,10 @@ end
 -- args: <startpunkt>, <Liste von Wegpunkten (in dieser Reihenfolge zu besuchen)>
 -- return: Liste von Wegpunkten, zwischen denen Wege existieren (inklusive Startpunkt)
 local function sucheWegUeberWegpunkte(wp_list)
-  logger.debug('erstelle_weg mit Wegpunkten '..table.concat(wp_list,','))
-  local _start = wp_list[1]
-  table.remove(wp_list, 1)
+  logger.debug('Wegsuche ueber Wegpunkte '..table.concat(wp_list,','))
+  local _start = table.remove(wp_list, 1)
   local weg = {_start}
-  while (#wp_list > 0) do
+  while #wp_list > 0 do
     local _ziel = room.getWegpunktNachAliasErsetzung(wp_list[1])
     table.remove(wp_list, 1)
     logger.debug('Wegsuche von '.._start..' nach '.._ziel)
