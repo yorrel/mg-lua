@@ -3,6 +3,7 @@ package.path = package.path..';'..mg_lua_dir..'/lua/?.lua'
 
 
 local tools  = require 'utils.tools'
+local class = require 'utils.class'
 local json   = require 'json'
 local regex  = require 'rex_pcre2'
 
@@ -375,27 +376,31 @@ local function pattern2log(pattern)
   return pattern
 end
 
-local function rex_replace(t, pattern, replacement)
-  replacement = string.gsub(replacement, '$(%d)', '%%1')
-  return regex.gsub(t, pattern, replacement)
-end
 
-local function rex_match(t, pattern)
+local Regex = class(
+  function(a, pattern)
+    a.re = regex.new(pattern)
+  end
+)
+function Regex:replace(s, replacement)
+  replacement = string.gsub(replacement, '$(%d)', '%%1')
+  return regex.gsub(s, self.re, replacement)
+end
+-- if s matches, return table of captures, otherwise return nil
+function Regex:match(s)
   -- regex.match return full text if no captures are specified
-  local m1,m2,m3,m4,m5,m6,m7,m8 = regex.match(t, pattern)
+  local m1,m2,m3,m4,m5,m6,m7,m8 = regex.match(s, self.re)
   if m1 == nil then
     return nil
   end
   return { m1,m2,m3,m4,m5,m6,m7,m8 }
 end
-
-local rex = {
-  replace = rex_replace,
-  match = rex_match,
-}
+function Regex.new(pattern)
+  return Regex(pattern)
+end
 
 local function matcheText(t, pattern, f)
-  local matches = rex.match(t, pattern)
+  local matches = Regex.new(pattern):match(t)
   logger.debug('matching multi-line buffer \''..t..'\' with pattern \''..pattern2log(pattern)..'\'')
   if matches ~= nil then
     matches.line = t
@@ -556,6 +561,6 @@ return {
   send = send,
   xtitle = xtitle,
   json = json,
-  regex = rex,
+  regex = Regex.new,
   login = login,
 }

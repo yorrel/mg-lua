@@ -1,5 +1,6 @@
 
 local tools = require 'utils.tools'
+local class = require 'utils.class'
 
 
 -- ---------------------------------------------------------------------------
@@ -168,15 +169,17 @@ local logger = createLogger('blight')
 -- ---------------------------------------------------------------------------
 -- regex
 
-local function rex_replace(s, pattern, replacement)
-  local re = regex.new(pattern)
-  return re:replace(s, replacement)
+local Regex = class(
+  function(a, pattern)
+    a.re = regex.new(pattern)
+  end
+)
+function Regex:replace(s, replacement)
+  return self.re:replace(s, replacement)
 end
-
 -- if s matches, return table of captures, otherwise return nil
-local function rex_match(s, pattern)
-  local re = regex.new(pattern)
-  local t = re:match(s)
+function Regex:match(s)
+  local t = self.re:match(s)
   if t ~= nil then
     local m = {}
     -- blight.regex.match returns t[1]=full_text, t[2]=match1, etc.
@@ -189,11 +192,9 @@ local function rex_match(s, pattern)
   end
   return nil
 end
-
-local rex = {
-  replace = rex_replace,
-  match = rex_match,
-}
+function Regex.new(pattern)
+  return Regex(pattern)
+end
 
 
 -- ---------------------------------------------------------------------------
@@ -350,7 +351,7 @@ local function pattern2log(pattern)
 end
 
 local function matcheText(t, pattern, f)
-  local matches = rex.match(t, pattern)
+  local matches = Regex.new(pattern):match(t)
   logger.debug('matching multi-line buffer \''..t..'\' with pattern \''..pattern2log(pattern)..'\'')
   if matches ~= nil then
     matches.line = t
@@ -511,6 +512,6 @@ return {
   send = send,
   xtitle = xtitle,
   json = json,
-  regex = rex,
+  regex = Regex.new,
   login = login,
 }

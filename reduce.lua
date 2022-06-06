@@ -1,5 +1,5 @@
 
-local rex = client.regex
+local regex = client.regex
 
 -- basiert urspruenglich auf reduce.tf aus TinyMacros:
 -- https://github.com/jexp/TinyMacros
@@ -275,9 +275,10 @@ local function re_genitiv_loeschen(name)
   return name
 end
 
+local RE_ARTIKEL = regex('^(:?[Dd](:?e(:?[rsmn]|in(:?e[srnm]?)?)|ie|as)|[Ee]in(e[srmn]?)?) ')
 local function re_artikelkuerzen(name)
   name = name or ''
-  local name_short = rex.replace(name, '^(:?[Dd](:?e(:?[rsmn]|in(:?e[srnm]?)?)|ie|as)|[Ee]in(e[srmn]?)?) ', '')
+  local name_short = RE_ARTIKEL:replace(name, '')
   return name_short
 end
 
@@ -408,15 +409,15 @@ local function re_ausgabe_zeile()
   return output
 end
 
-local RE_REGEXP_SELF='^D(:?u|i(:?ch|r)|ein(:?e[nmr]?)?)$'
+local RE_REGEXP_SELF = regex('^D(:?u|i(:?ch|r)|ein(:?e[nmr]?)?)$')
 
 local function re_ausgabe_vorbereiten()
   RE_ANGREIFER = re_artikelkuerzen(RE_ANGREIFER)
   RE_OPFER = re_artikelkuerzen(RE_OPFER)
-  if rex.match(RE_ANGREIFER, RE_REGEXP_SELF) then
+  if RE_REGEXP_SELF:match(RE_ANGREIFER) then
     RE_ANGREIFER = 'Du'
     RE_RICHTUNG = 'out'
-  elseif rex.match(RE_OPFER, RE_REGEXP_SELF) then
+  elseif RE_REGEXP_SELF:match(RE_OPFER) then
     RE_OPFER = 'Dich'
     RE_RICHTUNG = 'in'
   else
@@ -1859,6 +1860,8 @@ addGroupedSubstrTrigger(
   '  Ein leichter Wind kommt auf.',
   schaden(1)
 )
+
+local RE_ARASHI_1 = regex('(trifft|kratzt|streift) (.+)(sehr )?(hart)?\\.')
 addGroupedRegexTrigger(
   arashi_tmp_triggers,
   '^  Ein Windhauch (streift .+|kratzt .+|trifft .+)\\.$',
@@ -1875,13 +1878,14 @@ addGroupedRegexTrigger(
       RE_SCHADEN = 3
     end
     if RE_OPFER == '???' or RE_OPFER == '' then
-      local m_opfer = rex.match(m[1], '(trifft|kratzt|streift) (.+)(sehr )?(hart)?\\.', nil, 'U')
+      local m_opfer = RE_ARASHI_1:match(m[1])
       if m_opfer ~= nil then
         RE_OPFER = m_opfer[1]
       end
     end
   end
 )
+local RE_ARASHI_2 = regex('(.*) kraeftig$')
 addGroupedMultiLineRegexTrigger(
   arashi_tmp_triggers,
   '^  Ein Windstoss schuettelt ><(.+) durch\\.$',
@@ -1892,7 +1896,7 @@ addGroupedMultiLineRegexTrigger(
       RE_SCHADEN = 7
     end
     if RE_OPFER == '???' or RE_OPFER == '' then
-      local m_opfer = rex.match(m[1], '(.*) kraeftig$')
+      local m_opfer = RE_ARASHI_2:match(m[1])
       if m_opfer ~= nil then
         RE_OPFER = m_opfer[1]
       end
@@ -1918,6 +1922,8 @@ addGroupedMultiLineRegexTrigger(
     RE_SCHADEN = 10
   end
 )
+local RE_ARASHI_3 = regex('schleudert (.+) zu')
+local RE_ARASHI_4 = regex('(.*)^(zerfetzt|vernichtet) ')
 addGroupedRegexTrigger(
   arashi_tmp_triggers,
   '^  [^ ].+ Sturm (schleudert .+ zu Boden|zerfetzt .+|vernichtet .+)\\.$',
@@ -1930,11 +1936,11 @@ addGroupedRegexTrigger(
       RE_SCHADEN = 13
     end
     if RE_OPFER == '???' or RE_OPFER == '' then
-      local m_opfer = rex.match(m[1], 'schleudert (.+) zu')
+      local m_opfer = RE_ARASHI_3:match(m[1])
       if m_opfer ~= nil then
         RE_OPFER = m_opfer[1]
       else
-        m_opfer = rex.match(m[1], '(.*)^(zerfetzt|vernichtet) ')
+        m_opfer = RE_ARASHI_4:match(m[1])
         if m_opfer ~= nil then
           RE_OPFER = m_opfer[1]
         end
@@ -3370,7 +3376,7 @@ createRegexTrigger(
 -- versehentlich als Normalangriff erkannt werden
 -- ---------------------------------------------------------------------------
 local RE_REGEXP_WAFFE = '^  ([^ ].+) greifs?t [a-z,` ]*([A-Z].*) mit ([-A-Za-z` ]*) an\\.$'
-local RE_REGEXP_KARATEKOMBI='([^ ]+) kombinierten ([^ ]+)'
+local RE_REGEXP_KARATEKOMBI = regex('([^ ]+) kombinierten ([^ ]+)')
 
 local function match_normalen_angriff(m)
   local RE_ANAME = m[1]
@@ -3429,7 +3435,7 @@ local function match_normalen_angriff(m)
     RE_WAFFE = re_karatekuerzen(RE_WAFFE)
     RE_WAFFE = RE_WAFFE .. string.rep('_', 5-RE_WAFFE:len()) .. RE_WAFFE_P
   else
-    local m_kombi = rex.match(RE_WAFFE, RE_REGEXP_KARATEKOMBI) or {}
+    local m_kombi = RE_REGEXP_KARATEKOMBI:match(RE_WAFFE) or {}
     local k1 = m_kombi[1]
     local k2 = m_kombi[2]
     if k1 ~= nil and k2 ~= nil then

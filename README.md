@@ -125,15 +125,17 @@ return {
 
 ## regex
 ```lua
-function replace(s, pattern, replacement)
+local re = client.regex(pattern)
+local result = re:replace(s, replacement)
 ```
 Ersetzt alle Vorkommen von pattern in s durch replacement.
 
 ```lua
-function match(s, pattern)
+local re = client.regex(pattern)
+local matches = re:match(s)
 ```
 Liefert nil, wenn s nicht auf pattern passt. Ansonsten wird eine Table
-aller Matches geliefert {match1, match2, ...}.
+aller Matches geliefert: `matches = {match1, match2, ...}`
 
 
 # Clients installieren
