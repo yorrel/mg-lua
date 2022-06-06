@@ -168,13 +168,13 @@ local logger = createLogger('blight')
 -- ---------------------------------------------------------------------------
 -- regex
 
-local function gsub(s, pattern, replacement)
+local function rex_replace(s, pattern, replacement)
   local re = regex.new(pattern)
   return re:replace(s, replacement)
 end
 
 -- if s matches, return table of captures, otherwise return nil
-local function match(s, pattern)
+local function rex_match(s, pattern)
   local re = regex.new(pattern)
   local t = re:match(s)
   if t ~= nil then
@@ -191,8 +191,8 @@ local function match(s, pattern)
 end
 
 local rex = {
-  gsub = gsub,
-  match = match,
+  replace = rex_replace,
+  match = rex_match,
 }
 
 

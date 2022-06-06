@@ -123,6 +123,18 @@ return {
 }
 ```
 
+## regex
+```lua
+function replace(s, pattern, replacement)
+```
+Ersetzt alle Vorkommen von pattern in s durch replacement.
+
+```lua
+function match(s, pattern)
+```
+Liefert nil, wenn s nicht auf pattern passt. Ansonsten wird eine Table
+aller Matches geliefert {match1, match2, ...}.
+
 
 # Clients installieren
 

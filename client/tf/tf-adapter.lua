@@ -375,7 +375,7 @@ local function pattern2log(pattern)
   return pattern
 end
 
-local function rex_gsub(t, pattern, replacement)
+local function rex_replace(t, pattern, replacement)
   replacement = string.gsub(replacement, '$(%d)', '%%1')
   return regex.gsub(t, pattern, replacement)
 end
@@ -390,7 +390,7 @@ local function rex_match(t, pattern)
 end
 
 local rex = {
-  gsub = rex_gsub,
+  replace = rex_replace,
   match = rex_match,
 }
 

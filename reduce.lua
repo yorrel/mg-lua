@@ -277,7 +277,7 @@ end
 
 local function re_artikelkuerzen(name)
   name = name or ''
-  local name_short = rex.gsub(name, '^(:?[Dd](:?e(:?[rsmn]|in(:?e[srnm]?)?)|ie|as)|[Ee]in(e[srmn]?)?) ', '')
+  local name_short = rex.replace(name, '^(:?[Dd](:?e(:?[rsmn]|in(:?e[srnm]?)?)|ie|as)|[Ee]in(e[srmn]?)?) ', '')
   return name_short
 end
 
