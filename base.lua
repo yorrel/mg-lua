@@ -230,30 +230,6 @@ end
 
 
 -- ---------------------------------------------------------------------------
--- Helper: one-shot gag-trigger
-
-local ignore_trigger = {}
-local function gagNextLine(pattern, actual_line)
-  if actual_line == nil or not string.find(actual_line, pattern, 1, true) then
-    local id = ignore_trigger[pattern]
-    if id == nil then
-      id = client.createSubstrTrigger(
-        pattern,
-        function()
-          local id_pattern = ignore_trigger[pattern]
-          client.disableTrigger(id_pattern)
-        end,
-        {'g'}
-      )
-      ignore_trigger[pattern] = id
-    else
-      client.enableTrigger(id)
-    end
-  end
-end
-
-
--- ---------------------------------------------------------------------------
 -- standard funktionen
 -- schaetz, identifiziere, leichen entsorgen
 
@@ -355,7 +331,6 @@ return {
   dokey = dokey,
   registerEventHandler = registerEventHandler,
   raiseEvent = raiseEvent,
-  gagNextLine = gagNextLine,
   getPersistentTable = getPersistentTable,
   getCommonPersistentTable = getCommonPersistentTable,
   setCommonPersistentTableDirty = setCommonPersistentTableDirty,

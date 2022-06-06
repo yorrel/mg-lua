@@ -63,7 +63,6 @@ end
 
 local function eblockVollErkannt()
   logger.info('Elfenbeinblock ist voll.')
-  base.gagNextLine('in den Block.')
   state().eblock_voll = true
 end
 
@@ -97,7 +96,11 @@ end
 base.registerEventHandler('gmcp.MG.char.vitals', utilsMGLpKpListener)
 
 -- trigger zur Erkennung
-client.createSubstrTrigger([[Du konzentrierst Dich kurz und uebertraegst einen Teil Deiner magischen Energie]], eblockVollErkannt, {'g'})
+client.createMultiLineRegexTrigger(
+  '^Du konzentrierst Dich kurz und uebertraegst einen Teil Deiner magischen Energie>< in den Block\\.$',
+  eblockVollErkannt,
+  {'g'}
+)
 client.createSubstrTrigger([[Der Elfenbeinblock ist doch geladen!]], eblockVollErkannt, {'g'})
 client.createSubstrTrigger([[Frische Kraft stroemt aus dem Elfenbeinblock in Deinen Koerper.]], eblockLeerErkannt, {'g'})
 client.createSubstrTrigger([[Der Elfenbeinblock ist gar nicht geladen!]], eblockLeerErkannt, {'g'})
