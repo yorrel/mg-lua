@@ -395,12 +395,9 @@ function Regex:match(s)
   end
   return { m1,m2,m3,m4,m5,m6,m7,m8 }
 end
-function Regex.new(pattern)
-  return Regex(pattern)
-end
 
-local function matcheText(t, pattern, f)
-  local matches = Regex.new(pattern):match(t)
+local function matcheText(t, re, pattern, f)
+  local matches = re:match(t)
   logger.debug('matching multi-line buffer \''..t..'\' with pattern \''..pattern2log(pattern)..'\'')
   if matches ~= nil then
     matches.line = t
@@ -445,6 +442,7 @@ local multiline_trigger_buffer = {}
 local function createMultiLineRegexTrigger(pattern, f, style, prio)
   local start = improveAnchors('(' .. string.gsub(pattern, '><.*$', '') .. '.*)$')
   local pattern_multi = string.gsub(pattern, '><', '')
+  local re_multi = Regex(pattern_multi)
 
   local id = multi_re_ids
   multi_re_ids = multi_re_ids + 1
@@ -459,7 +457,7 @@ local function createMultiLineRegexTrigger(pattern, f, style, prio)
         disableTrigger(id2)
         local buffer = multiline_trigger_buffer[id]
         multiline_trigger_buffer[id] = nil
-        matcheText(buffer, pattern_multi, f)
+        matcheText(buffer, re_multi, pattern_multi, f)
       end
     end,
     style,
@@ -473,7 +471,7 @@ local function createMultiLineRegexTrigger(pattern, f, style, prio)
     function(m)
       local line = m[1]
       if string.match(line, '.*[.!] ?$') then
-        matcheText(line, pattern_multi, f)
+        matcheText(line, re_multi, pattern_multi, f)
       else
         multiline_trigger_buffer[id] = line
         enableTrigger(id2)
@@ -561,6 +559,6 @@ return {
   send = send,
   xtitle = xtitle,
   json = json,
-  regex = Regex.new,
+  regex = function(pattern) return Regex(pattern) end,
   login = login,
 }
