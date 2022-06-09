@@ -72,6 +72,7 @@ local RE_ART
 local RE_ART_COLOR
 local RE_WFUNC
 local RE_ANGREIFER
+local RE_FLAECHE_WAFFE
 local RE_FLAECHE_ART
 local RE_FLAECHE_ANGREIFER
 local RE_FLAECHE_ZEIT = 0
@@ -972,6 +973,24 @@ createRegexTrigger(
   function() abwehr_helfer('RING', 'C') end
 )
 
+-- BIERSCHUETTLER
+
+-- Hitzschlag
+createRegexTrigger(
+  'erzeugs?t einen Hitzeschlag gegen ',
+  function(m)
+    RE_WAFFE = 'Hitze'
+    RE_ART = 'Magie'
+  end
+)
+createRegexTrigger(
+  'ueberrascht Dich mit einem Hitzeschlag\\.',
+  function(m)
+    RE_WAFFE = 'Hitze'
+    RE_ART = 'Magie'
+  end
+)
+
 -- ZAUBERER
 
 -- Giftpfeil
@@ -1017,7 +1036,7 @@ re_zau_gpfeil_1 = createRegexTrigger(
     RE_OPFER = m[1]
     RE_ANGREIFER = 'Du'
     RE_WAFFE = 'Giftpfeil'
-    RE_ART =  'Zauberei'
+    RE_ART = 'Zauberei'
     disableTrigger(re_zau_gpfeil_1)
     enableTrigger(re_zau_gpfeil_tmp_triggers)
   end
