@@ -991,6 +991,36 @@ createRegexTrigger(
   end
 )
 
+-- Erdbeben
+local re_bier_eb_3 = createRegexTrigger(
+  '^Etwas faellt von der Decke und trifft Dich\\.',
+  nil,
+  nil,
+  {'<red>'}
+)
+disableTrigger(re_bier_eb_3)
+local re_bier_eb_2
+re_bier_eb_2 = createRegexTrigger(
+  '^Ploetzlich beginnt die Erde zu beben\\.',
+  function(m)
+    RE_FLAECHE_ZEIT = os.time()
+    RE_FLAECHE_WAFFE = 'Erdbeben'
+    RE_WAFFE = 'Erdbeben'
+    RE_FLAECHE_ART = 'Magie'
+    RE_ART = 'Magie'
+    disableTrigger(re_bier_eb_2)
+    enableTrigger(re_bier_eb_3, 1)
+  end
+)
+disableTrigger(re_bier_eb_2)
+createRegexTrigger(
+  '^([^ ].+) knies?t kurz nieder und klatscht mit den Haenden auf den Boden\\.$',
+  function(m)
+    RE_FLAECHE_ANGREIFER = re_artikelkuerzen(m[1])
+    enableTrigger(re_bier_eb_2)
+  end
+)
+
 -- ZAUBERER
 
 -- Giftpfeil
@@ -1168,7 +1198,7 @@ createRegexTrigger(
     end
     RE_FLAECHE_ANGREIFER = m[1]
     RE_FLAECHE_WAFFE = 'Feuerball'
-    RE_FLAECHE_ART = '<magenta>Zauberei'
+    RE_FLAECHE_ART = 'Zauberei'
     RE_FLAECHE_ZEIT = os.time()
     enableTrigger(zaub_feuerball_triggers, FLAECHE_DELAY)
   end
@@ -1697,7 +1727,7 @@ createRegexTrigger(
   function(m)
     RE_FLAECHE_WAFFE = 'Donner'
     RE_WAFFE =  'Donner'
-    RE_FLAECHE_ART = '<magenta>Klerus<reset>'
+    RE_FLAECHE_ART = 'Klerus'
     RE_ART = RE_FLAECHE_ART
     if m[3] == '' then
       RE_FLAECHE_ANGREIFER = re_genitiv_loeschen(re_artikelkuerzen(m[2]))
