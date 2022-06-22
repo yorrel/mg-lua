@@ -146,13 +146,13 @@ end
 local function readCharState(name)
   local filename = global_save_dir..'/'..name..'.json'
   char_state = readJsonFile(filename)
-  logger.info('Charakterzustand von \''..filename..'\' eingelesen')
+  logger.info('Charakterzustand \''..filename..'\' eingelesen')
 end
 
 local function readCommonState()
   local filename = global_save_dir..'/common.json'
   common_state = readJsonFile(filename)
-  logger.info('Gemeinsame Daten von \''..filename..'\' eingelesen')
+  logger.info('Gemeinsame Daten \''..filename..'\' eingelesen')
 end
 
 local function registerStandardSaveFiles(name)

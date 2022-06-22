@@ -379,6 +379,7 @@ local multiline_trigger_buffer = {}
 -- f: aufzurufende Funktion, bekommt table matches als parameter
 -- return triggerID
 local function createMultiLineRegexTrigger(pattern, f, style, prio)
+  f = f or dummyCallback
   local start = string.gsub(pattern, '><.*$', '')
   local pattern_multi = string.gsub(pattern, '><', '')
   local re_multi = Regex(pattern_multi)

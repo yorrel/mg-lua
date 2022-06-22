@@ -127,7 +127,7 @@ local PRIO_DEFAULT = 200
 -- Normalangriff erst nach den spezifischeren Triggern
 local PRIO_NORMALANGRIFF = 100
 
-local FLAECHE_DELAY = 4
+local FLAECHE_DELAY = 10
 
 local RE_STYLE
 if debug_flag then
@@ -992,32 +992,31 @@ createRegexTrigger(
 )
 
 -- Erdbeben
-local re_bier_eb_3 = createRegexTrigger(
+local re_bier_eb_1
+re_bier_eb_1 = createRegexTrigger(
+  '^Ploetzlich beginnt die Erde zu beben\\.',
+  function(m)
+    RE_FLAECHE_WAFFE = 'Erdbeben'
+    RE_FLAECHE_ART = 'Magie'
+    RE_FLAECHE_ZEIT = os.time()
+    disableTrigger(re_bier_eb_1)
+  end
+)
+disableTrigger(re_bier_eb_1)
+local re_bier_eb_2
+re_bier_eb_2 = createRegexTrigger(
   '^Etwas faellt von der Decke und trifft Dich\\.',
   nil,
   nil,
   {'<red>'}
-)
-disableTrigger(re_bier_eb_3)
-local re_bier_eb_2
-re_bier_eb_2 = createRegexTrigger(
-  '^Ploetzlich beginnt die Erde zu beben\\.',
-  function(m)
-    RE_FLAECHE_ZEIT = os.time()
-    RE_FLAECHE_WAFFE = 'Erdbeben'
-    RE_WAFFE = 'Erdbeben'
-    RE_FLAECHE_ART = 'Magie'
-    RE_ART = 'Magie'
-    disableTrigger(re_bier_eb_2)
-    enableTrigger(re_bier_eb_3, 1)
-  end
 )
 disableTrigger(re_bier_eb_2)
 createRegexTrigger(
   '^([^ ].+) knies?t kurz nieder und klatscht mit den Haenden auf den Boden\\.$',
   function(m)
     RE_FLAECHE_ANGREIFER = re_artikelkuerzen(m[1])
-    enableTrigger(re_bier_eb_2)
+    enableTrigger(re_bier_eb_1)
+    enableTrigger(re_bier_eb_2, 2)
   end
 )
 
@@ -1139,12 +1138,11 @@ createRegexTrigger(
 
 -- Feuerball
 local RE_FBALL = ''
-local zaub_feuerball_triggers = {}
-zaub_feuerball_triggers[#zaub_feuerball_triggers+1] = createMultiLineRegexTrigger(
-  '.* (schleuderst|schleudert) die Kugel in>< .* Richtung\\.',
-  function() end
+local zaub_fb_triggers = {}
+zaub_fb_triggers[#zaub_fb_triggers+1] = createMultiLineRegexTrigger(
+  '.* (schleuderst|schleudert) die Kugel in>< .* Richtung\\.'
 )
-zaub_feuerball_triggers[#zaub_feuerball_triggers+1] = createMultiLineRegexTrigger(
+zaub_fb_triggers[#zaub_fb_triggers+1] = createMultiLineRegexTrigger(
   '^  ([^ ].+) (wird durch|Feuerball verfehlt|Feuerball bringt|Feuerball versengt|Feuerball entzuendet|Feuerball trifft|Feuerball kocht|Feuerball roestet|Feuerball verbrennt)>< (.+) (Feuerball reichlich warm|meilenweit|zum Schwitzen|Haare und Augenbrauen|Kleidung|an der Schulter|wie einen Hummer|auf kleiner Flamme|russig schwarz|fast zu Asche)?\\.$',
   function(m)
     RE_WAFFE = 'Feuerball'..RE_FBALL
@@ -1186,7 +1184,7 @@ zaub_feuerball_triggers[#zaub_feuerball_triggers+1] = createMultiLineRegexTrigge
     re_ausgabe()
   end
 )
-disableTrigger(zaub_feuerball_triggers)
+disableTrigger(zaub_fb_triggers)
 createRegexTrigger(
   '^([A-Z].*) laesst eine (kleine |gewaltige )?Kugel aus Feuer entstehen\\.$',
   function(m)
@@ -1200,7 +1198,7 @@ createRegexTrigger(
     RE_FLAECHE_WAFFE = 'Feuerball'
     RE_FLAECHE_ART = 'Zauberei'
     RE_FLAECHE_ZEIT = os.time()
-    enableTrigger(zaub_feuerball_triggers, FLAECHE_DELAY)
+    enableTrigger(zaub_fb_triggers, 8)
   end
 )
 
@@ -2876,7 +2874,7 @@ createMultiLineRegexTrigger(
 -- Aura
 createRegexTrigger(
   '.* Aura leuchtet (hellrot|rot|orange|gelb) auf\\.',
-  function(m) abwehr_helfer('RUESTUNG', 'A') end
+  function() abwehr_helfer('RUESTUNG', 'A') end
 )
 
 -- Entziehe
@@ -2928,7 +2926,7 @@ createRegexTrigger(
   'Dein Schild faengt .+ Angriff (.+) ab\\.',
   function(m)
     local qualitaet = m[1]
-    abwehr_helfer('SCHILD', skillschild_quals[qualitaet], '<green>')
+    abwehr_helfer('SCHILD', skillschild_quals[qualitaet])
   end
 )
 
@@ -3033,15 +3031,11 @@ createSubstrTrigger(
 -- Pudelmuetze von Tilly
 createMultiLineRegexTrigger(
   '^[A-Z].+ Pudelmuetze gibt ein wuetendes Bellen von sich,>< .* veraengstigt an\\.',
-  function(m)
-    abwehr_helfer('HELM', 'P')
-  end
+  function() abwehr_helfer('HELM', 'P') end
 )
 createMultiLineRegexTrigger(
   'Die Pudelmuetze von .* gibt ein wuetendes Bellen von sich\\.>< .* um\\.',
-  function(m)
-    abwehr_helfer('HELM', 'P')
-  end
+  function() abwehr_helfer('HELM', 'P') end
 )
 
 -- Feuerhelm

@@ -352,10 +352,13 @@ local function maskPattern(pattern)
   return pattern
 end
 
+local dummyCallback = function() end
+
 -- trigger creation
 -- f: function to call with table of matches as parameter
 -- return triggerID
 local function createRegexTrigger(pattern, f, style, prio)
+  f = f or dummyCallback
   local id = createTriggerId('re')
   local switches = getPrioSwitch(prio)..getStyleSwitches(style)
   local patternId = 'lua_trigger_'..id..'_pattern'
@@ -440,6 +443,7 @@ local multiline_trigger_buffer = {}
 -- f: aufzurufende Funktion, bekommt table matches als parameter
 -- return triggerID
 local function createMultiLineRegexTrigger(pattern, f, style, prio)
+  f = f or dummyCallback
   local start = improveAnchors('(' .. string.gsub(pattern, '><.*$', '') .. '.*)$')
   local pattern_multi = string.gsub(pattern, '><', '')
   local re_multi = Regex(pattern_multi)
