@@ -19,7 +19,7 @@ end
 local lastKampfAktion = os.time() - 10
 
 -- global: wird auch von tf aus aufgerufen
-function kampfAktionErkannt()
+local function kampfAktionErkannt()
   lastKampfAktion = os.time()
 end
 

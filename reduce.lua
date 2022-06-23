@@ -735,7 +735,7 @@ end
 -- Blitzmeldungen, die von einigen Gilden gebraucht werden:
 local blitz_tmp_triggers = {}
 
-function re_blitzschaden()
+local function re_blitzschaden()
   enableTrigger(blitz_tmp_triggers)
 end
 
