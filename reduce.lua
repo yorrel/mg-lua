@@ -375,6 +375,7 @@ local art_color_table = {
   Magie = '<magenta>',
   Chaos = '<magenta>',
   Zauberei = '<magenta>',
+  Katzen = '<magenta>',
   Klerus = '<magenta>',
   Tanjian = '<magenta>',
   Delfen = '<magenta>',
@@ -2894,6 +2895,31 @@ createMultiLineRegexTrigger(
     RE_ART = 'Delfen'
     RE_ANGREIFER = m[1]
     RE_OPFER = re_genitiv_loeschen(m[2])
+  end
+)
+
+-- KATZENKRIEGER
+
+-- Krallenschlag
+createMultiLineRegexTrigger(
+  '^(.*) schlaegs?t mit ausgefahrenen Krallen auf>< (.*) ein\\.',
+  function(m)
+    RE_WAFFE = 'Krallenschlag'
+    RE_ART = 'Katzen'
+    RE_ANGREIFER = m[1]
+    RE_OPFER = m[2]
+  end
+)
+
+-- Blitz
+createMultiLineRegexTrigger(
+  '^([^ ].+) schleuders?t einen Blitz>< auf (.+)\\.$',
+  function(m)
+    RE_WAFFE = 'Blitz'
+    RE_ART = 'Katzen'
+    RE_ANGREIFER = m[1]
+    RE_OPFER = m[2]
+    re_blitzschaden()
   end
 )
 
