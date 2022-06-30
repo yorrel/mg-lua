@@ -1762,14 +1762,14 @@ addGroupedSubstrTrigger(
 )
 addGroupedRegexTrigger(
   erloese_tmp_triggers,
-  '  Ein kurzes Gluehen erscheint zwischen .* Haenden, verlischt aber sofort wieder',
+  '^  Ein kurzes Gluehen erscheint zwischen .* Haenden, verlischt aber sofort wieder',
   schaden(1)
 )
 
 
 addGroupedRegexTrigger(
   erloese_tmp_triggers,
-  '  ([^ ].+) (fuehlst ein kurzes Kribbeln|schuettelt sich kurz|spuers?t den Hauch der Erloesung|bemerkst ein leichtes Ziehen|zuckt elektrisiert zusammen)\\.$',
+  '^  ([^ ].+) (fuehlst ein kurzes Kribbeln|schuettelt sich kurz|spuers?t den Hauch der Erloesung|bemerkst ein leichtes Ziehen|zuckt elektrisiert zusammen)\\.$',
   function(m)
     if m[2] == 'fuehlst ein kurzes Kribbeln' then
       RE_SCHADEN = 1
@@ -1816,7 +1816,7 @@ addGroupedRegexTrigger(
 )
 addGroupedRegexTrigger(
   erloese_tmp_triggers,
-  '  Grelle Lichtblitze zucken um .* Koerper\\.',
+  '^  Grelle Lichtblitze zucken um .* Koerper\\.',
   schaden(9)
 )
 addGroupedRegexTrigger(
@@ -2065,7 +2065,7 @@ addGroupedSubstrTrigger(
 )
 addGroupedRegexTrigger(
   samusa_tmp_triggers,
-  '  Die Kaelte (brennt|kitzelt) auf .* Haut\\.',
+  '^  Die Kaelte (brennt|kitzelt) auf .* Haut\\.',
   function(m)
     if m[3] == 'brennt' then
       RE_SCHADEN = 3
@@ -2100,7 +2100,7 @@ addGroupedRegexTrigger(
 )
 addGroupedRegexTrigger(
   samusa_tmp_triggers,
-  '  (Kalter|Eiskalter) Regen prasselt auf .* herab\\.',
+  '^  (Kalter|Eiskalter) Regen prasselt auf .* herab\\.',
   function(m)
     if m[1] == 'Kalter' then
       RE_SCHADEN = 8
@@ -2116,7 +2116,7 @@ addGroupedRegexTrigger(
 )
 addGroupedRegexTrigger(
   samusa_tmp_triggers,
-  '  Ein Eishagel (zerschmettert|zermatscht) .*\\.',
+  '^  Ein Eishagel (zerschmettert|zermatscht) .*\\.',
   function(m)
     if m[1] == 'zerschmettert' then
       RE_SCHADEN = 11
@@ -2127,7 +2127,7 @@ addGroupedRegexTrigger(
 )
 addGroupedRegexTrigger(
   samusa_tmp_triggers,
-  '  Toedliche Kaelte umfaengt .*\\.',
+  '^  Toedliche Kaelte umfaengt .*\\.',
   schaden(13)
 )
 disableTrigger(samusa_tmp_triggers)
@@ -2231,7 +2231,7 @@ kshira_tmp_triggers[#kshira_tmp_triggers+1] = createRegexTrigger(
   end
 )
 kshira_tmp_triggers[#kshira_tmp_triggers+1] = createRegexTrigger(
-  '  Der Terror zermuerbt (.*)\\.',
+  '^  Der Terror zermuerbt (.*)\\.',
   function(m)
     RE_OPFER = m[1]
     RE_SCHADEN = 6
@@ -2343,7 +2343,7 @@ end
 local kami_fe_triggers = {}
 addGroupedRegexTrigger(
   kami_fe_triggers,
-  '  Ein warmer Lufthauch streift .*\\.',
+  '^  Ein warmer Lufthauch streift .*\\.',
   schaden(1)
 )
 addGroupedRegexTrigger(
@@ -2432,7 +2432,7 @@ addGroupedRegexTrigger(
 )
 addGroupedRegexTrigger(
   kami_sa_triggers,
-  '  Eine Saeureflut loesst (.*) auf\\.',
+  '^  Eine Saeureflut loesst (.*) auf\\.',
   function(m)
     if string.match(m[1], ' voellig') then
       RE_SCHADEN = 12
@@ -2499,12 +2499,12 @@ addGroupedRegexTrigger(
 )
 addGroupedRegexTrigger(
   kami_gi_triggers,
-  '  Eine giftgruene Wolke huellt .* ein\\.',
+  '^  Eine giftgruene Wolke huellt .* ein\\.',
   schaden(10)
 )
 addGroupedRegexTrigger(
   kami_gi_triggers,
-  '  Ein Giftpfeilhagel geht auf .* nieder\\.',
+  '^  Ein Giftpfeilhagel geht auf .* nieder\\.',
   schaden(11)
 )
 addGroupedRegexTrigger(
@@ -2582,7 +2582,7 @@ addGroupedRegexTrigger(
 )
 addGroupedRegexTrigger(
   kami_wa_triggers,
-  '  Ein Wasserfall (zerschmettert|vernichtet) .*\\.',
+  '^  Ein Wasserfall (zerschmettert|vernichtet) .*\\.',
   function(m)
     if m[1] == 'zerschmettert' then
       RE_SCHADEN = 12
@@ -2778,7 +2778,7 @@ addGroupedRegexTrigger(
 )
 addGroupedRegexTrigger(
   kami_te_triggers,
-  '  Die Angst bereitet .* Schmerzen\\.',
+  '^  Die Angst bereitet .* Schmerzen\\.',
   schaden(9)
 )
 addGroupedRegexTrigger(
