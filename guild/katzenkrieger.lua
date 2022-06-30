@@ -1,7 +1,6 @@
 -- Katzenkrieger
 
 local base   = require 'base'
-local kampf  = require 'battle'
 
 
 -- ---------------------------------------------------------------------------
@@ -14,8 +13,8 @@ local Katzenkrieger = class(Guild)
 function Katzenkrieger:enable()
   -- Tasten ------------------------------------------------------------------
   local keymap = base.keymap
-  keymap.F5   = kampf.createAttackFunctionWithEnemy('krallenschlag', 1)
-  keymap.F6   = kampf.createAttackFunctionWithEnemy('blitz', 1)
+  keymap.F5   = Guild.attackFunWithEnemy('krallenschlag', 1)
+  keymap.F6   = Guild.attackFunWithEnemy('blitz', 1)
   keymap.M_l = 'nachtsicht'
 
   -- Aliases -----------------------------------------------------------------

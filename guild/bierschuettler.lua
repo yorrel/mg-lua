@@ -5,7 +5,6 @@ local inv    = require 'inventory'
 local pub    = require 'pub'
 local room   = require 'room'
 local timer  = require 'timer'
-local kampf  = require 'battle'
 
 local logger = client.createLogger('bierschuettler')
 local trigger = {}
@@ -82,14 +81,14 @@ function Bierschuettler:enable()
 
   -- Tasten ------------------------------------------------------------------
   local keymap = base.keymap
-  keymap.F5 = kampf.createAttackFunctionWithEnemy('nebel', 2)
-  keymap.F6 = kampf.createAttackFunctionWithEnemy('alkoholgift', 1)
+  keymap.F5 = Guild.attackFunWithEnemy('nebel', 2)
+  keymap.F6 = Guild.attackFunWithEnemy('alkoholgift', 1)
   keymap.F7 = function() inv.doWithHands(2, 'erdbeben') end
-  keymap.F8 = kampf.createAttackFunctionWithEnemy('hitzeschlag', 1)
+  keymap.F8 = Guild.attackFunWithEnemy('hitzeschlag', 1)
 
   keymap.M_b = function() inv.doWithHands(2, 'sand') end
   keymap.M_e = 'nuechtern'
-  keymap.M_f = kampf.createAttackFunctionWithEnemy('schuettelstarre')
+  keymap.M_f = Guild.attackFunWithEnemy('schuettelstarre')
   keymap.M_g = 'floesse'
   keymap.M_i = 'beruhige'
   keymap.M_k = 'kneipen'

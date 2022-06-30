@@ -3,7 +3,6 @@
 local base  = require 'base'
 local ME    = require 'gmcp-data'
 local room  = require 'room'
-local inv   = require 'inventory'
 
 local logger = client.createLogger('battle')
 local keymap = base.keymap
@@ -114,17 +113,6 @@ local function untersucheFokusGegner()
   client.send ('unt '..getGegner())
 end
 
-local function createAttackFunctionWithEnemy(skill, hands)
-  return function()
-    local attack = skill .. ' ' .. getGegner()
-    if hands == nil then
-      client.send(attack)
-    else
-      inv.doWithHands(hands, attack)
-    end
-  end
-end
-
 
 -- ---------------------------------------------------------------------------
 -- Info
@@ -156,7 +144,6 @@ return {
   setVorsicht = setVorsicht,
   setFluchtrichtung = setFluchtrichtung,
   getGegner = getGegner,
-  createAttackFunctionWithEnemy = createAttackFunctionWithEnemy,
   istImKampf = istImKampf,
   kampfStatus = printKampfStatus,
 }

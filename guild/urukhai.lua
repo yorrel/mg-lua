@@ -1,7 +1,6 @@
 -- Urukhai
 
 local base   = require 'base'
-local kampf  = require 'battle'
 
 
 -- ---------------------------------------------------------------------------
@@ -14,9 +13,9 @@ local Urukhai = class(Guild)
 function Urukhai:enable()
   -- Tasten ------------------------------------------------------------------
   local keymap = base.keymap
-  keymap.F5 = kampf.createAttackFunctionWithEnemy('beisse')
-  keymap.F6 = kampf.createAttackFunctionWithEnemy('ruelpse')
-  keymap.F7 = kampf.createAttackFunctionWithEnemy('spucke')
+  keymap.F5 = Guild.attackFunWithEnemy('beisse')
+  keymap.F6 = Guild.attackFunWithEnemy('ruelpse')
+  keymap.F7 = Guild.attackFunWithEnemy('spucke')
 
   keymap.M_l = 'nachtsicht'
   keymap.M_v = 'steinhaut'

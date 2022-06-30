@@ -39,9 +39,9 @@ local regex = client.regex
 -- ****Z***  Zauberschild
 -- ****2***  2 von diesen Items (auch 3 usw.)
 -- *****G**  Silvanas Gluecksbringer
--- *****K**  Morgoths Himmelkreuz oder das Kreuz aus der Gruft
+-- *****K**  Morgoths Himmelkreuz oder Kreuz aus der Gruft
 -- *****N**  Nonnes Nixenhaaar
--- *****A**  Grummelbeisseramuletit
+-- *****A**  Grummelbeisseramulett
 -- *****O**  Obsidianamulett von Ananas
 -- ******T*  Toeters Totenschaedel
 -- ******H*  Morgoths Eishelm
