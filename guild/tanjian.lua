@@ -217,6 +217,7 @@ function Tanjian:enable()
   keymap.F5 = createFunctionMitGegner('samusa')
   keymap.S_F5 = createFunctionMitGegner('kshira')
   keymap.F6 = createFunctionMitGegner('kaminari')
+  keymap.S_F6 = 'kshira alle'
   keymap.F7 = createFunctionMitGegner('arashi')
   keymap.F8 = angriff_kami
 
