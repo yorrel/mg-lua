@@ -470,11 +470,11 @@ loginTrigger2 = createRegexTrigger(
 )
 disableTrigger(loginTrigger2)
 
-local function login(host, port, name, pwd)
+local function login(host, port, name, pwd, tls, verify)
   enableTrigger(loginTrigger1)
   loginName = name
   loginPwd = pwd
-  mud.connect(host, port, false, false)
+  mud.connect(host, port, tls, verify)
 end
 
 
