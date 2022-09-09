@@ -95,8 +95,8 @@ Nutzung:
 
 # Client-Unterstützung
 
-Alle Skripte nutzen client-spezifische Funktionen nur über einen Adapter. Dieser wird
-global unter `client` erwartet und von `main.lua` geladen.
+Alle Skripte nutzen client-spezifische Funktionen nur über einen Adapter. Dieser
+wird global unter `client` erwartet und von `main.lua` geladen.
 
 API des Adapters:
 
@@ -120,6 +120,8 @@ return {
   json,
   regex,
   login,
+  startLog,
+  stopLog
 }
 ```
 
@@ -160,7 +162,7 @@ sudo dnf install pkg-config openssl-devel alsa-lib-devel
 ubuntu:
 sudo apt install pkg-config libssl-dev libasound2-dev
 
-### compile & install
+### compile & install (& update)
 
 cargo install --git https://github.com/blightmud/blightmud blightmud
 

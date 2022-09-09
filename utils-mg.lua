@@ -42,7 +42,7 @@ end
 
 local function toggleScoreamu()
   local s = state()
-  s.scoreamu = not (s.scoreamu or false)
+  s.scoreamu = not s.scoreamu
   if s.scoreamu then
     logger.info('Ausruestungsanzeige mit Scoreamulett')
   else

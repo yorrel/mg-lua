@@ -513,4 +513,6 @@ return {
   json = json,
   regex = function(pattern) return Regex(pattern) end,
   login = login,
+  startLog = function(n) log.start(n) end,
+  stopLog = function(n) log.stop() end,
 }

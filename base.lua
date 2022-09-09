@@ -175,6 +175,24 @@ local function registerStandardSaveFiles(name)
   )
 end
 
+
+local function getPersistentTable(id)
+  char_state = char_state or {}
+  char_state[id] = char_state[id] or {}
+  return char_state[id]
+end
+
+local function getCommonPersistentTable(id)
+  common_state = common_state or {}
+  common_state[id] = common_state[id] or {}
+  return common_state[id]
+end
+
+local function setCommonPersistentTableDirty()
+  common_dirty_flag = true
+end
+
+
 local character_name
 local character_guild
 local character_wizlevel
@@ -200,23 +218,9 @@ local function initCharakter(name, guild, race, wizlevel)
   pcall(readCommonState)
   registerStandardSaveFiles(name)
   raiseEvent('base.char.init.done')
-end
-
-
-local function getPersistentTable(id)
-  char_state = char_state or {}
-  char_state[id] = char_state[id] or {}
-  return char_state[id]
-end
-
-local function getCommonPersistentTable(id)
-  common_state = common_state or {}
-  common_state[id] = common_state[id] or {}
-  return common_state[id]
-end
-
-local function setCommonPersistentTableDirty()
-  common_dirty_flag = true
+  if getPersistentTable('base').logfile then
+    client.startLog(name)
+  end
 end
 
 
@@ -296,6 +300,22 @@ end
 
 
 -- ---------------------------------------------------------------------------
+-- auto logfile on/off
+
+local function toggleAutoLogFile()
+  local s = getPersistentTable('base')
+  s.logfile = not s.logfile
+  if s.logfile then
+    logger.info('Starte kuenftig automatisch das Loggen ins Logfile')
+    client.startLog(character_name)
+  else
+    logger.info('Erzeuge kuenftig kein Logfile mehr')
+    client.stopLog()
+  end
+end
+
+
+-- ---------------------------------------------------------------------------
 -- Reboot / Reset
 
 local resetHooks = {}
@@ -319,6 +339,7 @@ client.createStandardAlias('s',  1, gilden_schaetz)
 client.createStandardAlias('i',  1, gilden_identifiziere)
 client.createStandardAlias('se', 0, save_and_sleep)
 client.createStandardAlias('para', 1, set_para_welt)
+client.createStandardAlias('log', 0, toggleAutoLogFile)
 
 
 -- ---------------------------------------------------------------------------

@@ -538,6 +538,20 @@ end
 
 
 -- ---------------------------------------------------------------------------
+-- logfile
+
+local function startLog(name)
+  local logfile = name..'_'..os.date('%Y-%m-%d_%H%M%S')..'.log'
+  tf_eval('/log -i '..logfile)
+  tf_eval('/log '..logfile)
+end
+
+local function stopLog()
+  tf_eval('/log off')
+end
+
+
+-- ---------------------------------------------------------------------------
 -- interaktion
 
 createStandardAlias('debug', 0,  function(item) debug_on = not debug_on end)
@@ -565,4 +579,6 @@ return {
   json = json,
   regex = function(pattern) return Regex(pattern) end,
   login = login,
+  startLog = startLog,
+  stopLog = stopLog,
 }
