@@ -38,7 +38,11 @@ local bete_arten = {
 }
 
 local function kleriker_bete(id)
-  client.send('bete '..bete_arten[id or 'i'])
+  if kampf.istImKampf() then
+    logger.error('Ignoriere bete im Kampf!')
+  else
+    client.send('bete '..bete_arten[id or 'i'])
+  end
 end
 
 local function kleriker_entfluche(ziel)
