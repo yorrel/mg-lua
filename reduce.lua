@@ -1297,13 +1297,16 @@ addGroupedMultiLineRegexTrigger(
   '^  [^ ].+ magischen? Funken treffen>< .+\\.$',
   schaden(6)
 )
+addGroupedRegexTrigger(
+  re_zau_ver_ma_triggers,
+  '^  [^ ].+ produziers?t (nur )? ungefaehrliche Funken\\.$',
+  schaden(1)
+)
 addGroupedMultiLineRegexTrigger(
   re_zau_ver_ma_triggers,
-  '^  [^ ].+ (produziers?t (nur )?|magischen? Funken umschwirren|magischen? Funken lassen|magischen? Funken rauben|magischen? Funken lassen|magischen? Funken bringen|magischen? Funken bringen)>< .+ (Funken|erschaudern|den Atem|altern|die Kaelte des Todes|um den Verstand)\\.$',
+  '^  [^ ].+ (magischen? Funken umschwirren|magischen? Funken lassen|magischen? Funken rauben|magischen? Funken lassen|magischen? Funken bringen)>< .+ (erschaudern|den Atem|altern|die Kaelte des Todes|um den Verstand)\\.$',
   function(m)
-    if string.match(m[1], '^produziers') then
-      RE_SCHADEN = 1
-    elseif string.match(m[1], '^magischen? Funken umschwirren$') then
+    if string.match(m[1], '^magischen? Funken umschwirren$') then
       RE_SCHADEN = 5
     elseif string.match(m[1], '^magischen? Funken lassen$') then
       RE_SCHADEN = 7
