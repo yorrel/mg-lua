@@ -164,8 +164,13 @@ sudo apt install pkg-config libssl-dev libasound2-dev
 
 ### compile & install (& update)
 
-cargo install --git https://github.com/blightmud/blightmud blightmud
+- cargo install --git https://github.com/blightmud/blightmud blightmud
 
+oder
+
+- git clone https://github.com/blightmud/blightmud
+- cd blightmud
+- cargo install --path .
 
 ## tf rebirth
 
