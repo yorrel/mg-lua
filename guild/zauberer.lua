@@ -77,16 +77,10 @@ local verletze_typen = {
   bl='blitz', er='erde',
 }
 
-verletzeSchaden = nil
-
 -- schaden fuer verletze einstellen
 local function verletzeSchaden(schaden)
-  verletzeSchaden = verletze_typen[schaden] or schaden
-  client.send('verletzungstyp '..verletzeSchaden)
-end
-
-local function getVerletzeSchaden()
-  return verletzeSchaden
+  local typ = verletze_typen[schaden] or schaden
+  client.send('verletzungstyp ' .. typ)
 end
 
 local function stabschaden(schaden)
@@ -242,7 +236,8 @@ function Zauberer:enable()
   )
 
   client.createStandardAlias('ruesten', 0, ruesten)
-  client.createStandardAlias('cs', 1, verletzeSchaden)
+  client.createStandardAlias('cs', 1, verletzeSchaden)   -- analog chaoten
+  client.createStandardAlias('vs', 1, verletzeSchaden)
   client.createStandardAlias('zs', 1, stabschaden)
   client.createStandardAlias('as', 2, spruchstaerke)
 end
