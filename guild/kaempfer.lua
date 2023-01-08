@@ -167,7 +167,7 @@ trigger[#trigger+1] = client.createSubstrTrigger('Du beendest Deine Parade.', st
 trigger[#trigger+1] = client.createSubstrTrigger('Du konzentrierst Dich nun nicht mehr auf die Bewegungen der Parade.', statusUpdate('parade'), {'<red>'})
 
 -- rueckendeckung
-trigger[#trigger+1] = client.createRegexTrigger('Du gibst .* Rueckendeckung.', statusUpdate('rueckendeckung','Rd'), {'<green>'})
+trigger[#trigger+1] = client.createRegexTrigger('^Du gibst .* Rueckendeckung.', statusUpdate('rueckendeckung','Rd'), {'<green>'})
 trigger[#trigger+1] = client.createSubstrTrigger('Du beendest die Rueckendeckung fuer ', statusUpdate('rueckendeckung'), {'<red>'})
 
 -- schnell
@@ -178,18 +178,53 @@ trigger[#trigger+1] = client.createSubstrTrigger('Du beisst ob der Schmerzen die
 trigger[#trigger+1] = client.createSubstrTrigger('Du schaffst es nicht mehr, die Schmerzen weiterhin zu ignorieren.', nil, {'<red>'})
 
 -- techniken: schildkroete - drache - schlange - raserei
-trigger[#trigger+1] = client.createSubstrTrigger('Du kaempfst nun mit der Kampftechnik der Schildkroete.', statusUpdate('technik','Skr'), {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Du kaempfst nun mit der Kampftechnik des Drachen.', statusUpdate('technik','Dra'), {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Du kaempfst nun die Technik der Schlange und machst dabei schnelle,', statusUpdate('technik','Sna'), {'<green>'})
+trigger[#trigger+1] = client.createRegexTrigger(
+  '^Du kaempfst nun mit der Kampftechnik der Schildkroete\\.',
+  statusUpdate('technik','Skr'),
+  {'<green>'}
+)
+trigger[#trigger+1] = client.createRegexTrigger(
+  '^Du machst doch schon die Kampftechnik \'Schildkroete\'\\.',
+  statusUpdate('technik','Skr'),
+  {'<blue>'}
+)
+trigger[#trigger+1] = client.createRegexTrigger(
+  '^Du kaempfst nun mit der Kampftechnik des Drachen\\.',
+  statusUpdate('technik','Dra'),
+  {'<green>'}
+)
+trigger[#trigger+1] = client.createRegexTrigger(
+  '^Du machst doch schon die Kampftechnik \'Drache\'\\.',
+  statusUpdate('technik','Dra'),
+  {'<blue>'}
+)
+trigger[#trigger+1] = client.createRegexTrigger(
+  '^Du kaempfst nun die Technik der Schlange und machst dabei schnelle,',
+  statusUpdate('technik','Sna'),
+  {'<green>'}
+)
+trigger[#trigger+1] = client.createRegexTrigger(
+  '^Du machst doch schon die Kampftechnik \'Schlange\'\\.',
+  statusUpdate('technik','Sna'),
+  {'<blue>'}
+)
+trigger[#trigger+1] = client.createRegexTrigger('^gefaehrliche Schlaege, die aber Deine Deckung nie oeffnen\\.', nil, {'<green>'})
 trigger[#trigger+1] = client.createSubstrTrigger('Du beendest die Kampftechnik ', statusUpdate('technik'), {'<red>'})
 trigger[#trigger+1] = client.createSubstrTrigger('Du konzentrierst Dich nun nicht mehr auf die Technik ', statusUpdate('technik'), {'<red>'})
-trigger[#trigger+1] = client.createSubstrTrigger(
-  'Du steigerst Dich in wilde Raserei!',
+trigger[#trigger+1] = client.createRegexTrigger(
+  '^Du steigerst Dich in wilde Raserei!',
   function()
     setTaktik(0)
     base.statusUpdate({'technik','Ras'})
   end,
   {'<green>'})
+trigger[#trigger+1] = client.createRegexTrigger(
+  '^Du bist schon in wilder Raserei!',
+  function()
+    setTaktik(0)
+    base.statusUpdate({'technik','Ras'})
+  end,
+  {'<blue>'})
 trigger[#trigger+1] = client.createSubstrTrigger('Du beendest Deine Raserei', statusUpdate('technik'), {'<red>'})
 
 -- block
@@ -203,8 +238,18 @@ client.createSubstrTrigger(
 local function setTaktikMatch1(m)
   setTaktik(m[1])
 end
-trigger[#trigger+1] = client.createRegexTrigger('Du kaempfst mit ([0-9]+)% Defensive.', setTaktikMatch1, {'<blue>'})
-trigger[#trigger+1] = client.createRegexTrigger('Du aenderst Deine Taktik und kaempfst nun mit ([0-9]+)% Defensive.', setTaktikMatch1, {'<blue>'})
+trigger[#trigger+1] = client.createRegexTrigger('^Du kaempfst mit ([0-9]+)% Defensive.', setTaktikMatch1, {'<blue>'})
+trigger[#trigger+1] = client.createRegexTrigger('^Du aenderst Deine Taktik und kaempfst nun mit ([0-9]+)% Defensive.', setTaktikMatch1, {'<blue>'})
+
+
+-- ---------------------------------------------------------------------------
+-- weitere Trigger
+
+trigger[#trigger+1] = client.createRegexTrigger('^Du bist nicht im Kampf!', nil, {'<magenta>'})
+
+trigger[#trigger+1] = client.createRegexTrigger('^Du machst (eine erfolgreiche Finte|einen Waffentrick) gegen .*', nil, {'<cyan>'})
+trigger[#trigger+1] = client.createRegexTrigger('(faellt nicht auf (die Finte|den Waffentrick) herein!|ist irgendwie gegen (die Finte|den Waffentrick) geschuetzt\\.)', nil, {'<magenta>'})
+trigger[#trigger+1] = client.createRegexTrigger('^Du siehst im Moment keine Moeglichkeiten fuer (eine Finte|einen Waffentrick)!', nil, {'<magenta>'})
 
 
 -- ---------------------------------------------------------------------------
@@ -229,7 +274,7 @@ trigger[#trigger+1] = client.createSubstrTrigger('Wie auch immer Du es geschafft
 trigger[#trigger+1] = client.createSubstrTrigger('Oh weia! Du wolltest mal wieder besonders cool sein und eine gewagte Finte', waffe_aufnehmen, {'<magenta>'})
 trigger[#trigger+1] = client.createSubstrTrigger('Im Eifer des Gefechts faellt Dir einfach so Deine Waffe aus der Hand. Dumm', waffe_aufnehmen, {'<magenta>'})
 trigger[#trigger+1] = client.createSubstrTrigger('Du versuchst schneller zu kaempfen und verlierst im Eifer des', waffe_aufnehmen, {'<magenta>'})
-trigger[#trigger+1] = client.createRegexTrigger('Du schwingst .* in hohem Bogen, laesst .* aber leider genau am', waffe_aufnehmen, {'<magenta>'})
+trigger[#trigger+1] = client.createRegexTrigger('^Du schwingst .* in hohem Bogen, laesst .* aber leider genau am', waffe_aufnehmen, {'<magenta>'})
 trigger[#trigger+1] = client.createSubstrTrigger('Der Waffenwurf ist misslungen. Du laesst ', waffe_aufnehmen, {'<magenta>'})
 trigger[#trigger+1] = client.createSubstrTrigger('Argl! Du machst eine weitausholende Bewegung, um die Waffe', waffe_aufnehmen, {'<magenta>'})
 

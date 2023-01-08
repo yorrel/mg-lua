@@ -99,7 +99,7 @@ end
 trigger[#trigger+1] = client.createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'<cyan>'})
 
 trigger[#trigger+1] = client.createSubstrTrigger('Du bist derzeit in der Parallelwelt.', nil, {'<blue>'})
-trigger[#trigger+1] = client.createRegexTrigger('Du bist derzeit in Parallelwelt Nr\\. (\\d*)\\.', nil, {'<blue>'})
+trigger[#trigger+1] = client.createRegexTrigger('^Du bist derzeit in Parallelwelt Nr\\. (\\d*)\\.', nil, {'<blue>'})
 
 -- meditation
 trigger[#trigger+1] = client.createSubstrTrigger('Du beendest Deine Meditation.', nil, {'<green>'})
@@ -122,7 +122,7 @@ trigger[#trigger+1] = client.createSubstrTrigger('Der Zeitfluss veraendert sich'
 trigger[#trigger+1] = client.createSubstrTrigger('Die Kontrolle ueber den Zeitfluss entgleitet Dir.', nil, {'<red>'})
 
 trigger[#trigger+1] = client.createRegexTrigger(
-  'Deine Haende fangen ploetzlich an, .* zu leuchten.',
+  '^Deine Haende fangen ploetzlich an, .* zu leuchten.',
   function()
     timer.enqueue(
       150,

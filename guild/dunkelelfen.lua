@@ -57,7 +57,7 @@ local function autoSonnenschutz()
   end
 end
 
-trigger[#trigger+1] = client.createSubstrTrigger('Die Sonne scheint gnadenlos auf Dein Haupt und schwaecht Dich.', autoSonnenschutz, {'<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Die Sonne scheint gnadenlos auf Dein Haupt und schwaecht Dich.', autoSonnenschutz, {'<magenta>'})
 
 
 -- Verkleiden
@@ -100,10 +100,10 @@ local function statusUpdate(id, optVal)
 end
 
 -- weihe
-trigger[#trigger+1] = client.createRegexTrigger('Die Weihe .* klingt wieder ab.', nil, {'<red>'})
+trigger[#trigger+1] = client.createRegexTrigger('^Die Weihe .* klingt wieder ab.', nil, {'<red>'})
 
 -- aura
-trigger[#trigger+1] = client.createRegexTrigger('Um Dich herum entsteht eine .*magische Aura\\.', statusUpdate('aura','A'), {'<green>'})
+trigger[#trigger+1] = client.createRegexTrigger('^Um Dich herum entsteht eine .*magische Aura\\.', statusUpdate('aura','A'), {'<green>'})
 trigger[#trigger+1] = client.createSubstrTrigger('Die Aura um Dich waechst gewaltig.', statusUpdate('aura','A+'), {'<green>'})
 trigger[#trigger+1] = client.createSubstrTrigger('Die Dich umgebene magische Aura stabilisiert sich wieder.', nil, {'<green>'})
 trigger[#trigger+1] = client.createSubstrTrigger('Die Magieaura die Dich umgibt loest sich allmaehlich auf.', statusUpdate('aura'), {'<red>'})
@@ -122,7 +122,7 @@ trigger[#trigger+1] = client.createSubstrTrigger('Das Kribbeln in Deinen Fingern
 trigger[#trigger+1] = client.createSubstrTrigger('Deine magischen Kraefte verlassen Dich, Deine Haende entspannen sich wieder.', statusUpdate('blitzhand'), {'<red>'})
 
 -- schmerzen
-trigger[#trigger+1] = client.createRegexTrigger('  Du starrst .* in die Augen, bis .*', nil, {'<green>'})
+trigger[#trigger+1] = client.createRegexTrigger('^  Du starrst .* in die Augen, bis .*', nil, {'<green>'})
 trigger[#trigger+1] = client.createSubstrTrigger('Schmerzen lassen nach.', nil, {'<red>'})
 
 -- beschwoere

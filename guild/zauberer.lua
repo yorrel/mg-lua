@@ -99,10 +99,10 @@ end
 -- Trigger fuer Highlighting
 
 trigger[#trigger+1] = client.createRegexTrigger('ist nun von einer (feurigen|eisigen|verschwommenen|magischen|giftgruenen|durchscheinenden|roetlichen|flimmernden|funkelnden) Aura eingehuellt.', nil, {'<green>'})
-trigger[#trigger+1] = client.createRegexTrigger('Die Aura um Dein.* schwindet.', nil, {'<red>'})
+trigger[#trigger+1] = client.createRegexTrigger('^Die Aura um Dein.* schwindet.', nil, {'<red>'})
 
 trigger[#trigger+1] = client.createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'<cyan>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Dir fehlen die noetigen Materialien!', nil, {'B','<red>'})
+trigger[#trigger+1] = client.createSubstrTrigger('Dir fehlen die noetigen Materialien!', nil, {'B','<magenta>'})
 
 trigger[#trigger+1] = client.createSubstrTrigger('Deine Haende beginnen', nil, {'<green>'})
 trigger[#trigger+1] = client.createSubstrTrigger('Die Verzauberung Deiner Haende laesst langsam nach.', nil, {'<red>'})
