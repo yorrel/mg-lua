@@ -148,7 +148,7 @@ trigger[#trigger+1] = client.createRegexTrigger(
     timer.enqueue(
       120,
       function()
-        logger.info('finsternis wieder moeglich (2 min um)')
+        logger.info('finsternis wieder moeglich (120 sec)')
       end
     )
   end,
@@ -157,9 +157,14 @@ trigger[#trigger+1] = client.createRegexTrigger(
 
 -- daemonenpeitsche
 trigger[#trigger+1] = client.createRegexTrigger(
-  '^Du schlaegst \\w* kraeftig mit Deiner, ploetzlich chaotisch',
+  '^(Yrintri|Tutszt|Flaxtri|Graiop|Nurchak|Harkuhu|Irkitis) steigert sich in wilde Raserei!',
   nil,
   {'<green>'}
+)
+trigger[#trigger+1] = client.createRegexTrigger(
+  '^(Yrintri|Tutszt|Flaxtri|Graiop|Nurchak|Harkuhu|Irkitis) hat die letzte Zuechtigung noch nicht verkraftet\\.',
+  nil,
+  {'<blue>'}
 )
 
 -- blutopfer
