@@ -228,7 +228,7 @@ trigger[#trigger+1] = client.createRegexTrigger(
 trigger[#trigger+1] = client.createSubstrTrigger('Du beendest Deine Raserei', statusUpdate('technik'), {'<red>'})
 
 -- block
-client.createSubstrTrigger(
+trigger[#trigger+1] = client.createSubstrTrigger(
   'Du spuerst, wie sich gleich Deine Waffe aus dem Block loesen wird!',
   nil,
   {'<yellow>'}
