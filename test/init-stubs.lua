@@ -132,7 +132,7 @@ client = {
 require "init"
 local char  = require "base"
 
-char.ME.name  = "Snert"
+char.ME.name  = "Basmati"
 char.ME.gilde = "karate"
 char.ME.raum_id = "bff5364155f609ff15992cb3572ed6d5"
 char.ME.raum_id_short = "bff53"

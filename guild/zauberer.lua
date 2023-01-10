@@ -5,7 +5,6 @@ local inv     = require 'inventory'
 local kampf   = require 'battle'
 
 local logger  = client.createLogger('zauberer')
-local trigger = {}
 
 -- ---------------------------------------------------------------------------
 -- Zauber
@@ -96,34 +95,7 @@ end
 
 
 -- ---------------------------------------------------------------------------
--- Trigger fuer Highlighting
-
-trigger[#trigger+1] = client.createRegexTrigger('ist nun von einer (feurigen|eisigen|verschwommenen|magischen|giftgruenen|durchscheinenden|roetlichen|flimmernden|funkelnden) Aura eingehuellt.', nil, {'<green>'})
-trigger[#trigger+1] = client.createRegexTrigger('^Die Aura um Dein.* schwindet.', nil, {'<red>'})
-
-trigger[#trigger+1] = client.createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'<cyan>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Dir fehlen die noetigen Materialien!', nil, {'B','<magenta>'})
-
-trigger[#trigger+1] = client.createSubstrTrigger('Deine Haende beginnen', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Die Verzauberung Deiner Haende laesst langsam nach.', nil, {'<red>'})
-
-trigger[#trigger+1] = client.createSubstrTrigger('Du konzentrierst Deinen Willen auf Deinen Schutz.', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Dein Wille laesst nach.', nil, {'<red>'})
-
-trigger[#trigger+1] = client.createSubstrTrigger('Ploetzlich loest sich Dein Schatten von Dir.', nil, {'<green>'})
-
-trigger[#trigger+1] = client.createSubstrTrigger('Du hast jetzt eine zusaetzliche Hand zur Verfuegung.', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Deine Extrahand loest sich auf.', nil, {'<red>'})
-
-trigger[#trigger+1] = client.createSubstrTrigger('Du wirst allmaehlich wieder langsamer.', nil, {'<red>'})
-
-
--- ---------------------------------------------------------------------------
 -- Statuszeile
-
-local statusConf =
-  'SKP:{skp:3} {hand:1} {extrahand:1} {wille:1} {sz:1} {ba:1}'
-  ..'{er:1} {gesinnung:1} {gesundheit:4}'
 
 local function convert(flag, to)
   return flag == 'J' and to or ' '
@@ -150,11 +122,6 @@ local function statusZeile2(m)
     {'er', m[6]}
   )
 end
-
-trigger[#trigger+1] = client.createRegexTrigger('^STATUS1: ([0-9]+) ([0-9]+) ([0-9]+) (.) (.) (.) (.) (.)', statusZeile1, {'g'})
-trigger[#trigger+1] = client.createRegexTrigger('^STATUS2: (.) (.) (.) (.) (.) (.) ([0-9]+) (.+)', statusZeile2, {'g'})
-
-client.disableTrigger(trigger)
 
 
 local function createFunctionMitGegner(cmd)
@@ -190,12 +157,46 @@ function Zauberer:entsorgeLeiche()
 end
 
 function Zauberer:enable()
-  -- Standardfunktionen ------------------------------------------------------
+  -- Statuszeile -------------------------------------------------------------
+  local statusConf =
+    'SKP:{skp:3} {hand:1} {extrahand:1} {wille:1} {sz:1} {ba:1}'
+    ..'{er:1} {gesinnung:1} {gesundheit:4}'
   base.statusConfig(statusConf)
 
-  -- Trigger -----------------------------------------------------------------
-  client.createSubstrTrigger(base.charName()..' loest sich in Luft auf.', nil, {'<red>'})
-  client.enableTrigger(trigger)
+  -- Trigger fuer Status -----------------------------------------------------
+  self:createRegexTrigger('^STATUS1: ([0-9]+) ([0-9]+) ([0-9]+) (.) (.) (.) (.) (.)', statusZeile1, {'g'})
+  self:createRegexTrigger('^STATUS2: (.) (.) (.) (.) (.) (.) ([0-9]+) (.+)', statusZeile2, {'g'})
+
+  base.addResetHook(
+    function()
+      client.send(
+        'stabreport STATUS1: %la %ma %sa %Al %gi %bl %ta %fr %lfSTATUS2: %Fh %Xh %Wi %Sz %Ba %Er %vo %fl %lf',
+        'stabreport ein'
+      )
+    end
+  )
+
+  -- Trigger fuer Highlighting -----------------------------------------------
+  self:createSubstrTrigger(base.charName()..' loest sich in Luft auf.', nil, {'<red>'})
+
+  self:createRegexTrigger('ist nun von einer (feurigen|eisigen|verschwommenen|magischen|giftgruenen|durchscheinenden|roetlichen|flimmernden|funkelnden) Aura eingehuellt.', nil, {'<green>'})
+  self:createRegexTrigger('^Die Aura um Dein.* schwindet.', nil, {'<red>'})
+
+  self:createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'<cyan>'})
+  self:createSubstrTrigger('Dir fehlen die noetigen Materialien!', nil, {'B','<magenta>'})
+
+  self:createSubstrTrigger('Deine Haende beginnen', nil, {'<green>'})
+  self:createSubstrTrigger('Die Verzauberung Deiner Haende laesst langsam nach.', nil, {'<red>'})
+
+  self:createSubstrTrigger('Du konzentrierst Deinen Willen auf Deinen Schutz.', nil, {'<green>'})
+  self:createSubstrTrigger('Dein Wille laesst nach.', nil, {'<red>'})
+
+  self:createSubstrTrigger('Ploetzlich loest sich Dein Schatten von Dir.', nil, {'<green>'})
+
+  self:createSubstrTrigger('Du hast jetzt eine zusaetzliche Hand zur Verfuegung.', nil, {'<green>'})
+  self:createSubstrTrigger('Deine Extrahand loest sich auf.', nil, {'<red>'})
+
+  self:createSubstrTrigger('Du wirst allmaehlich wieder langsamer.', nil, {'<red>'})
 
   -- Tasten ------------------------------------------------------------------
   local keymap = base.keymap

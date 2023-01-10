@@ -6,7 +6,6 @@ local timer  = require 'timer'
 local kampf  = require 'battle'
 
 local logger = client.createLogger('tanjian')
-local trigger = {}
 
 local function state()
   return base.getPersistentTable('tanjian')
@@ -93,76 +92,13 @@ local function setAksharaHandschuhe(item)
   state().akshara_handschuhe = item
 end
 
--- ---------------------------------------------------------------------------
--- Trigger
-
-trigger[#trigger+1] = client.createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'<cyan>'})
-
-trigger[#trigger+1] = client.createSubstrTrigger('Du bist derzeit in der Parallelwelt.', nil, {'<blue>'})
-trigger[#trigger+1] = client.createRegexTrigger('^Du bist derzeit in Parallelwelt Nr\\. (\\d*)\\.', nil, {'<blue>'})
-
--- meditation
-trigger[#trigger+1] = client.createSubstrTrigger('Du beendest Deine Meditation.', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Deine Konzentrationsfaehigkeit laesst langsam nach.', nil, {'<yellow>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Deine Umgebung scheint sich auf Deine Meditation auszuwirken.', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Du solltest mal wieder meditieren.', nil, {'<red>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Du spuerst noch die Wirkung der letzten Meditation.', nil, {'<blue>'})
-
--- kokoro
-trigger[#trigger+1] = client.createSubstrTrigger('Die Dunkelheit loest sich von Deinem Geist.', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Die Membran schwingt doch noch!', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Die Energien des Kokoro versiegen.', nil, {'<red>'})
-
--- tegatana, omamori, hayai
-trigger[#trigger+1] = client.createSubstrTrigger('Du konzentrierst Dich auf den Kampf.', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Deine Kampf-Konzentration laesst nach.', nil, {'<red>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Du konzentrierst Dich auf die Abwehr.', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Deine Abwehr-Konzentration laesst nach.', nil, {'<red>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Der Zeitfluss veraendert sich', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Die Kontrolle ueber den Zeitfluss entgleitet Dir.', nil, {'<red>'})
-
-trigger[#trigger+1] = client.createRegexTrigger(
-  '^Deine Haende fangen ploetzlich an, .* zu leuchten.',
-  function()
-    timer.enqueue(
-      150,
-      function()
-        logger.info('Akshara wieder moeglich')
-      end
-    )
-  end,
-  {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Du verlaesst den Pfad des Lichtes.', nil, {'<red>'})
-
--- Clan Nekekami
-trigger[#trigger+1] = client.createSubstrTrigger('Du huellst Dich in einen schuetzenden Nebel.', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Du bist noch in einen Nebel gehuellt.', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Der Nebel loest sich auf.', nil, {'<red>'})
 
 
 -- ---------------------------------------------------------------------------
 -- Statuszeile
 
-local tanjianStatusConf =
-  '{meditation:1} {gesinnung:1} {kokoro:2} {tegatana:2} {hayai:2} {akshara:2}'
-
-trigger[#trigger+1] = client.createRegexTrigger(
-  '^TANJIANREPORT: (.) (.) (..) (..) (..) (..)#',
-  function(m)
-    base.statusUpdate(
-      {'meditation', m[1]},
-      {'gesinnung', m[2]},
-      {'kokoro', m[3]},
-      {'tegatana', m[4]},
-      {'hayai', m[5]},
-      {'akshara', m[6]}
-    )
-  end,
-  {'g'}
-)
 
 
-client.disableTrigger(trigger)
 
 local function createFunctionMitGegner(cmd)
   return
@@ -198,7 +134,26 @@ function Tanjian:entsorgeLeiche()
 end
 
 function Tanjian:enable()
-  -- Standardfunktionen ------------------------------------------------------
+  -- Statuszeile -------------------------------------------------------------
+  local tanjianStatusConf =
+    '{meditation:1} {gesinnung:1} {kokoro:2} {tegatana:2} {hayai:2} {akshara:2}'
+  base.statusConfig(tanjianStatusConf)
+
+  self:createRegexTrigger(
+    '^TANJIANREPORT: (.) (.) (..) (..) (..) (..)#',
+    function(m)
+      base.statusUpdate(
+        {'meditation', m[1]},
+        {'gesinnung', m[2]},
+        {'kokoro', m[3]},
+        {'tegatana', m[4]},
+        {'hayai', m[5]},
+        {'akshara', m[6]}
+      )
+    end,
+    {'g'}
+  )
+
   base.addResetHook(
     function()
       client.send(
@@ -207,10 +162,49 @@ function Tanjian:enable()
       )
     end
   )
-  base.statusConfig(tanjianStatusConf)
 
   -- Trigger -----------------------------------------------------------------
-  client.enableTrigger(trigger)
+  self:createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'<cyan>'})
+  self:createSubstrTrigger('Du bist derzeit in der Parallelwelt.', nil, {'<blue>'})
+  self:createRegexTrigger('^Du bist derzeit in Parallelwelt Nr\\. (\\d*)\\.', nil, {'<blue>'})
+
+  -- meditation
+  self:createSubstrTrigger('Du beendest Deine Meditation.', nil, {'<green>'})
+  self:createSubstrTrigger('Deine Konzentrationsfaehigkeit laesst langsam nach.', nil, {'<yellow>'})
+  self:createSubstrTrigger('Deine Umgebung scheint sich auf Deine Meditation auszuwirken.', nil, {'<green>'})
+  self:createSubstrTrigger('Du solltest mal wieder meditieren.', nil, {'<red>'})
+  self:createSubstrTrigger('Du spuerst noch die Wirkung der letzten Meditation.', nil, {'<blue>'})
+
+  -- kokoro
+  self:createSubstrTrigger('Die Dunkelheit loest sich von Deinem Geist.', nil, {'<green>'})
+  self:createSubstrTrigger('Die Membran schwingt doch noch!', nil, {'<green>'})
+  self:createSubstrTrigger('Die Energien des Kokoro versiegen.', nil, {'<red>'})
+
+  -- tegatana, omamori, hayai
+  self:createSubstrTrigger('Du konzentrierst Dich auf den Kampf.', nil, {'<green>'})
+  self:createSubstrTrigger('Deine Kampf-Konzentration laesst nach.', nil, {'<red>'})
+  self:createSubstrTrigger('Du konzentrierst Dich auf die Abwehr.', nil, {'<green>'})
+  self:createSubstrTrigger('Deine Abwehr-Konzentration laesst nach.', nil, {'<red>'})
+  self:createSubstrTrigger('Der Zeitfluss veraendert sich', nil, {'<green>'})
+  self:createSubstrTrigger('Die Kontrolle ueber den Zeitfluss entgleitet Dir.', nil, {'<red>'})
+
+  self:createRegexTrigger(
+    '^Deine Haende fangen ploetzlich an, .* zu leuchten.',
+    function()
+      timer.enqueue(
+        150,
+        function()
+          logger.info('Akshara wieder moeglich')
+        end
+      )
+    end,
+    {'<green>'})
+  self:createSubstrTrigger('Du verlaesst den Pfad des Lichtes.', nil, {'<red>'})
+
+  -- Clan Nekekami
+  self:createSubstrTrigger('Du huellst Dich in einen schuetzenden Nebel.', nil, {'<green>'})
+  self:createSubstrTrigger('Du bist noch in einen Nebel gehuellt.', nil, {'<green>'})
+  self:createSubstrTrigger('Der Nebel loest sich auf.', nil, {'<red>'})
 
   -- Tasten ------------------------------------------------------------------
   local keymap = base.keymap

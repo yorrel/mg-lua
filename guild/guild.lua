@@ -2,9 +2,21 @@ local class = require 'utils.class'
 local kampf = require 'battle'
 local inv   = require 'inventory'
 
-local Guild = class(function(a,name)
-    a.name = name
- end)
+local Guild = class()
+
+local trigger = {}
+
+function Guild:createSubstrTrigger(pattern, f, style, prio)
+  local id = client.createSubstrTrigger(pattern, f, style, prio)
+  trigger[#trigger+1] = id
+  return id
+end
+
+function Guild:createRegexTrigger(pattern, f, style, prio)
+  local id = client.createRegexTrigger(pattern, f, style, prio)
+  trigger[#trigger+1] = id
+  return id
+end
 
 function Guild.attackFunWithEnemy(skill, hands)
   return function()

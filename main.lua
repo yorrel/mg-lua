@@ -60,7 +60,7 @@ base.registerEventHandler(
     local guildClass = guildClasses[guildName]
     if guildClass ~= nil then
       local guild = guildClass()
-      guild.enable()
+      guild:enable()
       base.setGuild(guild)
       logger.info('Code zur Gilde \''..(guildName or '')..'\' aktiviert')
     end

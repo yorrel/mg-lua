@@ -11,7 +11,6 @@ local kampf  = require 'battle'
 local gmcp   = require 'gmcp-data'
 
 local logger = client.createLogger('chaos')
-local trigger = {}
 
 local function state()
   return base.getPersistentTable('chaos')
@@ -114,92 +113,6 @@ local function chaoskontrolle_auto()
     chaos_chaoskontrolle(artMagisch, artPhysikalisch)
   end
 end
-
-
--- ---------------------------------------------------------------------------
--- Zauber
-
--- schutz
-trigger[#trigger+1] = client.createRegexTrigger(
-  '^Deine Chaoshaut schuetzt Dich jetzt (etwas|wesentlich) besser\\.',
-  function(m)
-    local schutz = m[1] == 'wesentlich' and 'S+' or 'S'
-    base.statusUpdate({'schutz', schutz})
-  end,
-  {'<green>'}
-)
-trigger[#trigger+1] = client.createSubstrTrigger('Der magische Schutz Deiner Chaoshaut wird gleich verschwinden!', nil, {'<yellow>'})
-trigger[#trigger+1] = client.createSubstrTrigger(
-  'Der magische Schutz der Chaoshaut verschwindet.',
-  function(m)
-    base.statusUpdate({'schutz'})
-  end,
-  {'<red>'}
-)
-
--- nachtsicht
-trigger[#trigger+1] = client.createSubstrTrigger('Du veraenderst magisch Deine Augen.', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('Die Magie Deiner Augen laesst nach und verschwindet.', nil, {'<red>'})
-
--- finsternis
-trigger[#trigger+1] = client.createRegexTrigger(
-  '^Du huellst .* in eine Wolke aus Finsternis ein\\.',
-  function()
-    timer.enqueue(
-      120,
-      function()
-        logger.info('finsternis wieder moeglich (120 sec)')
-      end
-    )
-  end,
-  {'<cyan>'}
-)
-
--- daemonenpeitsche
-trigger[#trigger+1] = client.createRegexTrigger(
-  '^(Yrintri|Tutszt|Flaxtri|Graiop|Nurchak|Harkuhu|Irkitis) steigert sich in wilde Raserei!',
-  nil,
-  {'<green>'}
-)
-trigger[#trigger+1] = client.createRegexTrigger(
-  '^(Yrintri|Tutszt|Flaxtri|Graiop|Nurchak|Harkuhu|Irkitis) hat die letzte Zuechtigung noch nicht verkraftet\\.',
-  nil,
-  {'<blue>'}
-)
-
--- blutopfer
-trigger[#trigger+1] = client.createSubstrTrigger('Mit einem grimmigen Aufschrei, rammst Du', nil, {'<green>'})
-trigger[#trigger+1] = client.createSubstrTrigger('naehrt sich an Deinem Blut.', nil, {'<cyan>'})
-trigger[#trigger+1] = client.createSubstrTrigger('will Dein Opfer nicht mehr.', nil, {'<red>'})
-
--- dimensionsriss
-trigger[#trigger+1] = client.createSubstrTrigger(
-  'durch einen winzigen Dimensionsriss gesaugt',
-  function()
-    logger.warn('AUSRUESTUNG WURDE ZUR CHAOSGILDE (Chaosteleporter) teleportiert!')
-  end,
-  {'<red>','B'})
-
--- Lernerfolg
-trigger[#trigger+1] = client.createSubstrTrigger('Die Macht des Chaos durchstroemt Dich und macht Dich staerker.', nil, {'<magenta>'})
-
-
--- ---------------------------------------------------------------------------
--- Chaoshaut
-
-local CHAOSHAUT_OK = true
-
-local function auto_kontrolle()
-  CHAOSHAUT_OK = false
-  client.send('kontrolle')
-end
-
-local function haut_ok()
-  CHAOSHAUT_OK = true
-end
-
-trigger[#trigger+1] = client.createSubstrTrigger('DER DAEMON IN DEINER HAUT WIRD GLEICH VERSUCHEN SICH ZU BEFREIEN!!!', auto_kontrolle, {'<magenta>','B'})
-trigger[#trigger+1] = client.createSubstrTrigger('Du erlangst die Kontrolle ueber die Chaos-Ruestung zurueck.', haut_ok, {'<green>'})
 
 
 -- ---------------------------------------------------------------------------
@@ -308,34 +221,6 @@ local function chaos_friss_leiche()
   )
 end
 
--- automatisch Daemonenausruestung retten:
-local function zeug_retten()
-  client.send('stecke daemonenpanzer in '..cont.default())
-  client.send('stecke lederkleidung in '..cont.default())
-  client.send('stecke daemonenhelm in '..cont.default())
-  client.send('stecke daemonenstiefel in '..cont.default())
-  if aktDaemonenWaffe ~= nil then
-     client.send('stecke '..aktDaemonenWaffe..' in '..cont.default())
-  end
-end
-
-trigger[#trigger+1] = client.createSubstrTrigger('Yrintri beendet seine Daseinsform.', zeug_retten)
-trigger[#trigger+1] = client.createSubstrTrigger('Tutszt bildet einen grossen Blutfleck.', zeug_retten)
-trigger[#trigger+1] = client.createSubstrTrigger('Flaxtri verschwindet brodelnd im Erdreich.', zeug_retten)
-trigger[#trigger+1] = client.createSubstrTrigger('Graiop verschwindet in einer Feuerexplosion.', zeug_retten)
-trigger[#trigger+1] = client.createSubstrTrigger('Nurchak zerfaellt zu einem Haufen Eiskristalle.', zeug_retten)
-trigger[#trigger+1] = client.createSubstrTrigger('Harkuhu verschwindet in einem Lichtblitz.', zeug_retten)
-trigger[#trigger+1] = client.createSubstrTrigger('Irkitis oeffnet eine unsichtbare Tuer und verschwindet.', zeug_retten)
-
-trigger[#trigger+1] = client.createRegexTrigger(
-  '^(Yrintri|Tutszt|Flaxtri|Graiop|Nurchak|Harkuhu|Irkitis) laesst.* (\\w+) fallen\\.',
-  function(m)
-    if m[1] == aktKampfDaemon then
-      client.send('stecke '..m[2]..' in '..cont.default())
-    end
-  end
-)
-
 -- Aktuellen Daemon ruesten/entruesten mit Panzer/Stiefel/Helm.
 local function chaos_druest(id)
   if id ~= nil and id ~= '-' then
@@ -409,8 +294,6 @@ end
 -- ---------------------------------------------------------------------------
 -- Statuszeile
 
-local statusConf = 'CB:{chaosball:11}  {schutz:2}'
-
 local cs_arten = {}
 cs_arten['harte Felsbrocken'] = 'fn'
 cs_arten['rotierende Messer'] = 'me'
@@ -461,11 +344,6 @@ local function chaoskontrolle_einstellung(m)
   local schadenKuerzel = anzahl..' '..art
   base.statusUpdate({'chaosball', schadenKuerzel})
 end
-
-trigger[#trigger+1] = client.createRegexTrigger(
-  '^Die naechsten ([0-9]+) Chaosbaelle sind: ([a-z]+)? ?([A-Z][a-z]+)\\.$',
-  chaoskontrolle_einstellung
-)
 
 
 -- ---------------------------------------------------------------------------
@@ -595,11 +473,120 @@ function Chaos:info()
 end
 
 function Chaos:enable()
-  -- Standardfunktionen ------------------------------------------------------
+  -- Statuszeile -------------------------------------------------------------
+  local statusConf = 'CB:{chaosball:11}  {schutz:2}'
   base.statusConfig(statusConf)
 
-  -- Trigger -----------------------------------------------------------------
-  client.enableTrigger(trigger)
+  self:createRegexTrigger(
+    '^Die naechsten ([0-9]+) Chaosbaelle sind: ([a-z]+)? ?([A-Z][a-z]+)\\.$',
+    chaoskontrolle_einstellung
+  )
+
+  -- ---------------------------------------------------------------------------
+  -- Zauber
+
+  -- schutz
+  self:createRegexTrigger(
+    '^Deine Chaoshaut schuetzt Dich jetzt (etwas|wesentlich) besser\\.',
+    function(m)
+      local schutz = m[1] == 'wesentlich' and 'S+' or 'S'
+      base.statusUpdate({'schutz', schutz})
+    end,
+    {'<green>'}
+  )
+  self:createSubstrTrigger('Der magische Schutz Deiner Chaoshaut wird gleich verschwinden!', nil, {'<yellow>'})
+  self:createSubstrTrigger(
+    'Der magische Schutz der Chaoshaut verschwindet.',
+    function(m)
+      base.statusUpdate({'schutz'})
+    end,
+    {'<red>'}
+  )
+
+  -- nachtsicht
+  self:createSubstrTrigger('Du veraenderst magisch Deine Augen.', nil, {'<green>'})
+  self:createSubstrTrigger('Die Magie Deiner Augen laesst nach und verschwindet.', nil, {'<red>'})
+
+  -- finsternis
+  self:createRegexTrigger(
+    '^Du huellst .* in eine Wolke aus Finsternis ein\\.',
+    function()
+      timer.enqueue(
+        120,
+        function()
+          logger.info('finsternis wieder moeglich (120 sec)')
+        end
+      )
+    end,
+    {'<cyan>'}
+  )
+
+  -- daemonenpeitsche
+  self:createRegexTrigger(
+    '^(Yrintri|Tutszt|Flaxtri|Graiop|Nurchak|Harkuhu|Irkitis) steigert sich in wilde Raserei!',
+    nil,
+    {'<green>'}
+  )
+  self:createRegexTrigger(
+    '^(Yrintri|Tutszt|Flaxtri|Graiop|Nurchak|Harkuhu|Irkitis) hat die letzte Zuechtigung noch nicht verkraftet\\.',
+    nil,
+    {'<blue>'}
+  )
+
+  -- blutopfer
+  self:createSubstrTrigger('Mit einem grimmigen Aufschrei, rammst Du', nil, {'<green>'})
+  self:createSubstrTrigger('naehrt sich an Deinem Blut.', nil, {'<cyan>'})
+  self:createSubstrTrigger('will Dein Opfer nicht mehr.', nil, {'<red>'})
+
+  -- dimensionsriss
+  self:createSubstrTrigger(
+    'durch einen winzigen Dimensionsriss gesaugt',
+    function()
+      logger.warn('AUSRUESTUNG WURDE ZUR CHAOSGILDE (Chaosteleporter) teleportiert!')
+    end,
+    {'<red>','B'})
+
+  -- Lernerfolg
+  self:createSubstrTrigger('Die Macht des Chaos durchstroemt Dich und macht Dich staerker.', nil, {'<magenta>'})
+
+  -- Chaoshaut ---------------------------------------------------------------
+
+  self:createSubstrTrigger(
+    'DER DAEMON IN DEINER HAUT WIRD GLEICH VERSUCHEN SICH ZU BEFREIEN!!!',
+    function()
+      client.send('kontrolle')
+    end,
+    {'<magenta>','B'}
+  )
+  self:createSubstrTrigger('Du erlangst die Kontrolle ueber die Chaos-Ruestung zurueck.', nil, {'<green>'})
+
+  -- Daemonenausruestung -----------------------------------------------------
+  local function zeug_retten()
+    client.send('stecke daemonenpanzer in '..cont.default())
+    client.send('stecke lederkleidung in '..cont.default())
+    client.send('stecke daemonenhelm in '..cont.default())
+    client.send('stecke daemonenstiefel in '..cont.default())
+    if aktDaemonenWaffe ~= nil then
+      client.send('stecke '..aktDaemonenWaffe..' in '..cont.default())
+    end
+  end
+
+  self:createSubstrTrigger('Yrintri beendet seine Daseinsform.', zeug_retten)
+  self:createSubstrTrigger('Tutszt bildet einen grossen Blutfleck.', zeug_retten)
+  self:createSubstrTrigger('Flaxtri verschwindet brodelnd im Erdreich.', zeug_retten)
+  self:createSubstrTrigger('Graiop verschwindet in einer Feuerexplosion.', zeug_retten)
+  self:createSubstrTrigger('Nurchak zerfaellt zu einem Haufen Eiskristalle.', zeug_retten)
+  self:createSubstrTrigger('Harkuhu verschwindet in einem Lichtblitz.', zeug_retten)
+  self:createSubstrTrigger('Irkitis oeffnet eine unsichtbare Tuer und verschwindet.', zeug_retten)
+
+  self:createRegexTrigger(
+    '^(Yrintri|Tutszt|Flaxtri|Graiop|Nurchak|Harkuhu|Irkitis) laesst.* (\\w+) fallen\\.',
+    function(m)
+      if m[1] == aktKampfDaemon then
+        client.send('stecke '..m[2]..' in '..cont.default())
+      end
+    end
+  )
 
   -- Tasten ------------------------------------------------------------------
   local keymap = base.keymap
