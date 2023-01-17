@@ -429,7 +429,7 @@ client.createStandardAlias(
   1,
   function(s)
     local args, flags = tools.parseArgs(s)
-    local cmd = table.remove(args, 1)
+    local cmd = table.remove(args, 1) or ''
     local sub_cmd = room_sub_cmds[cmd]
     if not sub_cmd then
       logger.error('unbekanntes Subcommand '..cmd)
