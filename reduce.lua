@@ -930,6 +930,16 @@ createMultiLineRegexTrigger(
   re_chaos_cb
 )
 
+-- ggf. Chaosball abbrechen (selten treten sonst Folgefehler auf)
+createMultiLineRegexTrigger(
+  '^Du konntest die Chaosmagie nicht beherrschen\\.$',
+  function()
+    re_loeschen()
+  end,
+  PRIO_DEFAULT,
+  {'F'}
+)
+
 -- Chaoswolke
 createMultiLineRegexTrigger(
   '^Eine Chaoswolke loest sich aus (.+) (Haut|Chaoshaut) und schiesst>< (.+) zu\\.$',
