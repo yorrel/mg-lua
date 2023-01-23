@@ -3457,7 +3457,7 @@ createRegexTrigger(
 -- haben niedrigere Prio als alle anderen Trigger, damit besondere Angriffe- nicht
 -- versehentlich als Normalangriff erkannt werden
 -- ---------------------------------------------------------------------------
-local RE_REGEXP_WAFFE = '^  ([^ ].+) greifs?t [a-z,` ]*([A-Z].*) mit ([-A-Za-z` ]*) an\\.$'
+local RE_REGEXP_WAFFE = '^  ([^ ].+) greifs?t [a-z,` ]*([A-Z].*) mit ><([-A-Za-z`, ]*) an\\.$'
 local RE_REGEXP_KARATEKOMBI = regex('([^ ]+) kombinierten ([^ ]+)')
 
 local function match_normalen_angriff(m)
@@ -3539,7 +3539,7 @@ local function match_normalen_angriff(m)
   }
 end
 
-createRegexTrigger(
+createMultiLineRegexTrigger(
   RE_REGEXP_WAFFE,
   match_normalen_angriff,
   PRIO_NORMALANGRIFF
