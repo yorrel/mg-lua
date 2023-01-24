@@ -2445,7 +2445,7 @@ addGroupedRegexTrigger(
 )
 addGroupedRegexTrigger(
   kami_sa_triggers,
-  '^  Eine Saeureflut loesst (.*) auf\\.',
+  '^  Eine Saeureflut loest (.*) auf\\.',
   function(m)
     if string.match(m[1], ' voellig') then
       RE_SCHADEN = 12
