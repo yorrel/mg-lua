@@ -1681,27 +1681,18 @@ createSubstrTrigger(
 )
 
 -- Blitz
-local kleriker_blitz_trigger2
-kleriker_blitz_trigger2 = createRegexTrigger(
-  '^  ((Der Blitz verfehlt|Du fuehlst|Es knistert auf|Kleine Funken springen auf|Auf der Haut|Der Blitz brennt sich in|Der Blitz schlaegt hart in|Der Blitz wirkt sich verheerend auf|Der Blitz hat verheerende Auswirkungen auf die Gesundheit) (.+) ((wenn auch nur )?knapp|Haut( umher)?|springen kleine Funken umher|ein|Gesundheit aus)|([^ ].*) (wird etwas statisch aufgeladen|knistert etwas|zucks?t elektrisiert zusammen))\\.$',
+local kleriker_blitz_trigger2 = {}
+kleriker_blitz_trigger2[#kleriker_blitz_trigger2+1] = createMultiLineRegexTrigger(
+  '^  (Der Blitz verfehlt|Du fuehlst|Es knistert auf|Kleine Funken springen auf|Auf der Haut|Der Blitz brennt sich in|Der Blitz schlaegt hart in|Der Blitz wirkt sich verheerend auf) ><(.+) ((wenn auch nur )?knapp|Haut( umher)?|springen kleine Funken umher|ein|Gesundheit aus)\\.$',
   function(m)
     disableTrigger(kleriker_blitz_trigger2)
-    local RE_KSCHADEN_1 = m[2]
-    local RE_KSCHADEN_2 = m[4]
-    RE_OPFER = m[3]
-    if m[2] == '' then
-      RE_KSCHADEN_1 = 'Nix'
-      RE_KSCHADEN_2 = m[8]
-      RE_OPFER = m[7]
-    end
+    local RE_KSCHADEN_1 = m[1]
+    local RE_KSCHADEN_2 = m[3]
+    RE_OPFER = m[2]
     if string.find(RE_KSCHADEN_2, 'knapp') then
       RE_SCHADEN = 1
-    elseif string.find(RE_KSCHADEN_2, 'statisch aufgeladen') then
-      RE_SCHADEN = 2
-    elseif string.find(RE_KSCHADEN_1, 'knistert auf') or RE_KSCHADEN_2 == 'knistert etwas' then
+    elseif string.find(RE_KSCHADEN_1, 'knistert auf') then
       RE_SCHADEN = 3
-    elseif string.find(RE_KSCHADEN_2, 'elektrisiert zusammen') then
-      RE_SCHADEN = 4
     elseif RE_KSCHADEN_2 == 'Haut umher' then
       RE_SCHADEN = 5
     elseif string.find(RE_KSCHADEN_2, 'kleine Funken umher') then
@@ -1713,9 +1704,6 @@ kleriker_blitz_trigger2 = createRegexTrigger(
       RE_SCHADEN = 7
     elseif string.find(RE_KSCHADEN_1, 'wirkt sich verheerend') then
       RE_SCHADEN = 109
-    elseif string.find(RE_KSCHADEN_1, 'hat verheerende Auswirkungen') then
-      RE_OPFER = re_genitiv_loeschen(RE_OPFER)
-      RE_SCHADEN = 109
     else
       logger.warn('Fehler bei Kleriker-Blitz-Schaden, teil1: '..RE_KSCHADEN_1)
       RE_SCHADEN = 15
@@ -1723,6 +1711,35 @@ kleriker_blitz_trigger2 = createRegexTrigger(
     re_ausgabe()
   end
 )
+kleriker_blitz_trigger2[#kleriker_blitz_trigger2+1] = createMultiLineRegexTrigger(
+  '^  Der Blitz hat verheerende Auswirkungen auf die Gesundheit ><(.+)\\.$',
+  function(m)
+    disableTrigger(kleriker_blitz_trigger2)
+    RE_OPFER = re_genitiv_loeschen(m[1])
+    RE_SCHADEN = 109
+    re_ausgabe()
+  end
+)
+kleriker_blitz_trigger2[#kleriker_blitz_trigger2+1] = createRegexTrigger(
+  '^  ([^ ].*) (wird etwas statisch aufgeladen|knistert etwas|zucks?t elektrisiert zusammen)\\.$',
+  function(m)
+    disableTrigger(kleriker_blitz_trigger2)
+    RE_OPFER = m[1]
+    local RE_KSCHADEN_1 = m[2]
+    if string.find(RE_KSCHADEN_1, 'statisch aufgeladen') then
+      RE_SCHADEN = 2
+    elseif RE_KSCHADEN_1 == 'knistert etwas' then
+      RE_SCHADEN = 3
+    elseif string.find(RE_KSCHADEN_1, 'elektrisiert zusammen') then
+      RE_SCHADEN = 4
+    else
+      logger.warn('Fehler bei Kleriker-Blitz-Schaden, teil1: '..RE_KSCHADEN_1)
+      RE_SCHADEN = 15
+    end
+    re_ausgabe()
+  end
+)
+disableTrigger(kleriker_blitz_trigger2)
 createMultiLineRegexTrigger(
   '^([^ ].+) (hebt|erhebst) (eine Hand|die Haende) gen Himmel und beschwoers?t>< .*herab\\.',
   function(m)
