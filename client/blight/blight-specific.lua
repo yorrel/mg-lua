@@ -101,7 +101,7 @@ local function updateVitalsStatus()
 end
 
 local roomStatusFormat =
-  C_BGREEN..'%-13s  '..C_BCYAN..'%-9s  %-24s  %-5s  '..C_BRED..'%2s'..C_RESET
+  C_BGREEN..'%-13s  '..C_BCYAN..'%-9s  %-24s %-1s%-5s  '..C_BRED..'%2s'..C_RESET
 
 local function updateRoomStatus()
   local para = base.para()
@@ -113,9 +113,10 @@ local function updateRoomStatus()
   wp = wp and '('..wp:sub(1, 11)..')' or ' '
   local raum_kurz = string.sub(ME.raum_kurz or '', 1, 24)
   local region = string.sub(ME.raum_region or '', 1, 9)
+  local flag = base.roomFlag() or ' '
   roomStatus = string.format(
     roomStatusFormat,
-    wp, region, raum_kurz, ME.raum_id_short or '', paraString
+    wp, region, raum_kurz, flag, ME.raum_id_short or '', paraString
   )
   status_update1()
 end

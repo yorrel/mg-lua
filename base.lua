@@ -298,6 +298,15 @@ local function getGildenStatusLine()
   )
 end
 
+local roomFlagFunction = function() return nil end
+
+local function roomFlag()
+  return roomFlagFunction()
+end
+
+local function setRoomFlagFunction(f)
+  roomFlagFunction = f
+end
 
 -- ---------------------------------------------------------------------------
 -- auto logfile on/off
@@ -363,6 +372,8 @@ return {
   statusConfig = statusConfig,
   statusUpdate = statusUpdate,
   getGildenStatusLine = getGildenStatusLine,
+  roomFlag = roomFlag,
+  setRoomFlagFunction = setRoomFlagFunction,
   addResetHook = addResetHook,
   charName = function() return character_name end,
   charGuild = function() return character_guild end,
