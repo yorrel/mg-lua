@@ -298,6 +298,24 @@ end
 
 
 -- ---------------------------------------------------------------------------
+-- in-game room extra data
+
+local function getRoomExtraData(key)
+  local extra = getRoomProperty('x')
+  return extra and extra[key] or nil
+end
+
+local function setRoomExtraData(key, value)
+  local extra = getRoomProperty('x')
+  if not extra then
+    extra = {}
+    setRoomProperty('x', extra)
+  end
+  extra[key] = value
+end
+
+
+-- ---------------------------------------------------------------------------
 -- room specific actions
 
 local function getRoomActions(nr)
@@ -462,5 +480,7 @@ return {
   getHerb = getRoomHerb,
   getLabel = getRoomLabel,
   getNPC = getRoomNPC,
+  getExtraData = getRoomExtraData,
+  setExtraData = setRoomExtraData,
   showStatus = showStatus,
 }
