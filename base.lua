@@ -347,6 +347,7 @@ client.createStandardAlias('reboot',  0, reboot)
 client.createStandardAlias('s',  1, gilden_schaetz)
 client.createStandardAlias('i',  1, gilden_identifiziere)
 client.createStandardAlias('se', 0, save_and_sleep)
+client.createStandardAlias('save', 0, saveChar)
 client.createStandardAlias('para', 1, set_para_welt)
 client.createStandardAlias('log', 0, toggleAutoLogFile)
 
