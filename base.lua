@@ -283,7 +283,7 @@ local function statusUpdate(...)
     local val = entry[2]
     attribute_values[attr] = val
   end
-  raiseEvent('gilde.statusline.update')
+  raiseEvent('statusline.gilde.update')
 end
 
 local function getGildenStatusLine()

@@ -92,4 +92,4 @@ local function gildenStatus2TF()
   tf_eval('/status_update')
 end
 
-base.registerEventHandler('gilde.statusline.update', gildenStatus2TF)
+base.registerEventHandler('statusline.gilde.update', gildenStatus2TF)

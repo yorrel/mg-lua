@@ -101,8 +101,8 @@ local function updateVitalsStatus()
 end
 
 local roomStatusFormat =
-  C_BGREEN..'%-13s  '..C_BCYAN..'%-9s  %-23s %-2s'
-  ..C_RESET..C_BCYAN..'%-5s '..C_BRED..'%2s'..C_RESET
+  C_BGREEN..'%-13s  '..C_BCYAN..'%-9s  %-24s %-1s'..C_RESET
+  ..C_BCYAN..'%-5s '..C_BRED..'%2s'..C_RESET
 
 local function updateRoomStatus()
   local para = base.para()
@@ -114,7 +114,7 @@ local function updateRoomStatus()
   wp = wp and '('..wp:sub(1, 11)..')' or ' '
   local raum_kurz = string.sub(ME.raum_kurz or '', 1, 23)
   local region = string.sub(ME.raum_region or '', 1, 9)
-  local flag = base.roomFlag() or '  '
+  local flag = base.roomFlag() or ' '
   roomStatus = string.format(
     roomStatusFormat,
     wp, region, raum_kurz, flag, ME.raum_id_short or '', paraString
@@ -124,6 +124,7 @@ end
 
 base.registerEventHandler('gmcp.MG.char.vitals', updateVitalsStatus)
 base.registerEventHandler('gmcp.MG.room.info', updateRoomStatus)
+base.registerEventHandler('statusline.room.update', updateRoomStatus)
 
 
 local gildenStatusFormat = '%-42s'
@@ -152,4 +153,4 @@ local function updateVSFR()
 end
 
 base.registerEventHandler('gmcp.MG.char.wimpy', updateVSFR)
-base.registerEventHandler('gilde.statusline.update', updateGildenStatus)
+base.registerEventHandler('statusline.gilde.update', updateGildenStatus)
