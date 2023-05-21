@@ -269,6 +269,10 @@ local zueck_funktionen = {
   kriegerbeutel = {
     wegstecken = function(w) end,
     holeUndZuecke = function(w) client.send('zueck '..w..' aus kb') end
+  },
+  kb = {
+    wegstecken = function(w) end,
+    holeUndZuecke = function(w) client.send('zueck '..w..' aus kb') end
   }
 }
 

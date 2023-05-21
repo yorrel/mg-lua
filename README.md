@@ -157,7 +157,7 @@ ubuntu:
 ### dependencies
 
 fedora:
-sudo dnf install pkg-config openssl-devel alsa-lib-devel
+sudo dnf install pkg-config openssl-devel alsa-lib-devel g++ clang
 
 ubuntu:
 sudo apt install pkg-config libssl-dev libasound2-dev

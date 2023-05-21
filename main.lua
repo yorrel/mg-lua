@@ -42,6 +42,7 @@ local allGuilds = {
   'klerus',
   'tanjian',
   'urukhai',
+  'werwoelfe',
   'zauberer'
 }
 
