@@ -379,6 +379,7 @@ local art_color_table = {
   Klerus = '<magenta>',
   Tanjian = '<magenta>',
   Delfen = '<magenta>',
+  Werwolf = '<magenta>',
   Artillerie = '<blue>'
 }
 
@@ -2953,6 +2954,78 @@ createMultiLineRegexTrigger(
   end
 )
 
+-- WERWOELFE
+
+-- Biss
+local werwolf_beiss_schaeden = {}
+werwolf_beiss_schaeden['die Schulter,'] = 3
+werwolf_beiss_schaeden['die Hand. Das'] = 4
+werwolf_beiss_schaeden['den Daumen. Der'] = 5
+werwolf_beiss_schaeden['die Wade,'] = 5
+werwolf_beiss_schaeden['den Fuss,'] = 6
+werwolf_beiss_schaeden['den Oberschenkel'] = 7
+
+local biss_tmp_trigger = {}
+addGroupedMultiLineRegexTrigger(
+  biss_tmp_trigger,
+  '^  (.*) beisst (.*) in (den Arm\\. Das|die Schulter,|die Hand\\. Das|den Daumen\\. Der|die Wade,|den Fuss,|den Oberschenkel|(.*) (Hals\\.|Oberarm,|Kehle, aus))><(.*)[.!]$',
+  function(m)
+    disableTrigger(biss_tmp_trigger)
+    local typ = m[3]
+    local hoehe = werwolf_beiss_schaeden[typ]
+    if hoehe ~= nil then
+      RE_SCHADEN = hoehe
+    elseif string.match(typ, 'Hals\\.') or string.match(typ, 'Oberarm,') or string.match(typ, 'Kehle, aus') then
+      RE_SCHADEN = 8
+    elseif string.match(typ, '^den Arm\\. Das')  then
+      local rest = m[6]
+      if string.match(rest, 'gar nicht weh\\.$') then
+        RE_SCHADEN = 1
+      elseif string.match(rest, 'kaum weh\\.$') then
+        RE_SCHADEN = 2
+      end
+    end
+  end
+)
+addGroupedMultiLineRegexTrigger(
+  biss_tmp_trigger,
+  '^  (.*) beisst und beisst an>< (.*) herum, .* nags?t und nags?t, .* schaut schon dumm\\.',
+  function(m)
+    disableTrigger(biss_tmp_trigger)
+    RE_SCHADEN = 6
+  end
+)
+disableTrigger(biss_tmp_trigger)
+createRegexTrigger(
+  '^Du beisst (.*)\\.$',
+  function(m)
+    RE_ANGREIFER = 'Du'
+    RE_OPFER = m[1]
+    RE_WAFFE = 'Biss'
+    RE_ART = 'Werwolf'
+    enableTrigger(biss_tmp_trigger)
+  end
+)
+
+-- Kralle
+createRegexTrigger(
+  '^(.*) schlaegt (.*) mit einem maechtigen Krallenschlag\\.',
+  function(m)
+    RE_WAFFE = 'Kralle'
+    RE_ART = 'Werwolf'
+    RE_ANGREIFER = m[1]
+    RE_OPFER = m[2]
+  end
+)
+createRegexTrigger(
+  '^Du verpasst (.*) einen (deftigen|kraeftigen) Krallenschlag\\.',
+  function(m)
+    RE_WAFFE = 'Kralle'
+    RE_ART = 'Werwolf'
+    RE_ANGREIFER = 'Du'
+    RE_OPFER = m[1]
+  end
+)
 
 -- ---------------------------------------------------------------------------
 -- Abwehr-Helferchen
