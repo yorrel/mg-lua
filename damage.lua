@@ -19,18 +19,31 @@ damages['zerstaeubt'] = (101+150)/2
 damages['atomisiert'] = (151+200)/2
 damages['vernichtet'] = 225
 
-local totalDamage = 0
-local number = 0
-local active = false
-  
+local hits_in_count = 0
+local hits_in_damage = 0
+local hits_out_count = 0
+local hits_out_damage = 0
+local metrics_active = false
+
 local function reduceOutputListener(output)
-  if string.match(output, '->') then
-    output = string.gsub(output, '@{%w*}', '')
-    output = string.gsub(output, '.*-> ', '')
+  if string.match(output, '%->') then
+    output = string.gsub(output, '<[a-z]*>', '')
+    output = string.gsub(output, '.* %-> ', '')
     local dmg = damages[output]
     if dmg ~= nil then
-      totalDamage = totalDamage + dmg
-      number = number + 1
+      hits_out_damage = hits_out_damage + dmg
+      hits_out_count = hits_out_count + 1
+    else
+      logger.warn('damage value not found for output: '..output)
+    end
+  end
+  if string.match(output, '<%-') then
+    output = string.gsub(output, '<[a-z]*>', '')
+    output = string.gsub(output, '.* <%- ', '')
+    local dmg = damages[output]
+    if dmg ~= nil then
+      hits_in_damage = hits_in_damage + dmg
+      hits_in_count = hits_in_count + 1
     else
       logger.warn('damage value not found for output: '..output)
     end
@@ -38,25 +51,50 @@ local function reduceOutputListener(output)
 end
 
 local function startDamageMetrics()
-  if not active then
+  if not metrics_active then
     logger.info('start damage metrics')
     reduce.setOutputListener(reduceOutputListener)
-    active = true
+    metrics_active = true
   end
-  if number > 0 then
-    logger.info('#measures: '..number..', average damage: '..(totalDamage/number))
+  if hits_out_count > 0 then
+    logger.info('-> damage avg : '..(hits_out_damage/hits_out_count))
+    logger.info('-> damage sum : '..hits_out_damage)
+    logger.info('-> count      : '..hits_out_count)
+    logger.info('<- damage avg : '..(hits_in_damage/hits_in_count))
+    logger.info('<- damage sum : '..hits_in_damage)
+    logger.info('<- count      : '..hits_in_count)
   end
-  totalDamage = 0
-  number = 0
+  hits_out_count = 0
+  hits_out_damage = 0
+  hits_in_count = 0
+  hits_in_damage = 0
 end
 
 local function stopDamageMetrics()
-  if active then
+  if metrics_active then
     logger.info('stop damage metrics')
     reduce.setOutputListener(nil)
-    active = false
+    metrics_active = false
   end
 end
-    
-client.createStandardAlias('dmg', 0, startDamageMetrics)
-client.createStandardAlias('dmg_end', 0, stopDamageMetrics)
+
+local cmds = {
+  start = startDamageMetrics,
+  stop = stopDamageMetrics
+}
+
+client.createStandardAlias(
+  'dmg',
+  1,
+  function(arg)
+    local cmd = cmds[arg]
+    if cmd == nil then
+      logger.error('unbekanntes Kommando '..arg)
+    else
+      cmd()
+    end
+  end,
+  function(arg)
+    return { 'start', 'stop' }
+  end
+)
