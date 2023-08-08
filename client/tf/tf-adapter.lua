@@ -61,25 +61,11 @@ darkmode_colors['<magenta>'] = '@{Cbrightmagenta}'
 darkmode_colors['<cyan>'] = '@{Cbrightcyan}'
 
 local function getColor(c)
-  if darkmode then
-    return darkmode_colors[c] or lightmode_colors[c] or c
-  else
-    return lightmode_colors[c] or c
-  end
-end
-
-local function replaceDarkmodeColors(s)
-  if not darkmode then
-    return s
-  end
-  for code,replacement in pairs(darkmode_colors) do
-    s = string.gsub(s, '@{'..code..'}', '@{'..replacement..'}')
-  end
-  return s
+  return darkmode and darkmode_colors[c] or lightmode_colors[c]
 end
 
 local function cecho(msg)
-  msg = string.gsub(msg, '(<%a+>)', getColor)
+  msg = string.gsub(msg, '(<%l+>)', getColor)
   msg = string.gsub(msg, '%%', '\\%%')
   local lines = tools.splitString(msg, '\n')
   for _,line in ipairs(lines) do

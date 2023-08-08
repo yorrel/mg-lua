@@ -113,22 +113,12 @@ darkmode_colors['<magenta>'] = C_BMAGENTA
 darkmode_colors['<cyan>'] = C_BCYAN
 
 local function getColor(c)
-  if darkmode then
-    return darkmode_colors[c] or color_codes[c]
-  end
-  return color_codes[c]
-end
-
-local function replaceColorCodes(s)
-  if not darkmode then
-    return s
-  end
-  s = string.gsub(s, '(<%l*>)', getColor)
-  return s
+  return darkmode and darkmode_colors[c] or color_codes[c]
 end
 
 local function cecho(msg)
-  blight.output(replaceColorCodes(msg))
+  msg = string.gsub(msg, '(<%l+>)', getColor)
+  blight.output(msg)
 end
 
 local function line()
