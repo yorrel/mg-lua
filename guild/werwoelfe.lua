@@ -113,7 +113,6 @@ function Werwoelfe:enable()
   keymap.F5 = Guild.attackFunWithEnemy('biss')
   keymap.F6 = Guild.attackFunWithEnemy('kralle', 1)
 
-  keymap.M_i = 'wolf'
   keymap.M_g = 'galbrag'
   keymap.M_j = 'horpas'
   keymap.M_k = 'ghourdal'
