@@ -109,7 +109,7 @@ end
 function Klerus:enable()
   -- Statuszeile -------------------------------------------------------------
   local statusConf =
-    '{heiligenschein:2} Esc:{eleschutz} Esp:{elesphaere:2}'
+    '{heiligenschein:2} Esc:{eleschutz:2} Esp:{elesphaere:2}'
     ..' {messerkreis:2} {weihe:2} {giftschwaechung:2}'
   base.statusConfig(statusConf)
 
