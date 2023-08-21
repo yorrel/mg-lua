@@ -18,6 +18,12 @@ function Guild:createRegexTrigger(pattern, f, style, prio)
   return id
 end
 
+function Guild:createMultiLineRegexTrigger(pattern, f, style, prio)
+  local id = client.createMultiLineRegexTrigger(pattern, f, style, prio)
+  trigger[#trigger+1] = id
+  return id
+end
+
 function Guild.attackFunWithEnemy(skill, hands)
   return function()
     local attack = skill .. ' ' .. kampf.getGegner()

@@ -142,7 +142,8 @@ function Klerus:enable()
   self:createSubstrTrigger('Die Elementarsphaere loest sich auf.', statusUpdate('elesphaere'), {'<green>'})
 
   -- Messerkreis
-  self:createSubstrTrigger('Kandri erfasst Dich mit ihrer Macht! Du beginnst zu gluehen! Das Gluehen', statusUpdate('messerkreis','Mk'), {'<green>'})
+  self:createMultiLineRegexTrigger('^Kandri erfasst Dich mit ihrer Macht! Du beginnst zu gluehen! Das Gluehen>< weitet sich langsam aus und verdichtet sich zu einem leuchtenden Kreis um Deinen Koerper\\. Aus dem Leuchten heraus kondensieren auf einmal wirbelnde Messer, die jeder Bewegung Deines Koerpers folgen\\.', statusUpdate('messerkreis','Mk'), {'<green>'})
+  self:createSubstrTrigger('Die wirbelnden Messer werden langsamer.', statusUpdate('messerkreis','Mk'), {'<yellow>'})
   self:createSubstrTrigger('Der Kreis wirbelnder Messer verschwindet wieder.', statusUpdate('messerkreis'), {'<red>'})
 
   -- Weihe

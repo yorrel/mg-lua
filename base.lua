@@ -286,6 +286,10 @@ local function statusUpdate(...)
   raiseEvent('statusline.gilde.update')
 end
 
+local function getStatusValue(key)
+  return attribute_values[key]
+end
+
 local function getGildenStatusLine()
   return string.gsub(
     status_config,
@@ -372,6 +376,7 @@ return {
   gilde = function() return gilde end,
   statusConfig = statusConfig,
   statusUpdate = statusUpdate,
+  getStatusValue = getStatusValue,
   getGildenStatusLine = getGildenStatusLine,
   roomFlag = roomFlag,
   setRoomFlagFunction = setRoomFlagFunction,
