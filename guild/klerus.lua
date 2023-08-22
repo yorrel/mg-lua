@@ -81,6 +81,29 @@ local function kleriker_weihe(ziel)
   end
 end
 
+-- Talisman Status
+local tali_status_trigger = {}
+tali_status_trigger[#tali_status_trigger+1] = client.createMultiLineRegexTrigger(
+  '^Der adamantene Ring steht fuer die Bestaendigkeit der Schoepfung>< Lembolds, der goldene Ring fuer den Wert der Heilgaben Saphinas und der eiserne Ring fuer die Durchsetzungskraft Kandris\\.',
+  nil,
+  {'g'}
+)
+tali_status_trigger[#tali_status_trigger+1] = client.createMultiLineRegexTrigger(
+  '^Der Talisman ist an einem ledernen Band befestigt>< und laesst sich um den Hals haengen\\.',
+  function()
+    client.disableTrigger(tali_status_trigger)
+  end,
+  {'g'}
+)
+tali_status_trigger[#tali_status_trigger+1] = client.createMultiLineRegexTrigger(
+  '^Der (.*) Talisman besteht aus drei ineinander>< verwobenen metallenen Ringen, durch die die drei Gottheiten des Heiligen Ordens repraesentiert werden\\.',
+  function(m)
+    logger.info('Talisman: '..m[1]:sub(1,-2))
+  end,
+  {'g'}
+)
+client.disableTrigger(tali_status_trigger)
+
 
 -- ---------------------------------------------------------------------------
 -- Statuszeile
@@ -101,9 +124,12 @@ local Guild  = require 'guild.guild'
 local Klerus = class(Guild)
 
 function Klerus:info()
-  client.send('reibe adamantenen ring')
-  client.send('reibe eisernen ring kraeftig')
-  client.send('unt talisman in mir')
+  client.enableTrigger(tali_status_trigger)
+  client.send(
+    'reibe adamantenen ring',
+    'reibe eisernen ring kraeftig',
+    'unt talisman in mir'
+  )
 end
 
 function Klerus:enable()
