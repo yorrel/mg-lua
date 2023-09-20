@@ -123,13 +123,17 @@ local class  = require 'utils.class'
 local Guild  = require 'guild.guild'
 local Klerus = class(Guild)
 
-function Klerus:info()
+function Klerus:talismanStatus()
   client.enableTrigger(tali_status_trigger)
+  client.send('unt talisman in mir')
+end
+
+function Klerus:info()
   client.send(
     'reibe adamantenen ring',
-    'reibe eisernen ring kraeftig',
-    'unt talisman in mir'
+    'reibe eisernen ring kraeftig'
   )
+  self:talismanStatus()
 end
 
 function Klerus:enable()
@@ -182,6 +186,13 @@ function Klerus:enable()
   -- Giftschwaechung
   self:createSubstrTrigger('Vergiftungen wirken nun nicht mehr so schnell bei Dir.', statusUpdate('giftschwaechung','Gs'), {'<green>'})
   self:createSubstrTrigger('Die Wirkung der Giftschwaechung ist nun ganz abgeklungen.', statusUpdate('giftschwaechung'), {'<red>'})
+
+    -- Beten
+  self:createRegexTrigger(
+    '^Du (legst die Geissel beiseite und )?beendest Dein Gebet',
+    function() self:talismanStatus() end,
+    {'<cyan>'}
+  )
 
   -- Tasten ------------------------------------------------------------------
   local keymap = base.keymap

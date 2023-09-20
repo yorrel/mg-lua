@@ -185,7 +185,7 @@ lua-Libs:
 
 packages (ubuntu):
 - lua5.4
-- liblua5.4
+- liblua5.4-0
 - libpcre3-dev
 
 packages (fedora):
