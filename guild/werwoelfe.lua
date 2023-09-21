@@ -91,6 +91,32 @@ function Werwoelfe:enable()
     {'g'}
   )
 
+  -- Fellgriff
+  self:createRegexTrigger(
+    '^Du entdeckst leider keine weiteren Schwachstellen\\.$',
+    nil,
+    {'<cyan>'}
+  )
+
+  -- Rage
+  self:createRegexTrigger(
+    '^Du (verfaellst|bist noch) in Rage\\.$',
+    statusUpdate('rage','Ra'),
+    {'<green>'}
+  )
+  self:createRegexTrigger(
+    '^Deine Wut verraucht\\.$',
+    statusUpdate('rage'),
+    {'<red>'}
+  )
+
+  -- Wolfswille
+  self:createRegexTrigger(
+    '^Du ueberwindest Deine Paralyse\\.$',
+    nil,
+    {'<cyan>'}
+  )
+
   -- Leuchten
   self:createRegexTrigger(
     '^Du beginnst zu leuchten\\.',
@@ -111,11 +137,21 @@ function Werwoelfe:enable()
   -- Tasten ------------------------------------------------------------------
   local keymap = base.keymap
   keymap.F5 = Guild.attackFunWithEnemy('biss')
-  keymap.F6 = Guild.attackFunWithEnemy('kralle', 1)
+  keymap.F6 = Guild.attackFunWithEnemy('ansturm')
+  keymap.F7 = Guild.attackFunWithEnemy('fellgriff', 1)
+  keymap.F8 = Guild.attackFunWithEnemy('kralle', 1)
 
+  -- Formen
+  keymap.M_d = 'horpas'
+  keymap.M_f = 'ghourdal'
   keymap.M_g = 'galbrag'
-  keymap.M_j = 'horpas'
-  keymap.M_k = 'ghourdal'
+
+  -- Kampf
+  keymap.M_x = 'rage'
+
+  -- Sonstiges
+  keymap.M_j = 'wolfswille'
+  keymap.M_k = 'heulen'
   keymap.M_l = 'leuchten'
   keymap.M_t = 'mondbruecke'
 
