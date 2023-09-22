@@ -95,7 +95,7 @@ function Werwoelfe:enable()
   self:createRegexTrigger(
     '^Du entdeckst leider keine weiteren Schwachstellen\\.$',
     nil,
-    {'<cyan>'}
+    {'<magenta>'}
   )
 
   -- Rage
@@ -148,10 +148,11 @@ function Werwoelfe:enable()
 
   -- Kampf
   keymap.M_x = 'rage'
+  keymap.M_j = 'wolfswille'
+  --keymap.M_k = 'fokus'
+  keymap.M_r = 'heulen'
 
   -- Sonstiges
-  keymap.M_j = 'wolfswille'
-  keymap.M_k = 'heulen'
   keymap.M_l = 'leuchten'
   keymap.M_t = 'mondbruecke'
 
