@@ -110,6 +110,23 @@ function Werwoelfe:enable()
     {'<red>'}
   )
 
+  -- Fellwuchs
+  self:createRegexTrigger(
+    '^Dein Fell waechst\\.$',
+    statusUpdate('fellwuchs','Fw'),
+    {'<green>'}
+  )
+  self:createRegexTrigger(
+    '^Du hast doch schon ein Fell!$',
+    statusUpdate('fellwuchs','Fw'),
+    {'<green>'}
+  )
+  self:createRegexTrigger(
+    '^Dein Fell zieht sich zurueck\\.$',
+    statusUpdate('fellwuchs'),
+    {'<red>'}
+  )
+
   -- Wolfswille
   self:createRegexTrigger(
     '^Du ueberwindest Deine Paralyse\\.$',
@@ -137,24 +154,33 @@ function Werwoelfe:enable()
   -- Tasten ------------------------------------------------------------------
   local keymap = base.keymap
   keymap.F5 = Guild.attackFunWithEnemy('biss')
+  keymap.S_F5 = Guild.attackFunWithEnemy('reissen', 1)
   keymap.F6 = Guild.attackFunWithEnemy('ansturm')
+  keymap.S_F6 = Guild.attackFunWithEnemy('schattensprung', 1)
   keymap.F7 = Guild.attackFunWithEnemy('fellgriff', 1)
+  keymap.S_F7 = Guild.attackFunWithEnemy('reissen', 1)
   keymap.F8 = Guild.attackFunWithEnemy('kralle', 1)
+  keymap.S_F8 = Guild.attackFunWithEnemy('wuergekralle', 1)
 
   -- Formen
-  keymap.M_d = 'horpas'
-  keymap.M_f = 'ghourdal'
-  keymap.M_g = 'galbrag'
-
-  -- Kampf
-  keymap.M_x = 'rage'
+  keymap.M_a = 'lebenskraft'
+  local formen = {'Ghourdal', 'Horpas', 'Galbrag', 'Wolf'}
+  local form = 0
+  keymap.M_i =
+    function()
+      form = (form + 1) % 4
+      logger.info('Nutze Form: '..formen[form+1])
+    end
+  keymap.M_d = function() client.send(formen[form+1]) end
+  keymap.M_e = 'heulen'
+  keymap.M_f = Guild.attackFunWithEnemy('wolfsblick')
   keymap.M_j = 'wolfswille'
-  --keymap.M_k = 'fokus'
-  keymap.M_r = 'heulen'
-
-  -- Sonstiges
+  keymap.M_k = Guild.attackFunWithEnemy('blutrausch')
   keymap.M_l = 'leuchten'
+  keymap.M_r = 'vorbild'
   keymap.M_t = 'mondbruecke'
+  keymap.M_v = 'fellwuchs'
+  keymap.M_x = 'rage'
 
   -- Aliases -----------------------------------------------------------------
   client.createStandardAlias(

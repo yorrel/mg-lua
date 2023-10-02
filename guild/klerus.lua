@@ -212,6 +212,7 @@ function Klerus:enable()
   keymap.M_v = 'heiligenschein'
   keymap.M_l = 'leuchten'
   keymap.M_m = kleriker_elementarschild
+  keymap.M_r = 'goettermacht'
   keymap.M_x = 'goettermacht'
   keymap.M_z = kleriker_bete
 
