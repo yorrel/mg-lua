@@ -1,5 +1,24 @@
 # Features
 
+## guild.*
+
+Enthält gildenspezifische Funktionen, Trigger und Tastenbelegungen.
+
+Einige Tastenbelegungen sind nach Möglichkeit gildenübergreifend ähnlich.
+
+- F5 bis F8 (mit/ohne Shift): Angriff
+- M-f paralyse
+- M-j kampfwille
+- M-k fokus
+- M-l licht/nachtsicht
+- M-m schutz (ggf. magisch)
+- M-t teleport
+- M-v schutz
+- M-x schnell
+- M-z Vorbereitung (bete, meditiere, Waffe schaerfen, ...)
+
+Möchte man eigene Belegungen nutzen, muss man sie nachträglich ändern.
+
 ## inventory.lua
 
 Ausrüstung:
@@ -40,6 +59,31 @@ werden.
 
 In-Game Notizen, Standard-Aktionen, raumspezifische Ausgänge.
 
+- #room name ssp - vergibt Id 'ssp' für den aktuellen Raum
+- #room alias ssp2 - vergibt alternativen Namen (nur für diesen Charakter)
+- #room alias -g ssp3 - vergibt alternativen Namen (charakterübergreifend)
+- #room exit ob kletter hoch - setzt abweichende Kommandos für M-n, M-s usw.
+- #room fr n - setzt default Fluchtrichtung für aktuellen Raum
+- #room npc titan - setzt default Gegner für aktuellen Raum
+- #room note Vorsicht: Gegner n! - setzt Notiz für aktuellen Raum
+
+Mit Flag -rm kann man die Daten des Raums zurücksetzen, z.B. löscht folgendes
+Kommando die raumspezifischen Bewegungskommandos: #room exit -rm
+
+## utils-mg.lua
+
+- F1 - schau
+- S-F1 - sich selbst ansehen
+- F2 - inventory
+- S-F2 - info
+- F12 - dschinn
+- M-n - norden
+- M-o - osten
+- M-s - sueden
+- M-w - westen
+- M-h - oben
+- M-u - unten
+
 ## ways.lua
 
 Funktionsumfang:
@@ -53,6 +97,7 @@ Nutzung:
 - #go nachWegpunkt (von einem bekannten Wegpunkt aus)
 - #go vonWegpunkt nachWegpunkt
 - #go -x (bricht aktuellen Weg ab)
+- M-7 - gehe zu letzten Startpunkt zurück
 
 Wege müssen programmiert werden. Mit wegdef wird ein einfacher Weg definiert. Mit wegdefx
 wird auch der Rückweg definiert (wenn denn alle einzelnen Schritte umdrehbar sind). Mit
