@@ -212,7 +212,7 @@ local function move(dir)
   return
     function()
       client.line()
-      client.send(
+      base.eval(
         room.getCmdForExit(dir)
         or getDirectionFor(dir)
         or dir
