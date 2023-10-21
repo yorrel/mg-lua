@@ -163,24 +163,31 @@ function Werwoelfe:enable()
   keymap.S_F8 = Guild.attackFunWithEnemy('wuergekralle', 1)
 
   -- Formen
-  keymap.M_a = 'lebenskraft'
-  local formen = {'Ghourdal', 'Horpas', 'Galbrag', 'Wolf'}
+  local formen = {'Ghourdal', 'Horpas', 'Galbrag'}
   local form = 0
-  keymap.M_i =
-    function()
-      form = (form + 1) % 4
-      logger.info('Nutze Form: '..formen[form+1])
-    end
-  keymap.M_d = function() client.send(formen[form+1]) end
+  local function toggleDefaultForm()
+    form = (form + 1) % #formen
+    logger.info('Nutze Form: '..formen[form+1])
+  end
+  local function defaultForm()
+    client.send(formen[form+1])
+  end
+
+  -- Tasten
+  keymap.M_a = 'lebenskraft'
+  keymap.M_d = defaultForm
   keymap.M_e = 'heulen'
-  keymap.M_f = Guild.attackFunWithEnemy('wolfsblick')
+  keymap.M_f = Guild.attackFunWithEnemy('blutrausch')
+  keymap.M_g = Guild.attackFunWithEnemy('wolfsblick')
   keymap.M_j = 'wolfswille'
-  keymap.M_k = Guild.attackFunWithEnemy('blutrausch')
+  keymap.M_k = defaultForm
   keymap.M_l = 'leuchten'
+  keymap.M_p = Guild.attackFunWithEnemy('wolfsblick')
   keymap.M_r = 'vorbild'
   keymap.M_t = 'mondbruecke'
   keymap.M_v = 'fellwuchs'
   keymap.M_x = 'rage'
+  keymap.M_z = toggleDefaultForm
 
   -- Aliases -----------------------------------------------------------------
   client.createStandardAlias(

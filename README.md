@@ -7,11 +7,12 @@ Enthält gildenspezifische Funktionen, Trigger und Tastenbelegungen.
 Einige Tastenbelegungen sind nach Möglichkeit gildenübergreifend ähnlich.
 
 - F5 bis F8 (mit/ohne Shift): Angriff
-- M-f paralyse
+- M-g Gegner schwächen
 - M-j kampfwille
 - M-k fokus
 - M-l licht/nachtsicht
 - M-m schutz (ggf. magisch)
+- M-p paralyse
 - M-t teleport
 - M-v schutz
 - M-x schnell
