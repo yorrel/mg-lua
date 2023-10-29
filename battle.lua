@@ -144,6 +144,7 @@ return {
   setVorsicht = setVorsicht,
   setFluchtrichtung = setFluchtrichtung,
   getGegner = getGegner,
+  setGegner = fokus_set_gegner,
   istImKampf = istImKampf,
   kampfStatus = printKampfStatus,
 }
