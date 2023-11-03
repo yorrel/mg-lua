@@ -145,31 +145,45 @@ function Klerus:enable()
 
   -- Trigger -----------------------------------------------------------------
   -- Heiligenschein
-  self:createSubstrTrigger('Lembold erhoert Dich. Ueber Deinem Haupt erscheint ein Heiligenschein.', statusUpdate('heiligenschein','Hs'), {'<green>'})
-  self:createSubstrTrigger('Dein Heiligenschein flackert.', nil, {'<yellow>'})
-  self:createSubstrTrigger('Dein Heiligenschein verglimmt.', statusUpdate('heiligenschein'), {'<red>'})
+  self:createRegexTrigger('^Lembold erhoert Dich\\. Ueber Deinem Haupt erscheint ein Heiligenschein\\.$', statusUpdate('heiligenschein','Hs'), {'<green>'})
+  self:createRegexTrigger('^Dein Heiligenschein flackert\\.$', nil, {'<yellow>'})
+  self:createRegexTrigger('^Dein Heiligenschein verglimmt\\.$', statusUpdate('heiligenschein'), {'<red>'})
 
   -- Goettermacht
   self:createSubstrTrigger('Eine goettliche Aura huellt Dich ein.', nil, {'<green>'})
   self:createSubstrTrigger('Die goettliche Aura verlaesst Dich wieder.', nil, {'<red>'})
 
   -- Elementarschild
-  self:createSubstrTrigger('Die Erde zu Deinen Fuessen woelbt sich und bricht auf. Ein irdener Schild', statusUpdate('eleschutz','er'), {'<green>'})
-  self:createSubstrTrigger('Eine Stichflamme schiesst vor Dir aus dem Boden und umgibt Dich mit einem', statusUpdate('eleschutz','fe'), {'<green>'})
-  self:createSubstrTrigger('Klirrende Kaelte umgibt Dich auf einmal schuetzend.', statusUpdate('eleschutz','ei'), {'<green>'})
-  self:createSubstrTrigger('Ein ploetzlicher Regenschauer prasselt hernieder, ohne Dich jedoch zu', statusUpdate('eleschutz','wa'), {'<green>'})
-  self:createSubstrTrigger('Ein starker Wind umtost Dich auf einmal und bildet so einen luftigen Schild.', statusUpdate('eleschutz','lu'), {'<green>'})
-  self:createSubstrTrigger('Eine Wolke aus Saeuregasen bildet sich um Dich herum. Einige Blitze erden sich', statusUpdate('eleschutz','sa'), {'<green>'})
-  self:createSubstrTrigger('Dein Elementarschild wird duenner.', nil, {'<yellow>'})
-  self:createSubstrTrigger('Der Elementarschild zerfaellt.', statusUpdate('eleschutz'), {'<red>'})
+  local function eleschild(typ)
+    return
+      function()
+        client.cecho('<bold><green>Elementarschild: '..typ..'<reset>')
+        local typKurz = typ:lower():sub(1,2)
+        base.statusUpdate({'eleschutz', typKurz})
+      end
+  end
+  self:createMultiLineRegexTrigger('^Die Erde zu Deinen Fuessen woelbt sich und bricht auf\\. Ein irdener>< Schild schiesst empor und umgibt Dich\\.$', eleschild('Erde'), {'g'})
+  self:createMultiLineRegexTrigger('^Eine Stichflamme schiesst vor Dir aus dem Boden und umgibt Dich mit>< einem feurigen Schild\\.$', eleschild('Feuer'), {'g'})
+  self:createRegexTrigger('^Klirrende Kaelte umgibt Dich auf einmal schuetzend\\.$', eleschild('Eis'), {'g'})
+  self:createMultiLineRegexTrigger('^Ein ploetzlicher Regenschauer prasselt hernieder, ohne Dich jedoch>< zu durchnaessen\\. Statt dessen umgibt Dich nun ein Schild aus Wasser\\.$', eleschild('Wasser'), {'g'})
+  self:createRegexTrigger('^Ein starker Wind umtost Dich auf einmal und bildet so einen luftigen Schild\\.$', eleschild('Luft'), {'g'})
+  self:createMultiLineRegexTrigger('^Eine Wolke aus Saeuregasen bildet sich um Dich herum. Einige Blitze>< erden sich durch die leitfaehigen gruenen Schwaden ab, einer haette Dich beinahe in den Fuss getroffen!$', eleschild('Saeure'), {'g'})
+  self:createRegexTrigger('^Dein Elementarschild wird duenner\\.$', nil, {'<yellow>'})
+  self:createRegexTrigger('^Der Elementarschild zerfaellt\\.$', statusUpdate('eleschutz'), {'<red>'})
 
   -- Elementarsphaere
-  self:createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Erde. Dann wird Deine', statusUpdate('elesphaere','er'), {'<green>'})
-  self:createSubstrTrigger('um Dich herum erscheint ein Blase aus kristallinem Feuer. Dann wird Deine', statusUpdate('elesphaere','fe'), {'<green>'})
-  self:createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Kaelte. Dann wird Deine', statusUpdate('elesphaere','ei'), {'<green>'})
-  self:createSubstrTrigger('um Dich herum erscheint ein Blase aus kristallinem Wasser. Dann wird Deine', statusUpdate('elesphaere','wa'), {'<green>'})
-  self:createSubstrTrigger('um Dich herum erscheint ein Blase aus kristalliner Luft. Dann wird Deine', statusUpdate('elesphaere','lua'), {'<green>'})
-  self:createSubstrTrigger('Die Elementarsphaere loest sich auf.', statusUpdate('elesphaere'), {'<green>'})
+  self:createMultiLineRegexTrigger(
+    '^Ein Reissen geht durch Deinen Koerper, und die Welt um Dich herum>< scheint zu verschwimmen\\. Kandri bedient sich der Grundlagen von Lembolds Schoepfung, und um Dich herum erscheint ein Blase aus kristalline[mr] (\\w+)\\. Dann wird Deine Wahrnehmung wieder scharf\\.$',
+    function(m)
+      local typ = m[1]
+      client.cecho('<bold><green>Elementarsphaere: '..typ..'<reset>')
+      local typKurz = typ == 'Kaelte' and 'ei' or m[1]:lower():sub(1,2)
+      base.statusUpdate({'elesphaere',typKurz})
+    end,
+    {'g'}
+  )
+  self:createRegexTrigger('^Deine Elementarsphaere bekommt duenne Stellen\\.$', nil, {'<yellow>'})
+  self:createRegexTrigger('^Die Elementarsphaere loest sich auf\\.$', statusUpdate('elesphaere'), {'<red>'})
 
   -- Messerkreis
   self:createMultiLineRegexTrigger('^Kandri erfasst Dich mit ihrer Macht! Du beginnst zu gluehen! Das Gluehen>< weitet sich langsam aus und verdichtet sich zu einem leuchtenden Kreis um Deinen Koerper\\. Aus dem Leuchten heraus kondensieren auf einmal wirbelnde Messer, die jeder Bewegung Deines Koerpers folgen\\.', statusUpdate('messerkreis','Mk'), {'<green>'})
@@ -177,7 +191,14 @@ function Klerus:enable()
   self:createSubstrTrigger('Der Kreis wirbelnder Messer verschwindet wieder.', statusUpdate('messerkreis'), {'<red>'})
 
   -- Weihe
-  self:createSubstrTrigger('Du sprichst ein kurzes, inbruenstiges Gebet.', statusUpdate('weihe','We'), {'<green>'})
+  self:createMultiLineRegexTrigger(
+    '^Du sprichst ein kurzes, inbruenstiges Gebet\\.>< Ein\\w* (.*) leuchtet kurz auf, als Lembold Dein Gebet erhoert und die Waffe mit seinem Heiligen Zorn versieht\\.$',
+    function(m)
+      client.cecho('<bold><green>Weihe: '..m[1]..'<reset>')
+      base.statusUpdate({'weihe','We'})
+    end,
+    {'g'}
+  )
   self:createSubstrTrigger('Der Heilige Zorn Lembolds ist verraucht.', statusUpdate('weihe'), {'<red>'})
 
   -- Spaltung
