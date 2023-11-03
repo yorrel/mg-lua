@@ -87,6 +87,7 @@ local RE_KARATE_ABWEHR
 local RE_ABWEHR
 local RE_ABWEHR_COLOR
 local RE_TMP_TRENNER
+local RE_TMP_TRENNER_COLOR
 
 local RE_ANGRIFFSWAFFEN_MERKER = {}
 
@@ -211,6 +212,7 @@ local function re_loeschen()
     RING = '<magenta>'
   }
   RE_TMP_TRENNER = nil
+  RE_TMP_TRENNER_COLOR = nil
 end
 re_loeschen()
 
@@ -229,7 +231,8 @@ local function abwehr_helfer(typ, val, farbe)
 end
 
 local function trenner_helfer(symbol, color)
-  RE_TMP_TRENNER = color..symbol..'<reset>'
+  RE_TMP_TRENNER = symbol
+  RE_TMP_TRENNER_COLOR = color
 end
 
 local function pad(s, length)
@@ -248,15 +251,23 @@ end
 
 local function getSchadenRichtung()
   if RE_RICHTUNG == 'out' then
-    return '<green>-><reset>'
+    if RE_TMP_TRENNER ~= nil then
+      return RE_TMP_TRENNER_COLOR..RE_TMP_TRENNER..'<reset><green>><reset>'
+    else
+      return '<green>-><reset>'
+    end
   elseif RE_RICHTUNG == 'in' then
     if RE_TMP_TRENNER ~= nil then
-      return '<red><'..RE_TMP_TRENNER
+      return '<red><'..RE_TMP_TRENNER_COLOR..RE_TMP_TRENNER..'<reset>'
     else
       return '<red><-<reset>'
     end
   else
-    return '--'
+    if RE_TMP_TRENNER ~= nil then
+      return RE_TMP_TRENNER..'-'
+    else
+      return '--'
+    end
   end
 end
 
@@ -3026,6 +3037,59 @@ createRegexTrigger(
     RE_OPFER = m[1]
   end
 )
+
+-- Fellgriff
+createRegexTrigger(
+  '^Du greifst .* mit vollen Krallen ins Fleisch\\.',
+  function()
+    RE_WAFFE = 'Fellgriff'
+    RE_ART = 'Werwolf'
+  end
+)
+createMultiLineRegexTrigger(
+  ' schlaegt .* mit einem maechtigen Krallen>< ins Fleisch\\.$',
+  function()
+    RE_WAFFE = 'Fellgriff'
+    RE_ART = 'Werwolf'
+  end
+)
+createMultiLineRegexTrigger(
+  '^Du grinst fies, als Du eine gerade von Dir selbst erschaffene Schwachstelle>< an .* sehr fies ausnutzt\\.$',
+  function()
+    trenner_helfer('+', '<bggreen>')
+  end
+)
+createMultiLineRegexTrigger(
+  'haut besonders mies und gemein und fies>< .* geschaffene Wunde\\.',
+  function()
+    trenner_helfer('+', '<bggreen>')
+  end
+)
+local ww_fellgriff_hinweis
+ww_fellgriff_hinweis = createMultiLineRegexTrigger(
+  '^Dabei (deutest Du auf eine fiese Wunde|fuchtelt er ein wenig herum)><',
+  function()
+    disableTrigger(ww_fellgriff_hinweis)
+  end
+)
+disableTrigger(ww_fellgriff_hinweis)
+createMultiLineRegexTrigger(
+  '^([^ ]+) bruells?t .* zu: LOS! DA!>< DA HAB ICH MEINE KRALLEN REINGESCHLAGEN!',
+  function()
+    trenner_helfer('+', '<bggreen>')
+    enableTrigger(ww_fellgriff_hinweis)
+  end
+)
+
+-- Ansturm
+createRegexTrigger(
+  ' schmeisst (sich|Dich) auf ',
+  function()
+    RE_WAFFE = 'Ansturm'
+    RE_ART = 'Werwolf'
+  end
+)
+
 
 -- ---------------------------------------------------------------------------
 -- Abwehr-Helferchen
