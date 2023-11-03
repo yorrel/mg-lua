@@ -391,7 +391,8 @@ local art_color_table = {
   Tanjian = '<magenta>',
   Delfen = '<magenta>',
   Werwolf = '<magenta>',
-  Artillerie = '<blue>'
+  Artillerie = '<blue>',
+  WaffenFkt = '<red>'
 }
 
 local function re_ausgabe_zeile()
@@ -666,6 +667,14 @@ def_status('fuehlte sich heute schon besser.', 80, true)
 def_status('ist leicht angeschlagen.', 70, true)
 def_status('sieht nicht mehr taufrisch aus.', 60, true)
 def_status('macht einen mitgenommenen Eindruck.', 50, true)
+-- Werwoelfe
+def_status('sieht noch ganz frisch aus.', 100, true)
+def_status('hat schon den ein oder anderen Schlag abgekriegt.', 90, true)
+def_status('hat schon was abgekriegt.', 80, true)
+def_status('blutet schon ganz gut, lecker.', 60, true)
+def_status('hat ordentlich was ueber den Schaedel gekriegt.', 50, true)
+def_status('ist... wie wuerde Mondheuler sagen? Bald faellig...', 30, true)
+def_status('sieht nach baldigem Umkippen aus.', 10, true)
 -- Rest wird durch zentrale Trigger mit Prefix abgehandelt
 def_status('ist schon ein wenig schwaecher.', 90)
 def_status('fuehlte sich heute auch schon besser.', 80)
@@ -3335,6 +3344,29 @@ createSubstrTrigger(
 createSubstrTrigger(
   'Du weichst dem Angriff schlangengleich aus.',
   function() abwehr_helfer('RUESTUNG', 'G') end
+)
+
+
+-- ---------------------------------------------------------------------------
+-- Waffenfunktionen
+-- ---------------------------------------------------------------------------
+
+-- Flammendolch
+createRegexTrigger(
+  '^Flammen schiessen aus dem Dolch hervor\\.$',
+  function()
+    RE_WAFFE = 'Flammendolch'
+    RE_WFUNC = 'WaffenFkt'
+  end
+)
+
+-- Silberdolch
+createMultiLineRegexTrigger(
+  '^Der Dolch (durchdringt|bohrt|reisst|glueht|zerfetzt|zerstoert|vernichtet)>< .*\\.',
+  function()
+    RE_WAFFE = 'Silberdolch'
+    RE_WFUNC = 'WaffenFkt'
+  end
 )
 
 
