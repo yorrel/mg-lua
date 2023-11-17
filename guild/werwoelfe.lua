@@ -100,6 +100,11 @@ function Werwoelfe:enable()
 
   -- Rage
   self:createRegexTrigger(
+    '^Du projizierst Deine Innere Wut auf Deinen Gegner\\.$',
+    statusUpdate('rage','Ra'),
+    {'g'}
+  )
+  self:createRegexTrigger(
     '^Du (verfaellst|bist noch) in Rage\\.$',
     statusUpdate('rage','Ra'),
     {'<green>'}
