@@ -68,9 +68,10 @@ local function kleriker_elementarsphaere(element)
 end
 
 local last_element = nil
-local function kleriker_elementarschild(element)
-  last_element = elementdb[element] or element or last_element
-  client.send('elementarschild '..last_element)
+local function kleriker_elementarschild(arg)
+  local element = arg and elementdb[arg] or arg or last_element or 'erde'
+  last_element = element ~= 'aus' and element or last_element
+  client.send('elementarschild '..element)
 end
 
 local function kleriker_weihe(ziel)
