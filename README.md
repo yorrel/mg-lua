@@ -186,8 +186,12 @@ Liefert nil, wenn s nicht auf pattern passt. Ansonsten wird eine Table
 aller Matches geliefert: `matches = {match1, match2, ...}`
 
 
-# Clients installieren
+# mg-lua im Client nutzen
 
+siehe Skripte unter startup/
+
+
+# Client installieren
 
 ## blightmud
 
@@ -203,7 +207,8 @@ ubuntu:
 ### dependencies
 
 fedora:
-sudo dnf install pkg-config openssl-devel alsa-lib-devel g++ clang
+sudo dnf install pkg-config g++
+sudo dnf install openssl-devel alsa-lib-devel clang
 
 ubuntu:
 sudo apt install pkg-config libssl-dev libasound2-dev
@@ -247,8 +252,7 @@ tools:
 - ./configure --enable-gmcp --enable-lua
 - make install
 
-
-# mudlet
+## mudlet
 
 Die Anbindung an Mudlet ist veraltet und funktioniert derzeit nicht.
 - Pfad anpassen in:

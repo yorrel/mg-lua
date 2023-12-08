@@ -452,7 +452,7 @@ loginTrigger1 = createRegexTrigger(
 disableTrigger(loginTrigger1)
 
 loginTrigger2 = createRegexTrigger(
-  '^Schoen, dass Du wieder da bist.*!$',
+  'Schoen, dass Du wieder da bist.*!$',
   function()
     disableTrigger(loginTrigger2)
     mud.send(loginPwd, { gag = true })
