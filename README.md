@@ -207,11 +207,12 @@ ubuntu:
 ### dependencies
 
 fedora:
-sudo dnf install pkg-config g++
-sudo dnf install openssl-devel alsa-lib-devel clang
+- sudo dnf install pkg-config g++
+- sudo dnf install openssl-devel alsa-lib-devel clang
 
 ubuntu:
-sudo apt install pkg-config libssl-dev libasound2-dev
+- sudo apt install pkg-config
+- sudo apt install libssl-dev libasound2-dev clang
 
 ### compile & install (& update)
 

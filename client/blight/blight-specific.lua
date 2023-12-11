@@ -34,6 +34,8 @@ client.createStandardAlias('quit', 0, function() blight.quit() end)
 -- ---------------------------------------------------------------------------
 -- gmcp
 
+local gmcpRegistered = false
+
 local function receive(event)
   gmcp.receive(event, ME.accept[event])
 end
@@ -47,6 +49,10 @@ gmcp.on_ready(
     gmcp.send('Core.Hello { "client": "'..clientName..'", "version": "'..version..'" }')
     gmcp.send('Core.Debug 1')
     gmcp.send('Core.Supports.Set [ "MG.char 1", "MG.room 1" ]')
+    if gmcpRegistered then
+      return
+    end
+    gmcpRegistered = true
     receive('MG.char.base')
     receive('MG.char.info')
     receive('MG.char.maxvitals')
