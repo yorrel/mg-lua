@@ -1906,18 +1906,11 @@ createRegexTrigger(
 local RE_TAN_TMP
 
 -- Kaminari
-createSubstrTrigger(
-  'Du konzentrierst Dich auf die Energien Deiner Umgebung.',
-  function()
-    RE_ANGREIFER = 'Du'
-    RE_WAFFE = 'Kaminari'
-    RE_ART = 'Tanjian'
-    re_blitzschaden()
-  end
-)
-createRegexTrigger(
+local kaminari_tmp_triggers = {}
+kaminari_tmp_triggers[#kaminari_tmp_triggers+1] = createRegexTrigger(
   '^(.*) lenks?t die sich entladenden Energien auf (.+)\\.$',
   function(m)
+    disableTrigger(kaminari_tmp_triggers)
     RE_ANGREIFER = m[1]
     RE_OPFER = m[2]
     RE_WAFFE = 'Kaminari'
@@ -1925,26 +1918,30 @@ createRegexTrigger(
     re_blitzschaden()
   end
 )
-local kaminari_tmp_triggers = {}
 kaminari_tmp_triggers[#kaminari_tmp_triggers+1] = createRegexTrigger(
-  '^Kleine Blitze zucken um .* herum durch die Luft\\.',
-  function()
-    disableTrigger(kaminari_tmp_triggers)
-  end
+  '^Kleine Blitze zucken um .* herum durch die Luft\\.$'
 )
 kaminari_tmp_triggers[#kaminari_tmp_triggers+1] = createRegexTrigger(
   '^Die Blitze rasen auf (.+) zu\\.$',
   function(m)
-    RE_OPFER = m[1]
     disableTrigger(kaminari_tmp_triggers)
+    RE_OPFER = m[1]
     re_blitzschaden()
   end
 )
 disableTrigger(kaminari_tmp_triggers)
 createRegexTrigger(
+  '^Du konzentrierst Dich auf die Energien Deiner Umgebung\\.$',
+  function()
+    RE_ANGREIFER = 'Du'
+    RE_WAFFE = 'Kaminari'
+    RE_ART = 'Tanjian'
+    enableTrigger(kaminari_tmp_triggers)
+  end
+)
+createRegexTrigger(
   '^([A-Z].*) konzentriert sich und (seine|ihre) Augen beginnen leicht zu gluehen\\.$',
   function(m)
-    disableTrigger(kaminari_tmp_triggers)
     RE_ANGREIFER = m[1]
     RE_WAFFE = 'Kaminari'
     RE_ART = 'Tanjian'
