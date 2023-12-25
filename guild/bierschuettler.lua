@@ -83,8 +83,8 @@ function Bierschuettler:enable()
   keymap.M_e = 'nuechtern'
   keymap.M_f = Guild.attackFunWithEnemy('schuettelstarre')
   keymap.M_g = 'floesse'
-  keymap.M_i = 'beruhige'
-  keymap.M_k = 'kneipen'
+  keymap.M_i = 'kneipen'
+  keymap.M_k = 'beruhige'
   keymap.M_l = 'licht'
   keymap.M_m = 'schimmer'
   keymap.M_r = 'rkaufe'

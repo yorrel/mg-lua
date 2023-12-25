@@ -442,7 +442,7 @@ local loginTrigger1
 local loginTrigger2
 
 loginTrigger1 = createRegexTrigger(
-  '^Der Steinbeisser verschwindet wieder, und Du wachst in einer anderen Welt auf\\.$',
+  'Der Steinbeisser verschwindet wieder, und Du wachst in einer anderen Welt auf\\.',
   function()
     disableTrigger(loginTrigger1)
     enableTrigger(loginTrigger2)
