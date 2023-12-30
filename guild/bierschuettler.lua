@@ -49,6 +49,10 @@ function Bierschuettler:enable()
   self:createSubstrTrigger('Du bist die Ruhe selbst.', statusUpdate('beruhige', 'Be'), {'<green>'})
   self:createSubstrTrigger('Du wirst wieder unruhiger.', statusUpdate('beruhige'), {'<red>'})
 
+  -- Lernen
+  self:createRegexTrigger('^Du lernst ein wenig aus diesem Fehler\\.$', nil, {'<magenta>'})
+  self:createRegexTrigger('^Leider hast Du aus dem Fehlschlag nichts gelernt\\.$', nil, {'<bgmagenta>'})
+
   -- Standardfunktionen ------------------------------------------------------
   pub.setOrderCmd(
     function(id)
