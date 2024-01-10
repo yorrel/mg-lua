@@ -346,11 +346,13 @@ local function wechselAufWaffe(waffeNeu)
   if waffeNeu == waffeAlt then
     return
   end
+
   local waffeGezueckt = not state().freehands
   local zueckFunktion = getZueckFunktion()
+  local stickyAlt = waffeAlt ~= nil and sticky(waffeAlt)
+  local stickyNeu = waffeNeu ~= nil and sticky(waffeNeu)
   if waffeAlt ~= nil then
-    local stickyAlt = sticky(waffeAlt)
-    if (not waffeGezueckt or waffeNeu == nil) and not stickyAlt then
+    if (not waffeGezueckt or waffeNeu == nil or stickyNeu) and not stickyAlt then
       defaultZueckFunktion.wegstecken(waffeAlt)
     elseif waffeGezueckt and stickyAlt then
       client.send('stecke '..waffeAlt..' zurueck')
@@ -359,7 +361,6 @@ local function wechselAufWaffe(waffeNeu)
     end
   end
   if waffeNeu ~= nil then
-    local stickyNeu = sticky(waffeNeu)
     if waffeGezueckt and stickyNeu then
       client.send('zuecke '..waffeNeu)
     elseif waffeGezueckt and not stickyNeu then
