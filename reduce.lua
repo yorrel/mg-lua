@@ -3774,7 +3774,10 @@ client.cecho('<magenta>>>> Lade Paket: <yellow>reduce.lua<reset>')
 client.createStandardAlias(
   'reduce',
   1,
-  function(level) damage_threshold = tonumber(level) end
+  function(level)
+    damage_threshold = tonumber(level)
+    logger.info('ignoriere Schaeden Stufe < '..level)
+  end
 )
 
 client.createStandardAlias('reduce_rm', 0, remove_reduce)
