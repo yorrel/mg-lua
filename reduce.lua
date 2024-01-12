@@ -3775,8 +3775,9 @@ client.createStandardAlias(
   'reduce',
   1,
   function(level)
-    damage_threshold = tonumber(level)
-    logger.info('ignoriere Schaeden Stufe < '..level)
+    damage_threshold = math.min(14, tonumber(level) or 0)
+    local dmg = RE_SCHADENLISTE[damage_threshold] or 'alle'
+    logger.info('ignoriere Meldungen < '..damage_threshold..' = '..dmg)
   end
 )
 
