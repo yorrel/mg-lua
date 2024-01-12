@@ -3357,6 +3357,38 @@ createRegexTrigger(
   end
 )
 
+-- Zynh
+createMultiLineRegexTrigger(
+  '^Ein kleiner Blitz schiesst aus der Spitze von Zynh auf><.*\\.$',
+  function()
+    RE_WAFFE = 'Zynh'
+    RE_WFUNC = 'WaffenFkt'
+  end
+)
+
+-- Vollstrecker
+createMultiLineRegexTrigger(
+  '^Der Vollstrecker schlaegt mit groesster Freude besonders kraeftig>< auf Deinen Gegner ein, als er merkt, dass dieser kurz vorm Ende steht!$',
+  function()
+    RE_WAFFE = 'Vollstrecker'
+    RE_WFUNC = '<red>Todesstoss'
+  end
+)
+createMultiLineRegexTrigger(
+  '^Der Vollstrecker versucht,>< .* den Todesstoss zu versetzen!$',
+  function()
+    RE_WAFFE = 'Vollstrecker'
+    RE_WFUNC = '<red>Todesstoss'
+  end
+)
+createMultiLineRegexTrigger(
+  '^Der Vollstrecker schlaegt mal ><.* zu\\.$',
+  function()
+    RE_WAFFE = 'Vollstrecker'
+    RE_WFUNC = 'Waffen-Fkt'
+  end
+)
+
 -- Silberdolch
 createMultiLineRegexTrigger(
   '^Der Dolch (durchdringt|bohrt|reisst|glueht|zerfetzt|zerstoert|vernichtet)>< .*\\.',
