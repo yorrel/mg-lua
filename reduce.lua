@@ -2865,27 +2865,13 @@ createRegexTrigger(
 -- DUNKELELFEN
 
 -- Feuerlanze
-local feuerlanze_tmp_triggers = {}
-addGroupedRegexTrigger(
-  feuerlanze_tmp_triggers,
-  '^  Deine Feuerlanze schwaerzt die Haut (.*)\\.',
-  function(m)
-    RE_WAFFE = 'Feuerlanze'
-    RE_ART = 'Delfen'
-    RE_ANGREIFER = 'Du'
-    RE_OPFER = m[1]
-    RE_SCHADEN = 1
-  end
-)
-local re_feuerlanze = '^  Deine Feuerlanze (fuegt|versengt|schlaegt mit voller Wucht in|roestet|verbrennt|laesst|verwandelt|verbannt)>< (.*) ((einige leichte|schwere) Verbrennungen zu|die Haut|ein|bei lebendigem Leibe|einen Raub der Flammen werden|in Russ und Asche|den Flammentod sterben|aus diesem Raum-Zeitkontinuum)\\.$'
+local re_feuerlanze = '^  [^ ].* Feuerlanze (fuegt|schwaerzt|versengt|schlaegt mit voller Wucht in|roestet|verbrennt|laesst|verwandelt|verbannt)>< (.*) ((einige leichte|schwere) Verbrennungen zu|Haut|ein|bei lebendigem Leibe|einen Raub der Flammen werden|in Russ und Asche|den Flammentod sterben|aus diesem Raum-Zeitkontinuum)\\.'
 local function delfen_feuerlanze(m)
-  RE_WAFFE = 'Feuerlanze'
-  RE_ART = 'Delfen'
-  RE_ANGREIFER = 'Du'
-  RE_OPFER = m[2]
-  if m[3] == 'einige leichte Verbrennungen zu' then
+  if m[1] == 'schwaerzt' and m[3] == 'Haut' then
+    RE_SCHADEN = 1
+  elseif m[3] == 'einige leichte Verbrennungen zu' then
     RE_SCHADEN = 5
-  elseif m[3] == 'die Haut' then
+  elseif m[1] == 'versengt' and m[3] == 'Haut' then
     RE_SCHADEN = 6
   elseif m[3] == 'schwere Verbrennungen zu' then
     RE_SCHADEN = 7
@@ -2905,18 +2891,42 @@ local function delfen_feuerlanze(m)
     RE_SCHADEN = 13
   else
     logger.warn('Feuerlanze nicht erkannt: m[1]=' .. m[1] .. ', m[2]='..m[2])
+    return
   end
+  -- ggf. kommen mehrere Angriffe nacheinander
+  local angreifer_save = RE_ANGREIFER
+  local opfer_save = RE_OPFER
+  re_ausgabe()
+  RE_ANGREIFER = angreifer_save
+  RE_OPFER = opfer_save
+  RE_WAFFE = 'Feuerlanze'
+  RE_ART = 'Delfen'
 end
-addGroupedMultiLineRegexTrigger(
-  feuerlanze_tmp_triggers,
+local feuerlanze_tmp_trigger
+feuerlanze_tmp_trigger = createMultiLineRegexTrigger(
   re_feuerlanze,
   delfen_feuerlanze
 )
-disableTrigger(feuerlanze_tmp_triggers)
+disableTrigger(feuerlanze_tmp_trigger)
 createMultiLineRegexTrigger(
   '^Du konzentrierst Dich auf (.*) und ploetzlich>< schiesst.* .*lanze auf (ihn|sie|es)\\.',
-  function()
-    enableTrigger(feuerlanze_tmp_triggers)
+  function(m)
+    RE_WAFFE = 'Feuerlanze'
+    RE_ART = 'Delfen'
+    RE_ANGREIFER = 'Du'
+    RE_OPFER = m[1]
+    enableTrigger(feuerlanze_tmp_trigger, 2)
+  end
+)
+createMultiLineRegexTrigger(
+  '^Aus (.*) Fingerspitzen schiesst>< eine.* Feuerlanze auf (.*)\\.',
+  function(m)
+    RE_WAFFE = 'Feuerlanze'
+    RE_ART = 'Delfen'
+    RE_ANGREIFER = m[1]
+    RE_OPFER = m[2]
+    -- ggf. kommen mehrere Angriffe nacheinander
+    enableTrigger(feuerlanze_tmp_trigger, 2)
   end
 )
 
@@ -2937,7 +2947,7 @@ createRegexTrigger(
   end
 )
 createMultiLineRegexTrigger(
-  '(.*) legt zwei Finger an>< (.*) Schlaefe, worauf (er|sie|es).*fuehlt\\.$',
+  '(.*) legt zwei Finger an>< (.*) Schlaefe, worauf (er|sie|es|Du).*fuehls?t\\.$',
   function(m)
     RE_WAFFE = 'Entziehe'
     RE_ART = 'Delfen'
@@ -3768,6 +3778,13 @@ createMultiLineRegexTrigger(
 -- wichtig: andere trigger auf 'schlaeg' oder 'trifft' muessen hoehere prio haben
 local RE_REGEXP_DEFAULT = '^  ([^ ].+) (verfehls?t|kitzels?t|kratzt|triffs?t|schlaegs?t|zerschmetters?t|pulverisiers?t|zerstaeubs?t|atomisiers?t|vernichtes?t) (.+)\\.'
 
+local function reset_art_waffe_wenn_noetig()
+  if RE_WAFFE == 'Feuerlanze' then
+    RE_WAFFE = '???'
+    RE_ART = 'normal'
+  end
+end
+
 local function suche_name_und_schaden_extra(rest)
   local i = string.find(rest, ' am Bauch')
     or string.find(rest, ' sehr hart')
@@ -3782,6 +3799,7 @@ local function suche_name_und_schaden_extra(rest)
 end
 
 local function match_normalen_schaden(m)
+  reset_art_waffe_wenn_noetig()
   RE_ANGREIFER = m[1]
   local name, meldung_nach = suche_name_und_schaden_extra(m[3])
   RE_OPFER = name
