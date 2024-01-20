@@ -1370,7 +1370,7 @@ createRegexTrigger(
 -- Verletze Wasser
 local re_zau_ver_wa_triggers = {}
 re_zau_ver_wa_triggers[#re_zau_ver_wa_triggers+1] = createMultiLineRegexTrigger(
-  '^  [^ ].+ (zaubers?t einen|spritzt|triffs?t|brings?t|spuels?t|laesst) ><.+ (Regen|klitschnass|mit einem Wasserstrahl(in.*)?|mit einem  Wasserstrahl aus dem Gleichgewicht|mit einem heftigen Wasserstrahl fast weg|in einer Sintflut untergehen)\\.$',
+  '^  [^ ].+ (zaubers?t einen|spritzt|triffs?t|brings?t|spuels?t|laesst) ><.+ (Regen|klitschnass|mit einem Wasserstrahl( in.*)?|mit einem Wasserstrahl aus dem Gleichgewicht|mit einem heftigen Wasserstrahl fast weg|in einer Sintflut untergehen)\\.$',
   function(m)
     if m[2] == 'Regen' then
       RE_SCHADEN = 1
