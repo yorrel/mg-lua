@@ -3395,7 +3395,7 @@ createMultiLineRegexTrigger(
   '^Der Vollstrecker schlaegt mal ><.* zu\\.$',
   function()
     RE_WAFFE = 'Vollstrecker'
-    RE_WFUNC = 'Waffen-Fkt'
+    RE_WFUNC = 'WaffenFkt'
   end
 )
 
