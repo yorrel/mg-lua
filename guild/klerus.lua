@@ -147,6 +147,7 @@ function Klerus:enable()
   -- Trigger -----------------------------------------------------------------
   -- Heiligenschein
   self:createRegexTrigger('^Lembold erhoert Dich\\. Ueber Deinem Haupt erscheint ein Heiligenschein\\.$', statusUpdate('heiligenschein','Hs'), {'<green>'})
+  self:createRegexTrigger('^Aber ueber Deinem Haupt schwebt doch schon ein Heiligenschein!$', statusUpdate('heiligenschein','Hs'), {'<green>'})
   self:createRegexTrigger('^Dein Heiligenschein flackert\\.$', nil, {'<yellow>'})
   self:createRegexTrigger('^Dein Heiligenschein verglimmt\\.$', statusUpdate('heiligenschein'), {'<red>'})
 
