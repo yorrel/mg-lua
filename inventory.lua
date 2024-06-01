@@ -67,6 +67,7 @@ local container_std_abk = {
    ks = 'kleiderschrank',
    wt = 'waffentruhe',
    ws = 'waffenschrank',
+   zk = 'zauberkiste',
 }
 
 -- auf diese Container wird auch von aussen zugegriffen
