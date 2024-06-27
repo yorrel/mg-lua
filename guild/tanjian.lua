@@ -167,12 +167,13 @@ function Tanjian:enable()
   self:createSubstrTrigger('Die Ausfuehrung Deines vorbereiteten Spruches wird verzoegert.', nil, {'<cyan>'})
   self:createSubstrTrigger('Du bist derzeit in der Parallelwelt.', nil, {'<blue>'})
   self:createRegexTrigger('^Du bist derzeit in Parallelwelt Nr\\. (\\d*)\\.', nil, {'<blue>'})
+  self:createSubstrTrigger('Es mangelt Dir an Konzentrationspunkten.', nil, {'<magenta>'})
 
   -- meditation
   self:createSubstrTrigger('Du beendest Deine Meditation.', nil, {'<green>'})
-  self:createSubstrTrigger('Deine Konzentrationsfaehigkeit laesst langsam nach.', nil, {'<yellow>'})
-  self:createSubstrTrigger('Deine Umgebung scheint sich auf Deine Meditation auszuwirken.', nil, {'<green>'})
-  self:createSubstrTrigger('Du solltest mal wieder meditieren.', nil, {'<red>'})
+  self:createSubstrTrigger('Deine Konzentrationsfaehigkeit laesst langsam nach.', nil, {'<magenta>'})
+  self:createSubstrTrigger('Deine Umgebung scheint sich auf Deine Meditation auszuwirken.', nil, {'<cyan>'})
+  self:createSubstrTrigger('Du solltest mal wieder meditieren.', nil, {'<magenta>'})
   self:createSubstrTrigger('Du spuerst noch die Wirkung der letzten Meditation.', nil, {'<blue>'})
 
   -- kokoro
@@ -181,11 +182,13 @@ function Tanjian:enable()
   self:createSubstrTrigger('Die Energien des Kokoro versiegen.', nil, {'<red>'})
 
   -- tegatana, omamori, hayai
-  self:createSubstrTrigger('Du konzentrierst Dich auf den Kampf.', nil, {'<green>'})
+  self:createRegexTrigger('^Du konzentrierst Dich (?:doch bereits )?auf den Kampf\\.$', nil, {'<green>'})
   self:createSubstrTrigger('Deine Kampf-Konzentration laesst nach.', nil, {'<red>'})
-  self:createSubstrTrigger('Du konzentrierst Dich auf die Abwehr.', nil, {'<green>'})
+  self:createRegexTrigger('^Du konzentrierst Dich (?:doch bereits )?auf (?:die|Deine) Abwehr\\.$', nil, {'<green>'})
+  self:createRegexTrigger('^Du konzentrierst Dich derzeit auf (?:Deine Abwehr|den Kampf)\\.$', nil, {'<magenta>'})
   self:createSubstrTrigger('Deine Abwehr-Konzentration laesst nach.', nil, {'<red>'})
   self:createSubstrTrigger('Der Zeitfluss veraendert sich', nil, {'<green>'})
+  self:createSubstrTrigger('Du konzentrierst Dich bereits auf den Zeitfluss.', nil, {'<green>'})
   self:createSubstrTrigger('Die Kontrolle ueber den Zeitfluss entgleitet Dir.', nil, {'<red>'})
 
   self:createRegexTrigger(
