@@ -20,6 +20,14 @@ Einige Tastenbelegungen sind nach Möglichkeit gildenübergreifend ähnlich.
 
 Möchte man eigene Belegungen nutzen, muss man sie nachträglich ändern.
 
+Farbcode der Trigger:
+
+- grün: Skill wird aktiv oder ist es noch
+- gelb: Warnung zu baldigem Skill-Ende
+- rot: Skill endet
+- magenta: Fehlschlag, Skill nicht möglich, Problem oder wichtige Meldung
+- cyan: andere Meldungen
+
 ## inventory.lua
 
 Ausrüstung:

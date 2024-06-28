@@ -23,6 +23,12 @@ function Werwoelfe:enable()
       end
   end
 
+  self:createRegexTrigger(
+    '^Du hast zu wenig Zauberpunkte fuer diesen Spruch\\.$',
+    nil,
+    {'<magenta>'}
+  )
+
   -- Wolfsform
   local formen = {
     Wolf = { color = '<green>', form = 'Wolf' },
@@ -54,7 +60,7 @@ function Werwoelfe:enable()
     {'g'}
   )
   self:createRegexTrigger(
-    '^Du bist schon in einer anderen Form\\.$', nil, {'<yellow>'}
+    '^Du bist schon in einer anderen Form\\.$', nil, {'<magenta>'}
   )
   self:createRegexTrigger(
     '^Du bist doch schon ein (Wolf|Halbwolf|Menschwolf|Wolfsmensch)\\.$',
@@ -148,7 +154,7 @@ function Werwoelfe:enable()
   self:createRegexTrigger(
     '^Du leuchtest doch bereits\\.',
     nil,
-    {'<yellow>'}
+    {'<green>'}
   )
   self:createRegexTrigger(
     '^Das Leuchten um Dich herum verblasst\\.',
