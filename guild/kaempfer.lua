@@ -204,19 +204,21 @@ function Kaempfer:enable()
   -- Trigger -----------------------------------------------------------------
 
   -- paraden
-  self:createSubstrTrigger('Du konzentrierst Dich auf die Bewegungen des Parierens, um im kommenden Kampf', statusUpdate('parade','Par'), {'<green>'})
-  self:createSubstrTrigger('Du parierst die naechsten Angriffe mit ', statusUpdate('parade','Par'), {'<green>'})
+  self:createMultiLineRegexTrigger('^Du konzentrierst Dich auf die Bewegungen des Parierens, um im kommenden Kampf>< vorbereitet zu sein\\.$', statusUpdate('parade','Par'), {'<green>'})
+  self:createRegexTrigger('^Du parierst die naechsten Angriffe mit ', statusUpdate('parade','Par'), {'<green>'})
+  self:createRegexTrigger('^Du parierst doch schon mit Deiner Waffe!$', statusUpdate('parade','Par'), {'<green>'})
   self:createSubstrTrigger('Du merkst, dass du die feindlichen Schlaege nicht mehr lange mit Deiner Waffe', nil, {'<yellow>'})
   self:createSubstrTrigger('Du beendest Deine Schildparade.', statusUpdate('parade'), {'<red>'})
   self:createSubstrTrigger('Du beendest Deine Parade.', statusUpdate('parade'), {'<red>'})
   self:createSubstrTrigger('Du konzentrierst Dich nun nicht mehr auf die Bewegungen der Parade.', statusUpdate('parade'), {'<red>'})
 
   -- rueckendeckung
-  self:createRegexTrigger('^Du gibst .* Rueckendeckung.', statusUpdate('rueckendeckung','Rd'), {'<green>'})
+  self:createRegexTrigger('^Du gibst .* Rueckendeckung\\.$', statusUpdate('rueckendeckung','Rd'), {'<green>'})
   self:createSubstrTrigger('Du beendest die Rueckendeckung fuer ', statusUpdate('rueckendeckung'), {'<red>'})
 
   -- schnell
-  self:createSubstrTrigger('Du kaempfst jetzt schneller!', statusUpdate('schnell','Sc'), {'<green>'})
+  self:createRegexTrigger('^Du kaempfst jetzt schneller!$', statusUpdate('schnell','Sc'), {'<green>'})
+  self:createRegexTrigger('^Deine Arme sind vom letzten schnellen Kaempfen noch zu erschoepft!$', nil, {'<magenta>'})
 
   -- schmerzen
   self:createSubstrTrigger('Du beisst ob der Schmerzen die Zaehne zusammen.', nil, {'<green>'})
@@ -231,7 +233,7 @@ function Kaempfer:enable()
   self:createRegexTrigger(
     '^Du machst doch schon die Kampftechnik \'Schildkroete\'\\.',
     statusUpdate('technik','Skr'),
-    {'<blue>'}
+    {'<green>'}
   )
   self:createRegexTrigger(
     '^Du kaempfst nun mit der Kampftechnik des Drachen\\.',
@@ -241,21 +243,20 @@ function Kaempfer:enable()
   self:createRegexTrigger(
     '^Du machst doch schon die Kampftechnik \'Drache\'\\.',
     statusUpdate('technik','Dra'),
-    {'<blue>'}
+    {'<green>'}
   )
-  self:createRegexTrigger(
-    '^Du kaempfst nun die Technik der Schlange und machst dabei schnelle,',
+  self:createMultiLineRegexTrigger(
+    '^Du kaempfst nun die Technik der Schlange und machst dabei schnelle,>< gefaehrliche Schlaege, die aber Deine Deckung nie oeffnen\\.$',
     statusUpdate('technik','Sna'),
     {'<green>'}
   )
   self:createRegexTrigger(
     '^Du machst doch schon die Kampftechnik \'Schlange\'\\.',
     statusUpdate('technik','Sna'),
-    {'<blue>'}
+    {'<green>'}
   )
-  self:createRegexTrigger('^gefaehrliche Schlaege, die aber Deine Deckung nie oeffnen\\.', nil, {'<green>'})
-  self:createSubstrTrigger('Du beendest die Kampftechnik ', statusUpdate('technik'), {'<red>'})
-  self:createSubstrTrigger('Du konzentrierst Dich nun nicht mehr auf die Technik ', statusUpdate('technik'), {'<red>'})
+  self:createRegexTrigger('^Du beendest die Kampftechnik ', statusUpdate('technik'), {'<red>'})
+  self:createRegexTrigger('^Du konzentrierst Dich nun nicht mehr auf die Technik ', statusUpdate('technik'), {'<red>'})
   self:createRegexTrigger(
     '^Du steigerst Dich in wilde Raserei!',
     function()
@@ -271,6 +272,8 @@ function Kaempfer:enable()
     end,
     {'<blue>'})
   self:createSubstrTrigger('Du beendest Deine Raserei', statusUpdate('technik'), {'<red>'})
+  self:createRegexTrigger('^Die Kampftechnik (?:der Schlange|der Schildkroete|des Drachen) passt nicht zur wilden Raserei\\.$', nil, {'<magenta>'})
+  self:createRegexTrigger('^In wilder Raserei ist keine (?:Parade|Schildparade|Rueckendeckung) moeglich!$', nil, {'<magenta>'})
 
   -- block
   self:createSubstrTrigger(
