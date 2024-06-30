@@ -2985,41 +2985,44 @@ createMultiLineRegexTrigger(
 
 -- Biss
 local werwolf_beiss_schaeden = {}
-werwolf_beiss_schaeden['die Schulter,'] = 3
-werwolf_beiss_schaeden['die Hand. Das'] = 4
-werwolf_beiss_schaeden['den Daumen. Der'] = 5
-werwolf_beiss_schaeden['die Wade,'] = 5
-werwolf_beiss_schaeden['den Fuss,'] = 6
-werwolf_beiss_schaeden['den Oberschenkel'] = 7
+werwolf_beiss_schaeden['gar nicht weh%.'] = 1
+werwolf_beiss_schaeden['in den Arm, ohne Schaden anzurichten%.'] = 1
+werwolf_beiss_schaeden['tat nicht weh%.'] = 2
+werwolf_beiss_schaeden['kaum weh%.'] = 2
+werwolf_beiss_schaeden['in den Arm, ohne allzu viel anzurichten%.'] = 2
+werwolf_beiss_schaeden['in die Schulter,'] = 3
+werwolf_beiss_schaeden['in die Hand%. Das'] = 4
+werwolf_beiss_schaeden['in den Daumen'] = 5
+werwolf_beiss_schaeden['in die Wade'] = 5
+werwolf_beiss_schaeden['in den Fuss'] = 6
+werwolf_beiss_schaeden['schaus?t schon dumm%.'] = 6
+werwolf_beiss_schaeden['in den Oberschenkel'] = 7
+werwolf_beiss_schaeden['Hals%.'] = 8
+werwolf_beiss_schaeden['Oberarm,'] = 8
+werwolf_beiss_schaeden['Koerper stroemt die Seele!'] = 8
 
-local biss_tmp_trigger = {}
-addGroupedMultiLineRegexTrigger(
-  biss_tmp_trigger,
-  '^  (.*) beisst (.*) in (den Arm\\. Das|die Schulter,|die Hand\\. Das|den Daumen\\. Der|die Wade,|den Fuss,|den Oberschenkel|(.*) (Hals\\.|Oberarm,|Kehle, aus))><(.*)[.!]$',
-  function(m)
-    disableTrigger(biss_tmp_trigger)
-    local typ = m[3]
-    local hoehe = werwolf_beiss_schaeden[typ]
-    if hoehe ~= nil then
-      RE_SCHADEN = hoehe
-    elseif string.match(typ, 'Hals\\.') or string.match(typ, 'Oberarm,') or string.match(typ, 'Kehle, aus') then
-      RE_SCHADEN = 8
-    elseif string.match(typ, '^den Arm\\. Das')  then
-      local rest = m[6]
-      if string.match(rest, 'gar nicht weh\\.$') then
-        RE_SCHADEN = 1
-      elseif string.match(rest, 'kaum weh\\.$') then
-        RE_SCHADEN = 2
-      end
+local function checkWerwolfBeissSchaeden(text)
+  for pattern,val in pairs(werwolf_beiss_schaeden) do
+    if string.find(text, pattern) then
+      return val
     end
   end
-)
-addGroupedMultiLineRegexTrigger(
-  biss_tmp_trigger,
-  '^  (.*) beisst und beisst an>< (.*) herum, .* nags?t und nags?t, .* schaut schon dumm\\.',
+end
+
+local biss_tmp_trigger
+biss_tmp_trigger = createMultiLineRegexTrigger(
+  '^  (.*) beisst>< (.*[.!])$',
   function(m)
     disableTrigger(biss_tmp_trigger)
-    RE_SCHADEN = 6
+    local rest = m[2]
+    local hoehe = checkWerwolfBeissSchaeden(rest)
+    if hoehe ~= nil then
+      RE_SCHADEN = hoehe
+    else
+      RE_SCHADEN = 15
+      logger.warn('Fehler bei Werwolf-Beisse, rest: '..rest)
+    end
+    re_ausgabe()
   end
 )
 disableTrigger(biss_tmp_trigger)
@@ -3028,6 +3031,16 @@ createRegexTrigger(
   function(m)
     RE_ANGREIFER = 'Du'
     RE_OPFER = m[1]
+    RE_WAFFE = 'Biss'
+    RE_ART = 'Werwolf'
+    enableTrigger(biss_tmp_trigger)
+  end
+)
+createMultiLineRegexTrigger(
+  '^(Eine Woelfin|Ein Wolf|\\w*) beisst (.*) (:?kraeftig und mit Biss|kraeftig\\. Richtig kraeftig sogar|einigermassen heftig|mit richtig viel Biss)\\.><.*',
+  function(m)
+    RE_ANGREIFER = m[1]
+    RE_OPFER = m[2]
     RE_WAFFE = 'Biss'
     RE_ART = 'Werwolf'
     enableTrigger(biss_tmp_trigger)
