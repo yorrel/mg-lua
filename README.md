@@ -156,7 +156,7 @@ API des Adapters:
 
 ```lua
 return {
-  useKeyListener,
+  configKeymap(f : keycode -> action),
   createLogger(componentName),
   cecho(msg),
   createStandardAlias(name, numberParams, f, optTabCompletion),

@@ -20,10 +20,9 @@ local keyListener = nil
 
 local function key(code, codeBlight)
   if codeBlight == nil then
-    codeBlight = string.gsub(code, 'C[-]', 'Ctrl-')
-    codeBlight = string.gsub(codeBlight, 'M[-]', 'Alt-')
+    codeBlight = string.gsub(code, 'C_', 'Ctrl-')
+    codeBlight = string.gsub(codeBlight, 'M_', 'Alt-')
   end
-  code = string.gsub(code, '[-]', '_')
   blight.bind(codeBlight, function() keyListener(code) end)
 end
 
@@ -31,8 +30,8 @@ local all_keys = 'abcdefghijklmnopqrstuvwxyz'
 local i = 1
 while i <= all_keys:len() do
   local k = all_keys:sub(i, i)
-  key('C-'..k)
-  key('M-'..k)
+  key('C_'..k)
+  key('M_'..k)
   i = i + 1
 end
 
@@ -49,33 +48,33 @@ key('F10', 'f10')
 key('F11', 'f11')
 key('F12', 'f12')
 
-key('S-F1', '\u{1b}[1;2p')
-key('S-F2', '\u{1b}[1;2q')
-key('S-F3', '\u{1b}[1;2r')
-key('S-F4', '\u{1b}[1;2s')
-key('S-F5', '\u{1b}[15;2~')
-key('S-F6', '\u{1b}[17;2~')
-key('S-F7', '\u{1b}[18;2~')
-key('S-F8', '\u{1b}[19;2~')
-key('S-F9', '\u{1b}[20;2~')
-key('S-F10', '\u{1b}[21;2~')
-key('S-F11', '\u{1b}[23;2~')
-key('S-F12', '\u{1b}[24;2~')
+key('S_F1', '\u{1b}[1;2p')
+key('S_F2', '\u{1b}[1;2q')
+key('S_F3', '\u{1b}[1;2r')
+key('S_F4', '\u{1b}[1;2s')
+key('S_F5', '\u{1b}[15;2~')
+key('S_F6', '\u{1b}[17;2~')
+key('S_F7', '\u{1b}[18;2~')
+key('S_F8', '\u{1b}[19;2~')
+key('S_F9', '\u{1b}[20;2~')
+key('S_F10', '\u{1b}[21;2~')
+key('S_F11', '\u{1b}[23;2~')
+key('S_F12', '\u{1b}[24;2~')
 
-key('M-0')
-key('M-1')
-key('M-2')
-key('M-3')
-key('M-4')
-key('M-5')
-key('M-6')
-key('M-7')
-key('M-8')
-key('M-9')
+key('M_0')
+key('M_1')
+key('M_2')
+key('M_3')
+key('M_4')
+key('M_5')
+key('M_6')
+key('M_7')
+key('M_8')
+key('M_9')
 
-key('M-,')
+key('M_,')
 
--- M-left, M-right, Ctrl-entf
+-- M-left, M-right, C-entf
 blight.bind('\u{1b}[1;3d', function() blight.ui('step_word_left') end)
 blight.bind('\u{1b}[1;3c', function() blight.ui('step_word_right') end)
 blight.bind('\u{1b}[3;5~', function() blight.ui('delete_to_end') end)
@@ -481,7 +480,7 @@ createStandardAlias(
 -- module definition
 
 return {
-  useKeyListener = function(f) keyListener = f end,
+  configKeymap = function(f) keyListener = f end,
   createLogger = createLogger,
   cecho = cecho,
   createStandardAlias = createStandardAlias,

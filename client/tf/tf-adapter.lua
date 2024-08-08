@@ -546,7 +546,7 @@ createStandardAlias('debug', 0,  function(item) debug_on = not debug_on end)
 -- module definition
 
 return {
-  useKeyListener = function(f) keyListener = f end,
+  configKeymap = function(f) keyListener = f end,
   createLogger = createLogger,
   cecho = cecho,
   createStandardAlias = createStandardAlias,

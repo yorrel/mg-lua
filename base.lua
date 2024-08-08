@@ -67,7 +67,6 @@ end
 local keymap = {}
 
 local function dokey(id)
-  id = string.gsub(id, '[-]', '_')
   local binding = keymap[id]
   if binding == nil then
     logger.info('key '..id)
@@ -76,7 +75,7 @@ local function dokey(id)
   end
 end
 
-client.useKeyListener(dokey)
+client.configKeymap(dokey)
 
 -- ---------------------------------------------------------------------------
 -- Persistence
