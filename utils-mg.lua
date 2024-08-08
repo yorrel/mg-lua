@@ -32,7 +32,7 @@ local function betrete_haus(name)
 end
 
 local function untersucheMich()
-  client.line()
+  base.line()
   client.send('unt '..base.charName())
 end
 
@@ -153,7 +153,7 @@ client.createSubstrTrigger([[Du bist nun im 'Ultrakurz'modus.]], nil, {'g'})
 local function withLine(cmd)
   return
     function()
-      client.line()
+      base.line()
       client.send(cmd)
     end
 end
@@ -211,7 +211,7 @@ end
 local function move(dir)
   return
     function()
-      client.line()
+      base.line()
       base.eval(
         room.getCmdForExit(dir)
         or getDirectionFor(dir)

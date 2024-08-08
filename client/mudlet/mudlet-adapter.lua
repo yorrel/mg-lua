@@ -15,10 +15,6 @@ local function cecho_tfcolors(msg)
   cecho(msg)
 end
 
-local function line()
-  echo('------------------------------------------------------------')
-end
-
 local function createLogger(komponente)
   local kmp = '['..string.sub(komponente,1,5)..']'
   kmp = kmp..string.sub('     ',1,7-#kmp)
@@ -241,8 +237,6 @@ end
 
 return {
   createLogger = createLogger,
-  line = line,
-  echo = echo,
   cecho = cecho_tfcolors,
   registerEventHandler = registerEventHandler,
   raiseEvent = raiseEvent,
@@ -258,4 +252,3 @@ return {
   eval = eval,
   xtitle = xtitle,
 }
-

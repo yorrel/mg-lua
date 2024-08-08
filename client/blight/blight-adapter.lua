@@ -121,10 +121,6 @@ local function cecho(msg)
   blight.output(msg)
 end
 
-local function line()
-  blight.output('------------------------------------------------------------')
-end
-
 local debug_on = false
 
 local function createLogger(komponente)
@@ -487,7 +483,6 @@ createStandardAlias(
 return {
   useKeyListener = function(f) keyListener = f end,
   createLogger = createLogger,
-  line = line,
   cecho = cecho,
   createStandardAlias = createStandardAlias,
   executeStandardAlias = executeStandardAlias,
@@ -503,6 +498,6 @@ return {
   json = json,
   regex = function(pattern) return Regex(pattern) end,
   login = login,
-  startLog = function(n) log.start(n) end,
-  stopLog = function(n) log.stop() end,
+  startLog = function() log.start(loginName) end,
+  stopLog = function() log.stop() end,
 }

@@ -77,10 +77,6 @@ local function echo(msg)
   tf_eval('/_echo '..msg)
 end
 
-local function line()
-  echo('------------------------------------------------------------')
-end
-
 local debug_on = false
 
 local function createLogger(komponente)
@@ -517,7 +513,10 @@ end
 -- ---------------------------------------------------------------------------
 -- login
 
+local loginName
+
 local function login(host, port, name, pwd)
+  loginName = name
   tf_eval('/addworld -Tlp MG '..name..' '..pwd..' '..host..' '..port)
   tf_eval('/connect MG')
 end
@@ -526,8 +525,8 @@ end
 -- ---------------------------------------------------------------------------
 -- logfile
 
-local function startLog(name)
-  local logfile = name..'_'..os.date('%Y-%m-%d_%H%M%S')..'.log'
+local function startLog()
+  local logfile = loginName..'_'..os.date('%Y-%m-%d_%H%M%S')..'.log'
   tf_eval('/log -i '..logfile)
   tf_eval('/log '..logfile)
 end
@@ -549,7 +548,6 @@ createStandardAlias('debug', 0,  function(item) debug_on = not debug_on end)
 return {
   useKeyListener = function(f) keyListener = f end,
   createLogger = createLogger,
-  line = line,
   cecho = cecho,
   createStandardAlias = createStandardAlias,
   executeStandardAlias = executeStandardAlias,

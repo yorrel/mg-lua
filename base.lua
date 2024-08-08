@@ -362,6 +362,9 @@ client.createStandardAlias('log', 0, toggleAutoLogFile)
 return {
   initCharakter = initCharakter,
   keymap = keymap,
+  line = function()
+    client.cecho('------------------------------------------------------------')
+  end,
   eval = eval,
   dokey = dokey,
   registerEventHandler = registerEventHandler,

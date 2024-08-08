@@ -157,25 +157,24 @@ API des Adapters:
 ```lua
 return {
   useKeyListener,
-  createLogger,
-  line,
-  cecho,
-  createStandardAlias,
-  executeStandardAlias,
-  createSubstrTrigger,
-  createRegexTrigger,
-  createMultiLineRegexTrigger,
-  enableTrigger,
-  disableTrigger,
-  killTrigger,
-  createTimer,
-  send,
-  xtitle,
-  json,
-  regex,
-  login,
-  startLog,
-  stopLog
+  createLogger(componentName),
+  cecho(msg),
+  createStandardAlias(name, numberParams, f, optTabCompletion),
+  executeStandardAlias(alias, param),
+  createSubstrTrigger(pattern, f, optStyle, optPrio),
+  createRegexTrigger(pattern, f, optStyle, optPrio),
+  createMultiLineRegexTrigger(pattern, f, optStyle, optPrio),
+  enableTrigger(trigger or triggerList),
+  disableTrigger(trigger or triggerList),
+  killTrigger(trigger or triggerList),
+  createTimer(sec, f, optCount),
+  send(cmds...),
+  xtitle(title),
+  json() : JSON - provides methods encode(value) and decode(value),
+  regex(pattern) : Regex,
+  login(host, port, name, pwd, optTls, optVerify),
+  startLog(),
+  stopLog()
 }
 ```
 
