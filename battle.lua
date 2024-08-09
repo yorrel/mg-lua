@@ -147,4 +147,5 @@ return {
   setGegner = fokus_set_gegner,
   istImKampf = istImKampf,
   kampfStatus = printKampfStatus,
+  fluechte = fluechte,
 }
