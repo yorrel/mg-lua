@@ -417,7 +417,7 @@ local function createTimer(sec, f, count)
   count = count or 1
   local callback = f
   if type(f) == 'string' then
-    callback = function() send(cmd) end
+    callback = function() send(f) end
   end
   timer.add(sec, count, callback)
 end
