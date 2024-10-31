@@ -28,7 +28,7 @@ local regex = client.regex
 -- ***D****  Drachenschuppe(Abwehr)
 -- ***H****  Drachenschuppe(Heilung)
 -- ***1****  Skillschild faengt mit niedrigster Stufe
--- ***5****  Skillschild faengt mit maximaler Stufe
+-- ***6****  Skillschild faengt mit maximaler Stufe
 -- ****R***  Paracelsus' gruene Robe
 -- ****U***  Bambis Umhang
 -- ****T***  Tsunamis Toga heilt
@@ -2126,9 +2126,9 @@ addGroupedRegexTrigger(
   samusa_tmp_triggers,
   '^  [^ ].+ Haut bekommt einen (leichten |)Blaustich\\.$',
   function(m)
-    if m[2] == '' then
+    if m[1] == '' then
       RE_SCHADEN = 3
-    elseif m[2] == 'leichten ' then
+    elseif m[1] == 'leichten ' then
       RE_SCHADEN = 2
     end
   end
