@@ -400,6 +400,8 @@ local function re_ausgabe_zeile()
   local art_color = ''
   if is_eigener_schaden then
     art_color = RE_ART_COLOR or art_color_table[RE_ART] or '<green>'
+  else
+    RE_ART = RE_ART:gsub('<[a-z]*>', '')
   end
   local art = art_color..RE_ART..'<reset>'
   local opfer = re_namekuerzen(RE_OPFER, 13)
@@ -3364,6 +3366,22 @@ createSubstrTrigger(
 createSubstrTrigger(
   'Du weichst dem Angriff schlangengleich aus.',
   function() abwehr_helfer('RUESTUNG', 'G') end
+)
+
+-- Todespanzer
+createMultiLineRegexTrigger(
+  '^Der Todespanzer glueht auf und strahlt Deinem Gegner einen Hitzestrahl>< entgegen\\.$',
+  function()
+    RE_WAFFE = 'Hitzestrahl'
+    RE_WFUNC = '<red>Todespanz'
+  end
+)
+createRegexTrigger(
+  'Panzer glueht durch einen Hitzestrahl auf\\.$',
+  function()
+    RE_WAFFE = 'Hitzestrahl'
+    RE_WFUNC = '<red>Todespanz'
+  end
 )
 
 
