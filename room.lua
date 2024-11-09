@@ -322,21 +322,24 @@ local function getRoomActions(nr)
   return getRoomProperty(nr)
 end
 
-local function execActions(nr)
+local function execActions(nr, optSilent)
   local actions = getRoomProperty(nr)
   if actions ~= nil then
     base.eval(actions)
-  else
+    return true
+  end
+  if not optSilent then
     logger.info('Keine Raumaktion fuer diesen Raum vorhanden.')
   end
+  return false
 end
 
-local function executeRoomActions1()
-  execActions('a1')
+local function executeRoomActions1(optSilent)
+  return execActions('a1', optSilent)
 end
 
-local function executeRoomActions2()
-  execActions('a2')
+local function executeRoomActions2(optSilent)
+  return execActions('a2', optSilent)
 end
 
 local function roomActions(nr, args, flags)
