@@ -73,7 +73,7 @@ local function room_unknown()
   base.raiseEvent('gmcp.MG.room.info')
 end
 
-client.createRegexTrigger('^Finsternis.$', room_unknown)
+client.createRegexTrigger('^Finsternis.$', room_unknown, {'F'})
 
 
 ME.accept = {}
