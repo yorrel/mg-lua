@@ -94,36 +94,6 @@ local function stabschaden(schaden)
 end
 
 
--- ---------------------------------------------------------------------------
--- Statuszeile
-
-local function convert(flag, to)
-  return flag == 'J' and to or ' '
-end
-
-local function statusZeile1(m)
-  local gesundheit =
-    convert(m[5],'G')..convert(m[6],'B')
-    ..convert(m[7],'T')..convert(m[8],'F')
-  base.statusUpdate(
-    {'skp', m[3]},
-    {'gesinnung', m[4]},
-    {'gesundheit', gesundheit}
-  )
-end
-
-local function statusZeile2(m)
-  base.statusUpdate(
-    {'hand', m[1]},
-    {'extrahand', m[2]},
-    {'wille', m[3]},
-    {'sz', m[4]},
-    {'ba', m[5]},
-    {'er', m[6]}
-  )
-end
-
-
 local function createFunctionMitGegner(cmd)
   return
     function()
@@ -158,19 +128,57 @@ end
 
 function Zauberer:enable()
   -- Statuszeile -------------------------------------------------------------
-  local statusConf =
+  base.statusConfig(
     'SKP:{skp:3} {hand:1} {extrahand:1} {wille:1} {sz:1} {ba:1}'
-    ..'{er:1} {gesinnung:1} {gesundheit:4}'
-  base.statusConfig(statusConf)
+    ..'{er:1} {gesinnung:1} {gifro:2}{blta:2}'
+  )
 
   -- Trigger fuer Status -----------------------------------------------------
-  self:createRegexTrigger('^STATUS1: ([0-9]+) ([0-9]+) ([0-9]+) (.) (.) (.) (.) (.)', statusZeile1, {'g'})
-  self:createRegexTrigger('^STATUS2: (.) (.) (.) (.) (.) (.) ([0-9]+) (.+)', statusZeile2, {'g'})
+  local function map(value, mapFrom, mapTo)
+    return value == mapFrom and mapTo or ' '
+  end
+
+  self:createRegexTrigger(
+    '^LP: [0-9]+ \\([0-9]+\\) MP: [0-9]+ \\([0-9]+\\) SMP: ([0-9]+) \\(([0-9]+)\\) GI: \\(([JN])\\) FRO: \\(([JN])\\) ER: ([JN])',
+    function(m)
+      base.statusUpdate(
+        {'skp', m[1]},
+        {'gifro', map(m[2],'J','G')..map(m[3],'J','F')},
+        {'er', map(m[4],'J','E')}
+      )
+    end,
+    {'g'}
+  )
+  local alignment = {
+    satanisch='s',
+    boese='b',
+    frech='f',
+    neutral='N',
+    nett='n',
+    gut='g',
+    heilig='h'
+  }
+  self:createRegexTrigger(
+    '^Ha: \\((.)\\) Wi: (ein|aus) XH: (ein|aus) SZ: \\((.)\\) BL: ([JN]) TA: ([JN]) AL: ([a-z]+) VS: ',
+    function(m)
+      base.statusUpdate(
+        {'hand', m[1]},
+        {'wille', map(m[2],'ein','W')},
+        {'extrahand', map(m[3],'ein','X')},
+        {'sz', m[4]},
+        {'blta', map(m[5],'J','B')..map(m[6],'J','T')},
+        {'gesinnung', alignment[m[7]]}
+      )
+    end,
+    {'g'}
+  )
 
   base.addResetHook(
     function()
       client.send(
-        'stabreport STATUS1: %la %ma %sa %Al %gi %bl %ta %fr %lfSTATUS2: %Fh %Xh %Wi %Sz %Ba %Er %vo %fl %lf',
+        'zmessage '
+        ..'LP: %la (%lm) MP: %ma (%mm) SMP: %sa (%sm) GI: (%gi) FRO: (%fr) ER: %er%lf'
+        ..'Ha: (%Fh) Wi: %wi XH: %xh SZ: (%Sz) BL: %bl TA: %ta AL: %AL VS: %vo FR: %fl%lf',
         'stabreport ein'
       )
     end
