@@ -295,22 +295,15 @@ local function re_artikelkuerzen(name)
 end
 
 local function re_namekuerzen(name, length)
+  local teilname_gross = string.match(name, '[A-Z].*')
+  if teilname_gross ~= nil then
+    name = teilname_gross
+  end
   if length == nil then
-    local teilname_gross = string.match(name, '[A-Z].*')
-    if teilname_gross ~= nil then
-      return teilname_gross
-    else
-      return name
-    end
+    return name
   end
   if name:len() > length+3 then
-    local teilname_gross = string.match(name, '[A-Z].*')
-    if teilname_gross ~= nil then
-      name = teilname_gross
-    end
-    if name:len() > length+3 then
-      name = re_leerzeichenkuerzen(name)
-    end
+    name = re_leerzeichenkuerzen(name)
   end
   return name:sub(1, length)
 end
@@ -453,6 +446,9 @@ end
 local function re_waffe_restaurieren()
   logger.debug('restauriere Waffe fuer Angreifer "' .. RE_ANGREIFER .. '"')
   local merker = RE_ANGRIFFSWAFFEN_MERKER[RE_ANGREIFER]
+  if merker == nil then
+    merker = RE_ANGRIFFSWAFFEN_MERKER[re_namekuerzen(RE_ANGREIFER)]
+  end
   if merker ~= nil then
     RE_WAFFE = merker.waffe
     RE_ART = merker.art
@@ -3788,11 +3784,14 @@ local function match_normalen_angriff(m)
   RE_WAFFE = re_artikelkuerzen(RE_WAFFE)
   RE_ANAME = re_artikelkuerzen(RE_ANAME)
   logger.debug('speichere Waffe "' .. RE_WAFFE .. '" fuer Angreifer "' .. RE_ANAME .. '"')
-  RE_ANGRIFFSWAFFEN_MERKER[RE_ANAME] = {
+  local merker = {
     waffe = RE_WAFFE,
     art = RE_ART,
     color = RE_ART_COLOR
   }
+  RE_ANGRIFFSWAFFEN_MERKER[RE_ANAME] = merker
+  local kurzname = re_namekuerzen(RE_ANAME)
+  RE_ANGRIFFSWAFFEN_MERKER[kurzname] = merker
 end
 
 createMultiLineRegexTrigger(
