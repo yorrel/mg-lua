@@ -287,7 +287,7 @@ local function re_genitiv_loeschen(name)
   return name
 end
 
-local RE_ARTIKEL = regex('^(:?[Dd](:?e(:?[rsmn]|in(:?e[srnm]?)?)|ie|as)|[Ee]in(e[srmn]?)?) ')
+local RE_ARTIKEL = regex('^(?:[Dd](?:e(?:[rsmn]|in(?:e[srnm]?)?)|ie|as)|[Ee]in(e[srmn]?)?) ')
 local function re_artikelkuerzen(name)
   name = name or ''
   local name_short = RE_ARTIKEL:replace(name, '')
@@ -419,7 +419,7 @@ local function re_ausgabe_zeile()
   return output
 end
 
-local RE_REGEXP_SELF = regex('^D(:?u|i(:?ch|r)|ein(:?e[nmr]?)?)$')
+local RE_REGEXP_SELF = regex('^D(?:u|i(?:ch|r)|ein(?:e[nmr]?)?)$')
 
 local function re_ausgabe_vorbereiten()
   RE_ANGREIFER = re_artikelkuerzen(RE_ANGREIFER)
@@ -3035,7 +3035,7 @@ createRegexTrigger(
   end
 )
 createMultiLineRegexTrigger(
-  '^(Eine Woelfin|Ein Wolf|\\w*) beisst (.*) (:?kraeftig und mit Biss|kraeftig\\. Richtig kraeftig sogar|einigermassen heftig|mit richtig viel Biss)\\.><.*',
+  '^(Eine Woelfin|Ein Wolf|\\w*) beisst (.*) (?:kraeftig und mit Biss|kraeftig\\. Richtig kraeftig sogar|einigermassen heftig|mit richtig viel Biss)\\.><.*',
   function(m)
     RE_ANGREIFER = m[1]
     RE_OPFER = m[2]
