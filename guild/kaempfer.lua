@@ -221,8 +221,9 @@ function Kaempfer:enable()
   self:createRegexTrigger('^Deine Arme sind vom letzten schnellen Kaempfen noch zu erschoepft!$', nil, {'<magenta>'})
 
   -- schmerzen
-  self:createSubstrTrigger('Du beisst ob der Schmerzen die Zaehne zusammen.', nil, {'<green>'})
-  self:createSubstrTrigger('Du schaffst es nicht mehr, die Schmerzen weiterhin zu ignorieren.', nil, {'<red>'})
+  self:createRegexTrigger('^Der Verlust an Lebenspunkten beeinflusst bisher noch nicht Deine Kampfkraft!', nil, {'<blue>'})
+  self:createRegexTrigger('^Du beisst ob der Schmerzen die Zaehne zusammen\\.', nil, {'<green>'})
+  self:createRegexTrigger('^Du schaffst es nicht mehr, die Schmerzen weiterhin zu ignorieren\\.', nil, {'<red>'})
 
   -- techniken: schildkroete - drache - schlange - raserei
   self:createRegexTrigger(

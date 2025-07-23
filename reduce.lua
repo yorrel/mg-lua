@@ -3025,7 +3025,7 @@ biss_tmp_trigger = createMultiLineRegexTrigger(
 )
 disableTrigger(biss_tmp_trigger)
 createRegexTrigger(
-  '^Du beisst (.*)\\.$',
+  '^Du beisst ([^o].*)\\.$',
   function(m)
     RE_ANGREIFER = 'Du'
     RE_OPFER = m[1]
