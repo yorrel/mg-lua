@@ -72,6 +72,11 @@ key('M_7')
 key('M_8')
 key('M_9')
 
+key('M_up')
+key('M_down')
+key('M_left')
+key('M_right')
+
 key('M_,')
 
 -- M-left, M-right, C-entf
