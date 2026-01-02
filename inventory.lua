@@ -334,6 +334,9 @@ local function setDefaultWaffe(id, optHaende)
   end
 end
 
+local function isWaffeGezueckt()
+  return not state().freehands
+end
 
 -- Wechselt auf die angegebene Waffe, die eingestellte default-Waffe
 -- ist von diesem Wechsel nicht beeinflusst.
@@ -348,7 +351,7 @@ local function wechselAufWaffe(waffeNeu)
     return
   end
 
-  local waffeGezueckt = not state().freehands
+  local waffeGezueckt = isWaffeGezueckt()
   local zueckFunktion = getZueckFunktion()
   local stickyAlt = waffeAlt ~= nil and sticky(waffeAlt)
   local stickyNeu = waffeNeu ~= nil and sticky(waffeNeu)
@@ -743,5 +746,6 @@ return {
   waffenAufnehmen = waffenAufnehmen,
   waffenStatus = printWaffenStatus,
   doWithHands = doWithHands,
+  isWaffeGezueckt = isWaffeGezueckt,
   freeHands = function() haendeToggle(true) end,
 }

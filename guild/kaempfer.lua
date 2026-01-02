@@ -71,7 +71,14 @@ end
 -- args: world_cmd, waffe
 local function skill_mit_waffe(cmd, waffe)
   inv.wechselWaffe(waffe)
+  local isGezueckt = inv.isWaffeGezueckt()
+  if not isGezueckt then
+    client.send('zuecke '..waffe)
+  end
   client.send(cmd..' '..kampf.getGegner())
+  if not isGezueckt then
+    client.send('stecke '..waffe..' zurueck')
+  end
   inv.zueckeDefaultWaffe()
 end
 
