@@ -13,11 +13,18 @@ local function tableConcat(t1,t2)
   end
 end
 
-
 local function tableJoin(t1,t2)
   for k,v in pairs(t2) do
     t1[k] = v
   end
+end
+
+local function tableKeySet(t)
+  local keys = {}
+  for key,_ in pairs(t) do
+    table.insert(keys, key)
+  end
+  return keys
 end
 
 -- erzeugt neue table vom index first bis last
@@ -81,6 +88,13 @@ local function listFilter(list, f)
     end
   end
   return result
+end
+
+local function listFilterByPrefix(list, prefix)
+  return listFilter(
+    list,
+    function(v) return v:sub(1, prefix:len()) == prefix end
+  )
 end
 
 -- ---------------------------------------------------------------------------
@@ -162,12 +176,14 @@ end
 return {
   tableConcat = tableConcat,
   tableJoin = tableJoin,
+  tableKeySet = tableKeySet,
   subTable = subTable,
   listJoin = listJoin,
   listContains = listContains,
   listRemove = listRemove,
   listMap = listMap,
   listFilter = listFilter,
+  listFilterByPrefix = listFilterByPrefix,
   splitString = splitString,
   splitWords = splitWords,
   capitalize = capitalize,
