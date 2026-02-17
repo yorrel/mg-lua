@@ -311,6 +311,19 @@ local function setRoomFlagFunction(f)
   roomFlagFunction = f
 end
 
+-- defuel
+local defuelStatus
+
+local function setDefuelStatus(status)
+  defuelStatus = status
+  raiseEvent('statusline.defuel')
+end
+
+local function getDefuelStatus()
+  return defuelStatus
+end
+
+
 -- ---------------------------------------------------------------------------
 -- auto logfile on/off
 
@@ -380,6 +393,8 @@ return {
   statusUpdate = statusUpdate,
   getStatusValue = getStatusValue,
   getGildenStatusLine = getGildenStatusLine,
+  getDefuelStatus = getDefuelStatus,
+  setDefuelStatus = setDefuelStatus,
   roomFlag = roomFlag,
   setRoomFlagFunction = setRoomFlagFunction,
   addResetHook = addResetHook,

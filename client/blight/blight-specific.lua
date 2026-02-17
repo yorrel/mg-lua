@@ -134,12 +134,14 @@ base.registerEventHandler('statusline.room.update', updateRoomStatus)
 
 
 local gildenStatusFormat = '%-42s'
-
 local gildenStatus = string.format(gildenStatusFormat, '')
+local vsfrStatusFormat = C_BOLD..C_BBLUE..'VS:%3d  FR:%-20s'..C_RESET
 local vsfrStatus = ''
+local defuelStatusFormat = C_BOLD..C_BYELLOW..'%2s'..C_RESET
+local defuelStatus = '  '
 
 local function status_update2()
-  blight.status_line(2, gildenStatus..'  '..vsfrStatus)
+  blight.status_line(2, gildenStatus..'  '..vsfrStatus..' '..defuelStatus)
 end
 
 local function updateGildenStatus()
@@ -148,15 +150,20 @@ local function updateGildenStatus()
   status_update2()
 end
 
-local vsfrFormat = C_BOLD..C_BBLUE..'VS:%3d  FR:%-20s'..C_RESET
-
 local function updateVSFR()
   local vs = state().vorsicht or 0
   local flucht = tools.listJoin(room.getEscape(), ';') or state().fluchtrichtung or ''
   flucht = flucht:sub(1, 24)
-  vsfrStatus = string.format(vsfrFormat, vs, flucht)
+  vsfrStatus = string.format(vsfrStatusFormat, vs, flucht)
+  status_update2()
+end
+
+local function updateDefuel()
+  local defuel = base.getDefuelStatus() or '  '
+  defuelStatus = string.format(defuelStatusFormat, defuel)
   status_update2()
 end
 
 base.registerEventHandler('gmcp.MG.char.wimpy', updateVSFR)
 base.registerEventHandler('statusline.gilde.update', updateGildenStatus)
+base.registerEventHandler('statusline.defuel', updateDefuel)
