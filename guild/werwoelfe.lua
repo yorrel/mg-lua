@@ -174,7 +174,7 @@ function Werwoelfe:enable()
   keymap.S_F8 = Guild.attackFunWithEnemy('wuergekralle', 1)
 
   -- Formen
-  local formen = {'Ghourdal', 'Horpas', 'Galbrag'}
+  local formen = {'Ghourdal', 'Horpas', 'Galbrag', 'Wolf'}
   local form = 0
   local function toggleDefaultForm()
     form = (form + 1) % #formen
