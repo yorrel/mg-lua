@@ -1937,8 +1937,8 @@ createRegexTrigger(
     enableTrigger(kaminari_tmp_triggers)
   end
 )
-createRegexTrigger(
-  '^([A-Z].*) konzentriert sich und (seine|ihre) Augen beginnen leicht zu gluehen\\.$',
+createMultiLineRegexTrigger(
+  '^([A-Z].*) konzentriert sich und (seine|ihre) Augen beginnen leicht>< zu gluehen\\.$',
   function(m)
     RE_ANGREIFER = m[1]
     RE_WAFFE = 'Kaminari'
