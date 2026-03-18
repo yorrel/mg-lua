@@ -1,6 +1,7 @@
 -- Schadenshoehe mitschneiden und Statistiken berechnen
 
 local reduce = require 'reduce'
+local tools  = require 'utils.tools'
 
 local logger = client.createLogger('damage')
 
@@ -86,15 +87,6 @@ local cmds = {
 client.createStandardAlias(
   'dmg',
   1,
-  function(arg)
-    local cmd = cmds[arg]
-    if cmd == nil then
-      logger.error('unbekanntes Kommando '..arg)
-    else
-      cmd()
-    end
-  end,
-  function(arg)
-    return { 'start', 'stop' }
-  end
+  tools.createSubCmdDispatcher(cmds),
+  tools.createSubCmdTabCompletion(cmds)
 )

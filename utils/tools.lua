@@ -90,13 +90,6 @@ local function listFilter(list, f)
   return result
 end
 
-local function listFilterByPrefix(list, prefix)
-  return listFilter(
-    list,
-    function(v) return v:sub(1, prefix:len()) == prefix end
-  )
-end
-
 -- ---------------------------------------------------------------------------
 -- div utilities
 
@@ -172,21 +165,53 @@ local function varargCallClosure(f)
     end
 end
 
+-- cmds: table [subcmd_name -> f]
+local function createSubCmdDispatcher(cmds)
+  return
+    function(cmd, arg1, arg2, arg3)
+      local f = cmds[cmd]
+      if f ~= nil then
+        f(arg1, arg2, arg3)
+      else
+        print('>>> unbekanntes Kommando '..cmd)
+      end
+    end
+end
+
+-- cmds_n: table [subcmd -> f]
+local function createSubCmdTabCompletion(cmds1, cmds2, cmds3, cmds4)
+  local all_cmds = {}
+  tableConcat(all_cmds, tableKeySet(cmds1))
+  if cmds2 then tableConcat(all_cmds, tableKeySet(cmds2)) end
+  if cmds3 then tableConcat(all_cmds, tableKeySet(cmds3)) end
+  if cmds4 then tableConcat(all_cmds, tableKeySet(cmds4)) end
+  table.sort(all_cmds)
+  return function(arg)
+    local cmds = {}
+    for _,cmd in ipairs(all_cmds) do
+      if cmd:sub(1,#arg) == arg then
+        table.insert(cmds, cmd)
+      end
+    end
+    return cmds
+  end
+end
+
 
 return {
   tableConcat = tableConcat,
   tableJoin = tableJoin,
-  tableKeySet = tableKeySet,
   subTable = subTable,
   listJoin = listJoin,
   listContains = listContains,
   listRemove = listRemove,
   listMap = listMap,
   listFilter = listFilter,
-  listFilterByPrefix = listFilterByPrefix,
   splitString = splitString,
   splitWords = splitWords,
   capitalize = capitalize,
   parseArgs = parseArgs,
   varargCallClosure = varargCallClosure,
+  createSubCmdDispatcher = createSubCmdDispatcher,
+  createSubCmdTabCompletion = createSubCmdTabCompletion,
 }

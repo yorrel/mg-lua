@@ -445,28 +445,19 @@ local room_sub_cmds = {
   log = logRoomIds,
 }
 
+for key,f in pairs(room_sub_cmds) do
+  room_sub_cmds[key] =
+    function(s)
+      local args, flags = tools.parseArgs(s)
+      f(args, flags)
+    end
+end
+
 client.createStandardAlias(
   'room',
-  1,
-  function(s)
-    local args, flags = tools.parseArgs(s)
-    local cmd = table.remove(args, 1) or ''
-    local sub_cmd = room_sub_cmds[cmd]
-    if not sub_cmd then
-      logger.error('unbekanntes Subcommand '..cmd)
-      return
-    end
-    sub_cmd(args, flags)
-  end,
-  function(arg)
-    local cmds = {}
-    for cmd,_ in pairs(room_sub_cmds) do
-      if cmd:sub(1,#arg) == arg then
-        table.insert(cmds, cmd)
-      end
-    end
-    return cmds
-  end
+  2,
+  tools.createSubCmdDispatcher(room_sub_cmds),
+  tools.createSubCmdTabCompletion(room_sub_cmds)
 )
 
 
