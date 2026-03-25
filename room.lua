@@ -431,7 +431,7 @@ keymap.M_6 = executeRoomActions2
 -- ---------------------------------------------------------------------------
 -- Aliases
 
-local room_sub_cmds = {
+local cmds1 = {
   name = roomName,
   alias = roomAlias,
   exit = roomExit,
@@ -442,22 +442,35 @@ local room_sub_cmds = {
   action1 = function(args, flags) roomActions('a1', args, flags) end,
   action2 = function(args, flags) roomActions('a2', args, flags) end,
   kraut = roomHerb,
+}
+
+local cmds0 = {
   log = logRoomIds,
 }
 
-for key,f in pairs(room_sub_cmds) do
-  room_sub_cmds[key] =
+for key,f in pairs(cmds1) do
+  cmds1[key] =
     function(s)
       local args, flags = tools.parseArgs(s)
       f(args, flags)
     end
 end
 
+local subCmdDispatcher = tools.createSubCmdDispatcher(cmds0, cmds1)
+local subCmdTabCompletion = tools.createSubCmdTabCompletion(cmds0, cmds1)
+
 client.createStandardAlias(
   'room',
   2,
-  tools.createSubCmdDispatcher(room_sub_cmds),
-  tools.createSubCmdTabCompletion(room_sub_cmds)
+  subCmdDispatcher,
+  subCmdTabCompletion
+)
+
+client.createStandardAlias(
+  'room',
+  1,
+  subCmdDispatcher,
+  subCmdTabCompletion
 )
 
 

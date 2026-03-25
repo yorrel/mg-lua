@@ -165,26 +165,51 @@ local function varargCallClosure(f)
     end
 end
 
--- cmds: table [subcmd_name -> f]
-local function createSubCmdDispatcher(cmds)
+-- cmds_n: table [subcmd_name -> f], with n = function arity
+local function createSubCmdDispatcher(cmds0, cmds1, cmds2, cmds3)
   return
     function(cmd, arg1, arg2, arg3)
-      local f = cmds[cmd]
-      if f ~= nil then
-        f(arg1, arg2, arg3)
-      else
-        print('>>> unbekanntes Kommando '..cmd)
+      if cmds3 and arg3 then
+        local f = cmds3[cmd]
+        if f ~= nil then
+          return f(arg1, arg2, arg3)
+        end
       end
+      if arg3 then
+        arg2 = arg2..' '..arg3
+      end
+      if cmds2 and arg2 then
+        local f = cmds2[cmd]
+        if f ~= nil then
+          return f(arg1, arg2)
+        end
+      end
+      if arg2 then
+        arg1 = arg1..' '..arg2
+      end
+      if arg1 then
+        local f = cmds1[cmd]
+        if f ~= nil then
+          return f(arg1)
+        end
+      end
+      if not arg1 then
+        local f = cmds0[cmd]
+        if f ~= nil then
+          return f()
+        end
+      end
+      print('>>> sub cmd '..cmd..' mit diesen Parametern nicht auswertbar')
     end
 end
 
--- cmds_n: table [subcmd -> f]
-local function createSubCmdTabCompletion(cmds1, cmds2, cmds3, cmds4)
+-- cmds_n: table [subcmd_name -> f]
+local function createSubCmdTabCompletion(cmds0, cmds1, cmds2, cmds3)
   local all_cmds = {}
-  tableConcat(all_cmds, tableKeySet(cmds1))
+  tableConcat(all_cmds, tableKeySet(cmds0))
+  if cmds1 then tableConcat(all_cmds, tableKeySet(cmds1)) end
   if cmds2 then tableConcat(all_cmds, tableKeySet(cmds2)) end
   if cmds3 then tableConcat(all_cmds, tableKeySet(cmds3)) end
-  if cmds4 then tableConcat(all_cmds, tableKeySet(cmds4)) end
   table.sort(all_cmds)
   return function(arg)
     local cmds = {}
