@@ -88,7 +88,7 @@ end
 -- automatisch nachladen wenn EBlock nicht gelocked ist
 local function utilsMGLpKpListener()
   local s = state()
-  if ME.kp < 21 and s.eblock_voll and not s.eblock_locked then
+  if ME.kp < 51 and s.eblock_voll and not s.eblock_locked then
     inv.doWithHands(1, 'sumere')
   end
 end
