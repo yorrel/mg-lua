@@ -64,22 +64,22 @@ end
 local function eblockVollErkannt()
   logger.info('Elfenbeinblock ist voll.')
   state().eblock_voll = true
+  base.raiseEvent('gmcp.MG.char.vitals')
 end
 
 local function eblockLeerErkannt()
   logger.warn('Elfenbeinblock ist leer!')
   state().eblock_voll = false
+  base.raiseEvent('gmcp.MG.char.vitals')
 end
 
 local function eblock()
   if not state().eblock_voll then
     inv.doWithHands(1, 'dare')
+    state().eblock_locked = true
   else
     state().eblock_locked = not state().eblock_locked
-    local msg = ''
-    if not state().eblock_locked then
-      msg = ' NICHT'
-    end
+    local msg = state().eblock_locked and '' or ' NICHT'
     logger.info('Elfenbeinblock'..msg..' locked.')
   end
   base.raiseEvent('gmcp.MG.char.vitals')
