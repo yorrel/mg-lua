@@ -1,8 +1,9 @@
 -- Basisfunktionalitaeten
 
 -- die event listener von gmcp-data muessen zuerst geladen werden
-local tools  = require 'utils.tools'
-local json   = client.json
+local tools   = require 'utils.tools'
+local json    = client.json
+local loggers = require 'client.common.loggers'
 
 local logger = client.createLogger('base')
 
@@ -366,6 +367,7 @@ client.createStandardAlias('se', 0, save_and_sleep)
 client.createStandardAlias('save', 0, saveChar)
 client.createStandardAlias('para', 1, set_para_welt)
 client.createStandardAlias('log', 0, toggleAutoLogFile)
+client.createStandardAlias('debug', 0, loggers.toggleDebug)
 
 
 -- ---------------------------------------------------------------------------

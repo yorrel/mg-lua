@@ -1,6 +1,7 @@
 
-local tools = require 'utils.tools'
-local class = require 'utils.class'
+local tools   = require 'utils.tools'
+local class   = require 'utils.class'
+local loggers = require 'client.common.loggers'
 
 
 -- ---------------------------------------------------------------------------
@@ -125,35 +126,11 @@ local function cecho(msg)
   blight.output(msg)
 end
 
-local debug_on = false
-
 local function createLogger(komponente)
-  local kmp = '['..komponente:sub(1,5)..']'
-  kmp = kmp..string.sub('     ',1,7-#kmp)
-  return {
-    debug =
-      function(msg)
-        if debug_on then
-          cecho('<cyan>[DEBUG] '..kmp..' '..msg..'<reset>')
-        end
-      end,
-    info =
-      function(msg)
-        cecho('<cyan>>>> '..kmp..' '..msg..'<reset>')
-      end,
-    warn =
-      function(msg)
-        cecho('<bgyellow>>>> '..kmp..' '..msg..'<reset>')
-      end,
-    error =
-      function(msg)
-        cecho('<bgred>>>> '..kmp..' '..msg..'<reset>')
-      end
-  }
+  return loggers.createLogger(komponente, cecho)
 end
 
-
-local logger = createLogger('blight')
+local logger = createLogger('blightmud')
 
 
 -- ---------------------------------------------------------------------------
@@ -466,19 +443,6 @@ local function login(host, port, name, pwd, tls, verify)
   loginPwd = pwd
   mud.connect(host, port, tls, verify)
 end
-
-
--- ---------------------------------------------------------------------------
--- interaktion
-
-createStandardAlias(
-  'debug',
-  0,
-  function()
-    debug_on = not debug_on
-    logger.info('Debug: '..(debug_on and 'on' or 'off'))
-  end
-)
 
 
 -- ---------------------------------------------------------------------------

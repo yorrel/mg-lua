@@ -2,10 +2,11 @@ local mg_lua_dir = os.getenv('MG_LUA_DIR')
 package.path = package.path..';'..mg_lua_dir..'/lua/?.lua'
 
 
-local tools  = require 'utils.tools'
-local class = require 'utils.class'
-local json   = require 'json'
-local regex  = require 'rex_pcre2'
+local tools   = require 'utils.tools'
+local class   = require 'utils.class'
+local json    = require 'json'
+local regex   = require 'rex_pcre2'
+local loggers = require 'client.common.loggers'
 
 
 -- ---------------------------------------------------------------------------
@@ -77,34 +78,9 @@ local function echo(msg)
   tf_eval('/_echo '..msg)
 end
 
-local debug_on = false
-
 local function createLogger(komponente)
-  local kmp = '['..komponente:sub(1,5)..']'
-  kmp = kmp..string.sub('     ',1,7-#kmp)
-  return {
-    debug =
-      function(msg)
-        if debug_on then
-          tf_eval('/echo -aCmagenta [DEBUG] '..kmp..' '..msg)
-        end
-      end,
-    info =
-      function(msg)
-        local color = getColor('<cyan>')
-        cecho(color..' >>> '..kmp..' '..msg)
-      end,
-    warn =
-      function(msg)
-        tf_eval('/echo -aCbgyellow >>> '..kmp..' '..msg)
-      end,
-    error =
-      function(msg)
-        tf_eval('/echo -aCbgred >>> '..kmp..' '..msg)
-      end
-  }
+  return loggers.createLogger(komponente, cecho)
 end
-
 
 local logger = createLogger('tf')
 
@@ -534,12 +510,6 @@ end
 local function stopLog()
   tf_eval('/log off')
 end
-
-
--- ---------------------------------------------------------------------------
--- interaktion
-
-createStandardAlias('debug', 0,  function(item) debug_on = not debug_on end)
 
 
 -- ---------------------------------------------------------------------------
