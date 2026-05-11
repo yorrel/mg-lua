@@ -237,7 +237,7 @@ oder
 
 lua-Libs:
 - luarocks --local install luafilesystem
-- luarocks --local install luajson
+- luarocks --local install dkjson
 - luarocks --local install lrexlib-pcre2
 
 ### compile & install

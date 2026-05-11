@@ -4,7 +4,7 @@ package.path = package.path..';'..mg_lua_dir..'/lua/?.lua'
 
 local tools   = require 'utils.tools'
 local class   = require 'utils.class'
-local json    = require 'json'
+local json    = require 'dkjson'
 local regex   = require 'rex_pcre2'
 local loggers = require 'client.common.loggers'
 
@@ -51,6 +51,8 @@ lightmode_colors['<bgred>'] = '@{Cbgred}'
 lightmode_colors['<bggreen>'] = '@{Cbggreen}'
 lightmode_colors['<bgmagenta>'] = '@{Cbgmagenta}'
 lightmode_colors['<bgyellow>'] = '@{Cbgyellow}'
+lightmode_colors['<bgcyan>'] = '@{Cbgcyan}'
+lightmode_colors['<bold>'] = '@{B}'
 lightmode_colors['<reset>'] = '@{n}'
 
 local darkmode_colors = {}
@@ -70,7 +72,7 @@ local function cecho(msg)
   msg = string.gsub(msg, '%%', '\\%%')
   local lines = tools.splitString(msg, '\n')
   for _,line in ipairs(lines) do
-    tf_eval('/echo -p '..line)
+    tf_eval('/echo -p -- '..line)
   end
 end
 
@@ -177,6 +179,7 @@ styles_common['<bgred>'] = '-aCbgred'
 styles_common['<bggreen>'] = '-aCbggreen'
 styles_common['<bgmagenta>'] = '-aCbgmagenta'
 styles_common['<bgyellow>'] = '-aCbgyellow'
+styles_common['<bgcyan>'] = '-aCbgcyan'
 
 local styles_lightmode = {}
 styles_lightmode['<red>'] = '-aCred'

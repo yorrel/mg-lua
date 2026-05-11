@@ -107,6 +107,7 @@ color_codes['<bgred>'] = BG_RED
 color_codes['<bggreen>'] = BG_GREEN
 color_codes['<bgmagenta>'] = BG_MAGENTA
 color_codes['<bgyellow>'] = BG_YELLOW
+color_codes['<bgcyan>'] = BG_CYAN
 color_codes['<bold>'] = C_BOLD
 color_codes['<reset>'] = C_RESET
 
