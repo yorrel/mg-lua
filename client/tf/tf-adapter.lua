@@ -7,6 +7,7 @@ local class   = require 'utils.class'
 local json    = require 'dkjson'
 local regex   = require 'rex_pcre2'
 local loggers = require 'client.common.loggers'
+local mre     = require 'client.common.multi-line-trigger'
 
 
 -- ---------------------------------------------------------------------------
@@ -156,6 +157,29 @@ local function executeStandardAlias(alias, param)
   else
     callLuaAlias(alias..paramSuffix)
   end
+end
+
+
+-- ---------------------------------------------------------------------------
+-- regex
+
+local Regex = class(
+  function(a, pattern)
+    a.re = regex.new(pattern)
+  end
+)
+function Regex:replace(s, replacement)
+  replacement = string.gsub(replacement, '$(%d)', '%%1')
+  return regex.gsub(s, self.re, replacement)
+end
+-- if s matches, return table of captures, otherwise return nil
+function Regex:match(s)
+  -- regex.match return full text if no captures are specified
+  local m1,m2,m3,m4,m5,m6,m7,m8 = regex.match(s, self.re)
+  if m1 == nil then
+    return nil
+  end
+  return { m1,m2,m3,m4,m5,m6,m7,m8 }
 end
 
 
@@ -310,6 +334,8 @@ local function maskPattern(pattern)
   -- workaround: mask \\ and $ (does not work directly)
   pattern = string.gsub(pattern, '\\', '&backslash&')
   pattern = string.gsub(pattern, '%$', '&dollar&')
+  -- workaround for '
+  pattern = string.gsub(pattern, '\'', '.')
   return pattern
 end
 
@@ -335,118 +361,13 @@ local function createRegexTrigger(pattern, f, style, prio)
   return id
 end
 
-local function pattern2log(pattern)
-  pattern = string.gsub(pattern, '%$', '')
-  return pattern
-end
-
-
-local Regex = class(
-  function(a, pattern)
-    a.re = regex.new(pattern)
-  end
-)
-function Regex:replace(s, replacement)
-  replacement = string.gsub(replacement, '$(%d)', '%%1')
-  return regex.gsub(s, self.re, replacement)
-end
--- if s matches, return table of captures, otherwise return nil
-function Regex:match(s)
-  -- regex.match return full text if no captures are specified
-  local m1,m2,m3,m4,m5,m6,m7,m8 = regex.match(s, self.re)
-  if m1 == nil then
-    return nil
-  end
-  return { m1,m2,m3,m4,m5,m6,m7,m8 }
-end
-
-local function matcheText(t, re, pattern, f)
-  local matches = re:match(t)
-  logger.debug('matching multi-line buffer \''..t..'\' with pattern \''..pattern2log(pattern)..'\'')
-  if matches ~= nil then
-    matches.line = t
-    f(matches)
-  else
-    logger.debug('multi line trigger: \'' .. t .. '\' passt nicht zu Pattern \'' .. pattern2log(pattern) .. '\'')
-    echo(t)
-  end
-end
-
-local function improveAnchors(pattern)
-  if pattern:sub(1,2) == '(^' then
-    pattern = '^('..pattern:sub(3)
-  end
-  if pattern:sub(-2) == '$)' then
-    pattern = pattern:sub(1,-3)..')$'
-  end
-  return pattern
-end
-
-local function strip(s)
-  local s = string.gsub(s, '^ *', '')
-  return s
-end
-
-local PRIO_MULTILINES = 99999
-
--- ids fuer multiline trigger / multiline_trigger_buffer
-local multi_re_ids = 0
-
--- Buffer fuer Zeilen der multiline trigger
--- id -> string (concatenated lines)
-local multiline_trigger_buffer = {}
-
--- Erzeugung eines Multi-Line-Triggers.  Der Anfang des Patterns bis zum
--- speziellen Kennzeichen '><' wird als Erkennung des Multi-Line-Triggers
--- verwendet. Danach werden alle Zeilen genommen bis eine Zeile mit '.' oder '!'
--- endet. Das gesamte Pattern (ohne '><') wird für alle Zeilen genutzt bis zum
--- Textende.
--- f: aufzurufende Funktion, bekommt table matches als parameter
--- return triggerID
 local function createMultiLineRegexTrigger(pattern, f, style, prio)
-  f = f or dummyCallback
-  local start = improveAnchors('(' .. string.gsub(pattern, '><.*$', '') .. '.*)$')
-  local pattern_multi = string.gsub(pattern, '><', '')
-  local re_multi = Regex(pattern_multi)
-
-  local id = multi_re_ids
-  multi_re_ids = multi_re_ids + 1
-
-  local id2
-  id2 = createRegexTrigger(
-    '^(.*)$',
-    function(m)
-      local line = m[1]
-      multiline_trigger_buffer[id] = multiline_trigger_buffer[id] .. ' ' .. strip(line)
-      if string.match(line, '.*[.!] ?$') then
-        disableTrigger(id2)
-        local buffer = multiline_trigger_buffer[id]
-        multiline_trigger_buffer[id] = nil
-        matcheText(buffer, re_multi, pattern_multi, f)
-      end
-    end,
-    style,
-    PRIO_MULTILINES
-  )
-  disableTrigger(id2)
-
-  local id1
-  id1 = createRegexTrigger(
-    start,
-    function(m)
-      local line = m[1]
-      if string.match(line, '.*[.!] ?$') then
-        matcheText(line, re_multi, pattern_multi, f)
-      else
-        multiline_trigger_buffer[id] = line
-        enableTrigger(id2)
-      end
-    end,
-    style,
-    prio
-  )
-
-  return id1
+  return
+    mre.createMultiLineRegexTrigger(
+      createRegexTrigger, enableTrigger, disableTrigger,
+      Regex, logger, echo,
+      pattern, f, style, prio
+    )
 end
 
 

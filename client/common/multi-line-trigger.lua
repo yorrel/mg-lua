@@ -24,6 +24,8 @@ end
 
 local dummyCallback = function() end
 
+local PRIO_MULTILINES = 99999
+
 -- ids fuer multiline trigger / multiline_trigger_buffer
 local multi_re_ids = 0
 
@@ -42,8 +44,9 @@ local function createMultiLineRegexTrigger(
     createRegexTrigger, enableTrigger, disableTrigger,
     Regex, logger, output,
     pattern, f, style, prio)
+
   f = f or dummyCallback
-  local start = string.gsub(pattern, '><.*$', '')
+  local start = '('..string.gsub(pattern, '><.*$', '')..'.*)$'
   local pattern_multi = string.gsub(pattern, '><', '')
   local re_multi = Regex(pattern_multi)
   local id = multi_re_ids
@@ -53,7 +56,7 @@ local function createMultiLineRegexTrigger(
   id2 = createRegexTrigger(
     '^(.*)$',
     function(m)
-      local line = m.line
+      local line = m[1]
       multiline_trigger_buffer[id] = multiline_trigger_buffer[id] .. ' ' .. strip(line)
       if string.match(line, '.*[.!] ?$') then
         disableTrigger(id2)
@@ -62,7 +65,8 @@ local function createMultiLineRegexTrigger(
         matcheText(buffer, re_multi, pattern_multi, f, logger, output)
       end
     end,
-    style
+    style,
+    PRIO_MULTILINES
   )
   disableTrigger(id2)
 
@@ -70,7 +74,7 @@ local function createMultiLineRegexTrigger(
   id1 = createRegexTrigger(
     start,
     function(m)
-      local line = m.line
+      local line = m[1]
       if string.match(line, '.*[.!] ?$') then
         matcheText(line, re_multi, pattern_multi, f, logger, output)
       else
