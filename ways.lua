@@ -3,7 +3,6 @@
 local base   = require 'base'
 local tools  = require 'utils.tools'
 local room   = require 'room'
-local ME     = require 'gmcp-data'
 
 local logger = client.createLogger('wege')
 local keymap = base.keymap

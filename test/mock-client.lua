@@ -31,11 +31,10 @@ local alias_ids = alias_ids or {}
 local alias_cmds = alias_cmds or {}
 
 
-function _executeAliasCmd(name, n, matches)
+function testExecuteAliasCmd(name, n, m1,m2,m3,m4,m5)
   local aliasId = name..'~'..n
   local cmd = alias_cmds[aliasId]
-  -- matches[2] ist der erste match
-  cmd(matches[2],matches[3],matches[4],matches[5],matches[6],matches[7],matches[8],matches[9])
+  cmd(m1,m2,m3,m4,m5)
 end
 
 -- Standard-Alias mit n Pflicht-Parametern erzeugen.
@@ -54,11 +53,23 @@ end
 
 local nop = function() end
 
+local output_buffer = {}
+
 local function send(...)
   for _,msg in ipairs{...} do
     print('[2MUD]   '..msg)
+    output_buffer[#output_buffer+1] = msg
   end
 end
+
+local function resetMudOutput()
+  output_buffer = {}
+end
+
+local function getMudOutput()
+  return output_buffer
+end
+
 
 local Regex = class(
   function(a, pattern)
@@ -152,7 +163,7 @@ return {
   createLogger = createLogger,
   cecho = cecho,
   createStandardAlias = createStandardAlias,
-  executeStandardAlias = _executeAliasCmd,
+  executeStandardAlias = nop,
   createSubstrTrigger = createSubstrTrigger,
   createRegexTrigger = createRegexTrigger,
   createMultiLineRegexTrigger = createMultiLineRegexTrigger,
@@ -167,5 +178,9 @@ return {
   login = nop,
   startLog = nop,
   stopLog = nop,
+  -- test api
+  testExecuteStandardAlias = testExecuteAliasCmd,
   trigger = trigger,
+  resetMudOutput = resetMudOutput,
+  getMudOutput = getMudOutput,
 }

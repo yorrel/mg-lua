@@ -202,6 +202,10 @@ siehe Skripte unter startup/
 
 Alle Tests laufen außerhalb der Clients mit einem minimalen Mock-Client,
 der Trigger-Funktionen mit regex-Mitteln nachbildet.
+Benötigt wird dazu:
+
+- pcre2-devel
+- luarocks --local install lrexlib-pcre2
 
 Aufruf:
 
@@ -258,7 +262,7 @@ packages (ubuntu):
 - libpcre3-dev
 
 packages (fedora):
-- pcre-devel
+- pcre2-devel
 - lua-devel
 
 tools:
