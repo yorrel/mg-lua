@@ -198,6 +198,16 @@ aller Matches geliefert: `matches = {match1, match2, ...}`
 siehe Skripte unter startup/
 
 
+# Tests
+
+Alle Tests laufen außerhalb der Clients mit einem minimalen Mock-Client,
+der Trigger-Funktionen mit regex-Mitteln nachbildet.
+
+Aufruf:
+
+    lua test/all-tests.lua
+
+
 # Client installieren
 
 ## blightmud

@@ -1,5 +1,5 @@
 
-local reduce = require "reduce"
+local reduce = require 'reduce'
 
 -- ---------------------------------------------------------------------------
 -- framework
@@ -10,7 +10,7 @@ local tests_error = {}
 local tests_running = {}
 
 local function msg(m)
-  client.cecho(m)
+  print(m)
 end
 
 local function msgError(m)
@@ -39,31 +39,32 @@ end
 local function run_test(test)
   tests_running[#tests_running+1] = test
   for _,s in ipairs(test.trigger) do
-    tf_eval('/trigger "'..s..'"')
+    client.trigger(s)
   end
 end
 
 local function create_test_report()
   if #tests_error > 0 then
-    msg('@{Cred}TESTS ERRORS@{n}')
+    msg('\n❌ TESTS ERRORS')
     for _,m in ipairs(tests_error) do
       msg(m)
     end
   else
-    msg('@{Cgreen}tests ok@{n}')
+    msg('\n✅ tests ok')
   end
 end
 
 local index_run = 1
 local function reduce_output_listener(actual)
-  local output_raw = string.gsub(actual, '@{%w*}', '')
+  local output_raw = string.gsub(actual, '<%w*>', '')
   local test = tests_running[index_run]
   local name = test.name
   local expect = test.expect
   if output_raw == expect then
-    msg('\n@{Cgreen}(+)@{n} '..name)
+    msg('✅ '..name..'\n')
   else
-    msgError('\n@{Cred}(-)@{n} '..name)
+    msg('❌ '..name..'\n')
+    msgError('❌ '..name)
     msgError('e='..expect)
     msgError('a='..(output_raw or 'nil'))
   end
@@ -77,7 +78,7 @@ local function runAllTests()
   reduce.setOutputListener(reduce_output_listener)
   tests_error = {}
   for _,test in pairs(tests) do
-    msg("running test " .. count .. "/" .. #tests .. ": " .. test.name)
+    msg('running test ' .. count .. '/' .. #tests .. ': ' .. test.name)
     count = count + 1
     run_test(test)
   end

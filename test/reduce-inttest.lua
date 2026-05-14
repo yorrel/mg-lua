@@ -1,5 +1,5 @@
 
-local reduce_tester = require "reduce-tester"
+local reduce_tester = require 'test.reduce-tester'
 local test = reduce_tester.test
 
 
