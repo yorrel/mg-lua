@@ -25,6 +25,12 @@ function Bierschuettler:schaetz(item)
   client.send('beobachte '..item)
 end
 
+function Bierschuettler:info()
+  if base.charWizlevel() == 1 then
+    client.send('tropfen')
+  end
+end
+
 function Bierschuettler:enable()
   -- Statuszeile -------------------------------------------------------------
   local statusConf = '{haarwuchs:2} {schimmer:2} {beruhige:2}'
