@@ -170,7 +170,7 @@ function Tanjian:enable()
   self:createSubstrTrigger('Es mangelt Dir an Konzentrationspunkten.', nil, {'<magenta>'})
 
   -- meditation
-  self:createSubstrTrigger('Du beendest Deine Meditation.', nil, {'<green>'})
+  self:createSubstrTrigger('Du beendest Deine Meditation.', nil, {'<cyan>'})
   self:createSubstrTrigger('Deine Konzentrationsfaehigkeit laesst langsam nach.', nil, {'<magenta>'})
   self:createSubstrTrigger('Deine Umgebung scheint sich auf Deine Meditation auszuwirken.', nil, {'<cyan>'})
   self:createSubstrTrigger('Du solltest mal wieder meditieren.', nil, {'<magenta>'})

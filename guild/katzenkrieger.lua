@@ -14,6 +14,9 @@ function Katzenkrieger:enable()
   -- Lernerfolg
   self:createRegexTrigger('^Du lernst aus Deine(n Fehlern|m Erfolg)\\.$', nil, {'<magenta>'})
 
+  -- doese
+  self:createRegexTrigger('^Du erwachst frisch gestaerkt von Deinem Nickerchen\\.', nil, {'<cyan>'})
+
   -- Tasten ------------------------------------------------------------------
   local keymap = base.keymap
   keymap.F5   = Guild.attackFunWithEnemy('blitz', 1)
@@ -24,7 +27,9 @@ function Katzenkrieger:enable()
   keymap.M_a = 'ausweichen'
   keymap.M_d = 'ausweichen'
   keymap.M_e = 'schleichen'
+  keymap.M_f = 'pflanzenfessel'
   keymap.M_g = 'pflanzenfessel'
+  keymap.M_j = 'katzenauge'
   keymap.M_l = 'nachtsicht'
   keymap.M_x = 'schnell'
   keymap.M_z = 'doese'
