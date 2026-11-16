@@ -2979,6 +2979,15 @@ createMultiLineRegexTrigger(
   end
 )
 
+-- Todeskralle
+createMultiLineRegexTrigger(
+  '^([^ ].+) schlaegs?t blitzschnell mit ausgefahrenen Krallen>< auf (.+) ein\\.$',
+  function(m)
+    RE_WAFFE = 'Todeskralle'
+    RE_ART = 'Katzen'
+  end
+)
+
 -- WERWOELFE
 
 -- Biss
