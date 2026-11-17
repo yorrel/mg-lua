@@ -2988,6 +2988,69 @@ createMultiLineRegexTrigger(
   end
 )
 
+-- Wasserstrahl
+local kk_wasserstrahl_triggers = {}
+addGroupedRegexTrigger(
+  kk_wasserstrahl_triggers,
+  '^  ([^ ].*) Wasserstrahl verfehlt .+\\.$',
+  function(m)
+    RE_SCHADEN = 1
+  end
+)
+addGroupedRegexTrigger(
+  kk_wasserstrahl_triggers,
+	'^  Ein Wasserspritzer streift .+\\.$',
+  function(m)
+    RE_SCHADEN = 2
+  end
+)
+addGroupedRegexTrigger(
+  kk_wasserstrahl_triggers,
+	'^  [^ ].+ spritzt .+ klitschnass\\.$',
+  function(m)
+    RE_SCHADEN = 4
+  end
+)
+addGroupedRegexTrigger(
+  kk_wasserstrahl_triggers,
+	'^  [^ ].+ triffs?t (.+) mit einem Wasserstrahl\\.$',
+  function(m)
+    if string.match(m[1], '.* sehr hart') then
+      RE_SCHADEN = 8
+		elseif string.match(m[1], '.* hart') then
+      RE_SCHADEN = 7
+    else
+      RE_SCHADEN = 6
+    end
+  end
+)
+addGroupedRegexTrigger(
+  kk_wasserstrahl_triggers,
+	'^  [^ ].+ brings?t .+ mit einem Wasserstrahl aus dem Gleichgewicht\\.$',
+  function(m)
+		RE_SCHADEN = 9
+  end
+)
+-- TODO: ist 10 richtig?
+addGroupedRegexTrigger(
+  kk_wasserstrahl_triggers,
+	'^  [^ ].+ Wasserstrahl haut .+ von den Beinen\\.$',
+  function(m)
+		RE_SCHADEN = 10
+  end
+)
+disableTrigger(kk_wasserstrahl_triggers)
+createMultiLineRegexTrigger(
+  '^([^ ].+) forms?t mit ([Ds]einen|ihren) Haenden einen Trichter, aus>< dem ein (Wasserstrahl )?schiesst\\. Diesen richtes?t (Du|er|sie) auf (.+)\\.$',
+  function(m)
+    enableTrigger(kk_wasserstrahl_triggers)
+    RE_WAFFE = 'Wasserstrahl'
+    RE_ART = 'Katzen'
+    RE_ANGREIFER = m[1]
+    RE_OPFER = m[5]
+  end
+)
+
 -- WERWOELFE
 
 -- Biss
