@@ -217,6 +217,12 @@ local function re_loeschen()
 end
 re_loeschen()
 
+local function flaechen_angriff_beenden()
+  RE_FLAECHE_ANGREIFER = nil
+  RE_FLAECHE_LETZTER_ANGREIFER = nil
+  RE_FLAECHE_ZEIT = 0
+end
+
 local function abwehr_helfer(typ, val, farbe)
   local akt = RE_ABWEHR[typ]
   if akt == nil then
@@ -3095,7 +3101,7 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) Gliedmassen weisen (.*) Eiszapfen auf\\.$',
   function(m)
     RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
-    RE_OPFER = m[1]
+    RE_OPFER = re_genitiv_loeschen(m[1])
     if m[2] ~= 'vereinzelt' then
       RE_SCHADEN = 5
     elseif m[1] ~= 'einige' then
@@ -3108,7 +3114,7 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) Haut weist (.*) Frostbeulen auf\\.$',
   function(m)
     RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
-    RE_OPFER = m[1]
+    RE_OPFER = re_genitiv_loeschen(m[1])
     if m[2] ~= 'einige' then
       RE_SCHADEN = 7
     elseif m[1] ~= 'etliche' then
@@ -3175,7 +3181,9 @@ kk_winterhauch_2 = createRegexTrigger(
     RE_FLAECHE_ANGREIFER = 'Du'
     RE_FLAECHE_LETZTER_ANGREIFER = 'Du'
     RE_FLAECHE_WAFFE = 'Winterhauch'
+    RE_WAFFE = RE_FLAECHE_WAFFE
     RE_FLAECHE_ART = 'Katzen'
+    RE_ART = RE_FLAECHE_ART
     RE_FLAECHE_ZEIT = os.time()
     FLAECHE_DELAY = 3
     enableTrigger(kk_winterhauch_triggers, 2)
@@ -3930,6 +3938,7 @@ local function match_normalen_angriff(m)
   local opfer = m[2]
   local waffe = m[3]
   re_loeschen()
+  flaechen_angriff_beenden()
   RE_WAFFE = waffe
   logger.debug('RE_WAFFE = "' .. RE_WAFFE .. '"')
   if RE_WAFFE == 'brennenden Haenden' or RE_WAFFE == 'flammenden Haenden' then
