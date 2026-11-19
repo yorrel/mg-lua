@@ -75,6 +75,7 @@ local RE_ANGREIFER
 local RE_FLAECHE_WAFFE
 local RE_FLAECHE_ART
 local RE_FLAECHE_ANGREIFER
+local RE_FLAECHE_LETZTER_ANGREIFER
 local RE_FLAECHE_ZEIT = 0
 local RE_WAFFE
 local RE_OPFER
@@ -465,6 +466,7 @@ local function re_ausgabe()
       RE_ART = RE_FLAECHE_ART
       re_waffe_geraten()
     else
+      RE_FLAECHE_LETZTER_ANGREIFER = nil
       RE_FLAECHE_ANGREIFER = nil
       re_waffe_restaurieren()
     end
@@ -3052,14 +3054,16 @@ createMultiLineRegexTrigger(
 )
 
 -- Winterhauch
+-- TODO: Schaden ausmessen
 local kk_winterhauch_triggers = {}
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
-	'^  ([^ ].+) wuerde sich (.+) ueber einen Schal freuen\\.$',
+	'^  ([^ ].+) wuerde sich (.+)ueber einen Schal freuen\\.$',
   function(m)
+    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
-    if m[2] ~= 'sehr' then
+    if m[2] ~= 'sehr ' or m[2] ~= '' then
       RE_SCHADEN = 1
-    elseif m[1] ~= 'riesig' then
+    elseif m[1] ~= 'riesig ' then
       RE_SCHADEN = 2
     end
     re_ausgabe()
@@ -3068,6 +3072,7 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) zittert (.*)deutlich\\.$',
   function(m)
+    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
     if m[1] ~= 'etwas' then
       RE_SCHADEN = 3
@@ -3080,6 +3085,7 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) hat das Zittern laengst aufgegeben\\.$',
   function(m)
+    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
 		RE_SCHADEN = 4
     re_ausgabe()
@@ -3088,6 +3094,7 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) Gliedmassen weisen (.*) Eiszapfen auf\\.$',
   function(m)
+    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
     if m[2] ~= 'vereinzelt' then
       RE_SCHADEN = 5
@@ -3100,6 +3107,7 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) Haut weist (.*) Frostbeulen auf\\.$',
   function(m)
+    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
     if m[2] ~= 'einige' then
       RE_SCHADEN = 7
@@ -3112,6 +3120,7 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createMultiLineRegexTrigger(
 	'^  Die dadurch entstehenden Frostbeulen tun>< (.*) hoellisch weh\\.$',
   function(m)
+    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
 		RE_SCHADEN = 9
     re_ausgabe()
@@ -3120,6 +3129,7 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createMultiLineRegexTrigge
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) friert sich fast etwas ab\\.$',
   function(m)
+    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
 		RE_SCHADEN = 10
     re_ausgabe()
@@ -3128,6 +3138,7 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) kann sich nur unter Schmerzen bewegen\\.$',
   function(m)
+    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
 		RE_SCHADEN = 10
     re_ausgabe()
@@ -3136,6 +3147,7 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) erstarrt beinahe\\.$',
   function(m)
+    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
 		RE_SCHADEN = 11
     re_ausgabe()
@@ -3144,6 +3156,7 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  Fuer (.+) ist diese Kaelte (.*) jenseits von Gut und Boese\\.$',
   function(m)
+    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
     if m[2] ~= 'fast' then
       RE_SCHADEN = 12
@@ -3160,6 +3173,7 @@ kk_winterhauch_2 = createRegexTrigger(
   function()
     RE_ANGREIFER = 'Du'
     RE_FLAECHE_ANGREIFER = 'Du'
+    RE_FLAECHE_LETZTER_ANGREIFER = 'Du'
     RE_FLAECHE_WAFFE = 'Winterhauch'
     RE_FLAECHE_ART = 'Katzen'
     RE_FLAECHE_ZEIT = os.time()
