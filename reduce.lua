@@ -75,7 +75,6 @@ local RE_ANGREIFER
 local RE_FLAECHE_WAFFE
 local RE_FLAECHE_ART
 local RE_FLAECHE_ANGREIFER
-local RE_FLAECHE_LETZTER_ANGREIFER
 local RE_FLAECHE_ZEIT = 0
 local RE_WAFFE
 local RE_OPFER
@@ -129,7 +128,7 @@ local PRIO_DEFAULT = 200
 -- Normalangriff erst nach den spezifischeren Triggern
 local PRIO_NORMALANGRIFF = 100
 
-local FLAECHE_DELAY = 10
+local FLAECHE_DELAY = 3
 
 local RE_STYLE
 if debug_flag then
@@ -217,9 +216,15 @@ local function re_loeschen()
 end
 re_loeschen()
 
+local function flaechen_angriff_start(angreifer, waffe, art)
+  RE_FLAECHE_ANGREIFER = angreifer
+  RE_FLAECHE_WAFFE = waffe
+  RE_FLAECHE_ART = art
+  RE_FLAECHE_ZEIT = os.time()
+end
+
 local function flaechen_angriff_beenden()
   RE_FLAECHE_ANGREIFER = nil
-  RE_FLAECHE_LETZTER_ANGREIFER = nil
   RE_FLAECHE_ZEIT = 0
 end
 
@@ -467,12 +472,15 @@ end
 local function re_ausgabe()
   re_ausgabe_vorbereiten()
   if RE_WAFFE == '???' then
-    if RE_ANGREIFER == RE_FLAECHE_ANGREIFER and (os.time() - RE_FLAECHE_ZEIT) < FLAECHE_DELAY then
+    if
+      (RE_ANGREIFER == '???' or RE_ANGREIFER == RE_FLAECHE_ANGREIFER)
+      and (os.time() - RE_FLAECHE_ZEIT) < FLAECHE_DELAY
+    then
+      RE_ANGREIFER = RE_FLAECHE_ANGREIFER
       RE_WAFFE = RE_FLAECHE_WAFFE
       RE_ART = RE_FLAECHE_ART
       re_waffe_geraten()
     else
-      RE_FLAECHE_LETZTER_ANGREIFER = nil
       RE_FLAECHE_ANGREIFER = nil
       re_waffe_restaurieren()
     end
@@ -1030,13 +1038,12 @@ createRegexTrigger(
 )
 
 -- Erdbeben
+local re_bier_eb_angreifer
 local re_bier_eb_1
 re_bier_eb_1 = createRegexTrigger(
   '^Ploetzlich beginnt die Erde zu beben\\.',
   function(m)
-    RE_FLAECHE_WAFFE = 'Erdbeben'
-    RE_FLAECHE_ART = 'Magie'
-    RE_FLAECHE_ZEIT = os.time()
+    flaechen_angriff_start(re_bier_eb_angreifer, 'Erdbeben', 'Magie')
     disableTrigger(re_bier_eb_1)
   end
 )
@@ -1052,7 +1059,7 @@ disableTrigger(re_bier_eb_2)
 createRegexTrigger(
   '^([^ ].+) knies?t kurz nieder und klatscht mit den Haenden auf den Boden\\.$',
   function(m)
-    RE_FLAECHE_ANGREIFER = re_artikelkuerzen(m[1])
+    re_bier_eb_angreifer = re_artikelkuerzen(m[1])
     enableTrigger(re_bier_eb_1)
     enableTrigger(re_bier_eb_2, 2)
   end
@@ -1232,10 +1239,7 @@ createRegexTrigger(
     elseif m[1] == 'gewaltige ' then
       RE_FBALL = '(+)'
     end
-    RE_FLAECHE_ANGREIFER = m[1]
-    RE_FLAECHE_WAFFE = 'Feuerball'
-    RE_FLAECHE_ART = 'Zauberei'
-    RE_FLAECHE_ZEIT = os.time()
+    flaechen_angriff_start(m[1], 'Feuerball', 'Zauberei')
     enableTrigger(zaub_fb_triggers, 8)
   end
 )
@@ -1781,23 +1785,20 @@ createMultiLineRegexTrigger(
 createRegexTrigger(
   '^(Der Koerper (.*) verkrampft sich vor Konzentration|(Du) konzentrierst Deine Gedanken auf einen Donner)\\.$',
   function(m)
-    RE_FLAECHE_WAFFE = 'Donner'
-    RE_WAFFE =  'Donner'
-    RE_FLAECHE_ART = 'Klerus'
-    RE_ART = RE_FLAECHE_ART
+    local angreifer
     if m[3] == '' then
-      RE_FLAECHE_ANGREIFER = re_genitiv_loeschen(re_artikelkuerzen(m[2]))
+      angreifer = re_genitiv_loeschen(re_artikelkuerzen(m[2]))
     else
-      RE_FLAECHE_ANGREIFER = 'Du'
+      angreifer = 'Du'
     end
-    RE_FLAECHE_ZEIT = os.time()
+    flaechen_angriff_start(angreifer, 'Donner', 'Klerus')
   end
 )
 createRegexTrigger(
   '^([^ ].*) (furzt tierisch|laesst tierisch einen Stinkefurz fahren)\\.$',
   function()
     if RE_FLAECHE_WAFFE == 'Donner' then
-      RE_FLAECHE_ANGREIFER = nil
+      flaechen_angriff_beenden()
     end
   end
 )
@@ -1805,7 +1806,7 @@ createSubstrTrigger(
   'Ein gewaltiger Donner erschuettert Dein Trommelfell.',
   function()
     if RE_FLAECHE_WAFFE == 'Donner' then
-      RE_FLAECHE_ANGREIFER = nil
+      flaechen_angriff_beenden()
     end
   end
 )
@@ -3065,7 +3066,6 @@ local kk_winterhauch_triggers = {}
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) wuerde sich (.+)ueber einen Schal freuen\\.$',
   function(m)
-    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
     if m[2] ~= 'sehr ' or m[2] ~= '' then
       RE_SCHADEN = 1
@@ -3078,7 +3078,6 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) zittert (.*)deutlich\\.$',
   function(m)
-    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
     if m[1] ~= 'etwas' then
       RE_SCHADEN = 3
@@ -3091,7 +3090,6 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) hat das Zittern laengst aufgegeben\\.$',
   function(m)
-    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
 		RE_SCHADEN = 4
     re_ausgabe()
@@ -3100,7 +3098,6 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) Gliedmassen weisen (.*) Eiszapfen auf\\.$',
   function(m)
-    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = re_genitiv_loeschen(m[1])
     if m[2] ~= 'vereinzelt' then
       RE_SCHADEN = 5
@@ -3113,7 +3110,6 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) Haut weist (.*) Frostbeulen auf\\.$',
   function(m)
-    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = re_genitiv_loeschen(m[1])
     if m[2] ~= 'einige' then
       RE_SCHADEN = 7
@@ -3126,7 +3122,6 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createMultiLineRegexTrigger(
 	'^  Die dadurch entstehenden Frostbeulen tun>< (.*) hoellisch weh\\.$',
   function(m)
-    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
 		RE_SCHADEN = 9
     re_ausgabe()
@@ -3135,7 +3130,6 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createMultiLineRegexTrigge
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) friert sich fast etwas ab\\.$',
   function(m)
-    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
 		RE_SCHADEN = 10
     re_ausgabe()
@@ -3144,7 +3138,6 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) kann sich nur unter Schmerzen bewegen\\.$',
   function(m)
-    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
 		RE_SCHADEN = 10
     re_ausgabe()
@@ -3153,7 +3146,6 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  ([^ ].+) erstarrt beinahe\\.$',
   function(m)
-    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
 		RE_SCHADEN = 11
     re_ausgabe()
@@ -3162,7 +3154,6 @@ kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
 	'^  Fuer (.+) ist diese Kaelte (.*) jenseits von Gut und Boese\\.$',
   function(m)
-    RE_ANGREIFER = RE_FLAECHE_LETZTER_ANGREIFER
     RE_OPFER = m[1]
     if m[2] ~= 'fast' then
       RE_SCHADEN = 12
@@ -3177,15 +3168,7 @@ local kk_winterhauch_2
 kk_winterhauch_2 = createRegexTrigger(
   '^Es wird ploetzlich kaelter um .*\\.\\.\\.$',
   function()
-    RE_ANGREIFER = 'Du'
-    RE_FLAECHE_ANGREIFER = 'Du'
-    RE_FLAECHE_LETZTER_ANGREIFER = 'Du'
-    RE_FLAECHE_WAFFE = 'Winterhauch'
-    RE_WAFFE = RE_FLAECHE_WAFFE
-    RE_FLAECHE_ART = 'Katzen'
-    RE_ART = RE_FLAECHE_ART
-    RE_FLAECHE_ZEIT = os.time()
-    FLAECHE_DELAY = 3
+    flaechen_angriff_start('Du', 'Winterhauch', 'Katzen')
     enableTrigger(kk_winterhauch_triggers, 2)
     disableTrigger(kk_winterhauch_2)
   end,
