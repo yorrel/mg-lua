@@ -3038,6 +3038,215 @@ createMultiLineRegexTrigger(
   end
 )
 
+-- Wasserstrahl
+local kk_wasserstrahl_triggers = {}
+addGroupedRegexTrigger(
+  kk_wasserstrahl_triggers,
+  '^  ([^ ].*) Wasserstrahl verfehlt .+\\.$',
+  function(m)
+    RE_SCHADEN = 1
+  end
+)
+addGroupedRegexTrigger(
+  kk_wasserstrahl_triggers,
+  '^  Ein Wasserspritzer streift .+\\.$',
+  function(m)
+    RE_SCHADEN = 2
+  end
+)
+addGroupedRegexTrigger(
+  kk_wasserstrahl_triggers,
+  '^  [^ ].+ spritzt .+ klitschnass\\.$',
+  function(m)
+    RE_SCHADEN = 4
+  end
+)
+addGroupedRegexTrigger(
+  kk_wasserstrahl_triggers,
+  '^  [^ ].+ triffs?t (.+) mit einem Wasserstrahl\\.$',
+  function(m)
+    if string.match(m[1], '.* sehr hart') then
+      RE_SCHADEN = 8
+    elseif string.match(m[1], '.* hart') then
+      RE_SCHADEN = 7
+    else
+      RE_SCHADEN = 6
+    end
+  end
+)
+addGroupedRegexTrigger(
+  kk_wasserstrahl_triggers,
+  '^  [^ ].+ brings?t .+ mit einem Wasserstrahl aus dem Gleichgewicht\\.$',
+  function(m)
+    RE_SCHADEN = 9
+  end
+)
+addGroupedRegexTrigger(
+  kk_wasserstrahl_triggers,
+  '^  [^ ].+ Wasserstrahl haut .+ von den Beinen\\.$',
+  function(m)
+    RE_SCHADEN = 10  -- Vermutung, nicht gemessen
+  end
+)
+disableTrigger(kk_wasserstrahl_triggers)
+createMultiLineRegexTrigger(
+  '^([^ ].+) forms?t mit ([Ds]einen|ihren) Haenden einen Trichter, aus>< dem ein (Wasserstrahl )?schiesst\\. Diesen richtes?t (Du|er|sie) auf (.+)\\.$',
+  function(m)
+    enableTrigger(kk_wasserstrahl_triggers)
+    RE_WAFFE = 'Wasserstrahl'
+    RE_ART = 'Katzen'
+    RE_ANGREIFER = m[1]
+    RE_OPFER = m[5]
+  end
+)
+
+-- Winterhauch
+local kk_winterhauch_triggers = {}
+kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
+  '^  Das macht ([^ ].+) nicht viel aus\\.$',
+  function(m)
+    RE_OPFER = m[1]
+    RE_SCHADEN = 5
+    re_ausgabe(true)
+  end
+)
+kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
+  '^  ([^ ].+) zittert (.*)\\.$',
+  function(m)
+    RE_OPFER = m[1]
+    -- Varianten: 'leicht', 'etwas', 'deutlich', 'unuebersehbar'
+    RE_SCHADEN = 6
+    re_ausgabe(true)
+  end
+)
+kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
+  '^  ([^ ].+) wuerde sich (.*)ueber einen Schal freuen\\.$',
+  function(m)
+    RE_OPFER = m[1]
+    -- Varianten: '', 'sehr ', 'ungemein ' (21-29) / 'riesig ' (30-32)
+    RE_SCHADEN = 7
+    if m[2] ~= 'riesig ' then
+      RE_SCHADEN = 8
+      RE_SCHADEN_SUB = -1
+    end
+    re_ausgabe(true)
+  end
+)
+kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
+  '^  ([^ ].+) bekommt vereinzelt kleine Frostbeulen\\.$',
+  function(m)
+    RE_OPFER = re_genitiv_loeschen(m[1])
+    RE_SCHADEN = 8
+    RE_SCHADEN_SUB = -1
+    re_ausgabe(true)
+  end
+)
+kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
+  '^  ([^ ].+) Haut weist (.*) Frostbeulen auf\\.$',
+  function(m)
+    RE_OPFER = re_genitiv_loeschen(m[1])
+    -- Varianten: 'einige', 'etliche'
+    RE_SCHADEN = 8
+    re_ausgabe(true)
+  end
+)
+kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createMultiLineRegexTrigger(
+  '^  Die dadurch entstehenden Frostbeulen tun>< (.*) hoellisch weh\\.$',
+  function(m)
+    RE_OPFER = m[1]
+    RE_SCHADEN = 8
+    RE_SCHADEN_SUB = 1
+    re_ausgabe(true)
+  end
+)
+kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
+  '^  ([^ ].+) Gliedmassen weisen (.*) Eiszapfen auf\\.$',
+  function(m)
+    RE_OPFER = re_genitiv_loeschen(m[1])
+    if m[2] ~= 'vereinzelt' then
+      RE_SCHADEN = 9
+    elseif m[1] ~= 'einige' then
+      RE_SCHADEN = 10
+    end
+    re_ausgabe(true)
+  end
+)
+kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
+  '^  ([^ ].+) friert sich fast etwas ab\\.$',
+  function(m)
+    RE_OPFER = m[1]
+    RE_SCHADEN = 11
+    RE_SCHADEN_SUB = -1
+    re_ausgabe(true)
+  end
+)
+kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
+  '^  ([^ ].+) kann sich nur unter Schmerzen bewegen\\.$',
+  function(m)
+    RE_OPFER = m[1]
+    RE_SCHADEN = 11
+    re_ausgabe(true)
+  end
+)
+kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
+  '^  ([^ ].+) erstarrt beinahe\\.$',
+  function(m)
+    RE_OPFER = m[1]
+    RE_SCHADEN = 11
+    RE_SCHADEN_SUB = 1
+    re_ausgabe(true)
+  end
+)
+kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
+  '^  ([^ ].+) hat das Zittern laengst aufgegeben\\.$',
+  function(m)
+    RE_OPFER = m[1]
+    RE_SCHADEN = 12
+    RE_SCHADEN_SUB = -1
+    re_ausgabe(true)
+  end
+)
+kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
+  '^  Fuer (.+) ist diese Kaelte (.*) jenseits von Gut und Boese\\.$',
+  function(m)
+    RE_OPFER = m[1]
+    -- Varianten: 'fast', 'definitiv'
+    RE_SCHADEN = 12
+    if m[2] ~= 'definitiv' then
+      RE_SCHADEN_SUB = 1
+    end
+    re_ausgabe(true)
+  end
+)
+kk_winterhauch_triggers[#kk_winterhauch_triggers+1] = createRegexTrigger(
+  '^  Fuer ([^ ].+) bricht der nukleare Winter aus\\.$',
+  function(m)
+    RE_OPFER = m[1]
+    RE_SCHADEN = 13
+    re_ausgabe(true)
+  end
+)
+disableTrigger(kk_winterhauch_triggers)
+local kk_winterhauch_2
+kk_winterhauch_2 = createRegexTrigger(
+  '^Es wird ploetzlich kaelter um .*\\.\\.\\.$',
+  function()
+    flaechen_angriff_start(
+      'Du', 'Winterhauch', 'Katzen', kk_winterhauch_triggers
+    )
+    disableTrigger(kk_winterhauch_2)
+  end,
+  {'g'}
+)
+disableTrigger(kk_winterhauch_2)
+createRegexTrigger(
+  '^Du breitest die Arme aus und konzentrierst Dich\\.$',
+  function()
+    enableTrigger(kk_winterhauch_2)
+  end,
+  {'g'}
+)
+
 -- WERWOELFE
 
 -- Biss
