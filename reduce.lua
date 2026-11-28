@@ -5,6 +5,14 @@ local regex = client.regex
 -- https://github.com/jexp/TinyMacros
 -- (dem Nachfolger von Ringors legendaerem kampfmeldungen.tf)
 
+
+-- HINWEISE
+-- --------
+-- Damit die Erkennung richtig funktioniert:
+-- (1) angriffsmeldung ein
+-- (2) bei individuellem sethands muss die Meldung mit "mit ..." beginnen
+
+
 -- BEDEUTUNG DER AUSGABE
 -- ---------------------
 --  ________ Rueckendeckung
@@ -76,6 +84,7 @@ local RE_FLAECHE_WAFFE
 local RE_FLAECHE_ART
 local RE_FLAECHE_ANGREIFER
 local RE_FLAECHE_ZEIT = 0
+local RE_FLAECHE_TRIGGER
 local RE_WAFFE
 local RE_OPFER
 local RE_RICHTUNG
@@ -128,7 +137,7 @@ local PRIO_DEFAULT = 200
 -- Normalangriff erst nach den spezifischeren Triggern
 local PRIO_NORMALANGRIFF = 100
 
-local FLAECHE_DELAY = 10
+local FLAECHE_DELAY = 3
 
 local RE_STYLE
 if debug_flag then
@@ -215,6 +224,30 @@ local function re_loeschen()
   RE_TMP_TRENNER_COLOR = nil
 end
 re_loeschen()
+
+-- trigger optional: Schadensverarbeitung-Trigger fuer diesen Flaechenangriff
+local function flaechen_angriff_start(angreifer, waffe, art, trigger)
+  RE_FLAECHE_ANGREIFER = angreifer
+  RE_FLAECHE_WAFFE = waffe
+  RE_FLAECHE_ART = art
+  RE_FLAECHE_ZEIT = os.time()
+  RE_FLAECHE_TRIGGER = trigger
+  if RE_FLAECHE_TRIGGER then
+    enableTrigger(RE_FLAECHE_TRIGGER, FLAECHE_DELAY)
+  end
+end
+
+local function flaechen_angriff_beenden()
+  RE_FLAECHE_ANGREIFER = nil
+  RE_FLAECHE_ZEIT = 0
+  if RE_FLAECHE_TRIGGER then
+    disableTrigger(RE_FLAECHE_TRIGGER)
+    for _,id in ipairs(RE_FLAECHE_TRIGGER) do
+      timed_triggers[id] = nil
+    end
+    RE_FLAECHE_TRIGGER = nil
+  end
+end
 
 local function abwehr_helfer(typ, val, farbe)
   local akt = RE_ABWEHR[typ]
@@ -426,16 +459,22 @@ local function re_ausgabe_vorbereiten()
   RE_OPFER = re_artikelkuerzen(RE_OPFER)
   if RE_REGEXP_SELF:match(RE_ANGREIFER) then
     RE_ANGREIFER = 'Du'
-    RE_RICHTUNG = 'out'
   elseif RE_REGEXP_SELF:match(RE_OPFER) then
     RE_OPFER = 'Dich'
-    RE_RICHTUNG = 'in'
-  else
-    RE_RICHTUNG = 'other'
   end
   if RE_WFUNC ~= nil then
     RE_ART = RE_WFUNC
     RE_WFUNC = nil
+  end
+end
+
+local function re_ausgabe_richtung_vorbereiten()
+  if RE_ANGREIFER == 'Du' then
+    RE_RICHTUNG = 'out'
+  elseif RE_OPFER == 'Dich' then
+    RE_RICHTUNG = 'in'
+  else
+    RE_RICHTUNG = 'other'
   end
 end
 
@@ -457,17 +496,26 @@ local function re_waffe_restaurieren()
   end
 end
 
-local function re_ausgabe()
+-- optFlaeche = moeglicherweise Flaechenangriff (fehlt -> garantiert keiner)
+local function re_ausgabe(optFlaeche)
   re_ausgabe_vorbereiten()
-  if RE_WAFFE == '???' then
-    if RE_ANGREIFER == RE_FLAECHE_ANGREIFER and (os.time() - RE_FLAECHE_ZEIT) < FLAECHE_DELAY then
+  if not optFlaeche and RE_FLAECHE_ANGREIFER then
+    flaechen_angriff_beenden()
+  elseif RE_FLAECHE_ANGREIFER then
+    if (RE_ANGREIFER == '???' or RE_ANGREIFER == RE_FLAECHE_ANGREIFER)
+      and (os.time() - RE_FLAECHE_ZEIT) < FLAECHE_DELAY
+    then
+      RE_ANGREIFER = RE_FLAECHE_ANGREIFER
       RE_WAFFE = RE_FLAECHE_WAFFE
       RE_ART = RE_FLAECHE_ART
       re_waffe_geraten()
     else
-      RE_FLAECHE_ANGREIFER = nil
-      re_waffe_restaurieren()
+      flaechen_angriff_beenden()
     end
+  end
+  re_ausgabe_richtung_vorbereiten()
+  if RE_WAFFE == '???' then
+    re_waffe_restaurieren()
   end
   -- zeitlich begrenzte Trigger loeschen
   if #timed_triggers > 0 then
@@ -516,7 +564,7 @@ local function re_macro(meldung_vor, meldung_nach, line)
     re_loeschen()
     client.cecho(line)
   end
-  re_ausgabe()
+  re_ausgabe(true)
 end
 
 local KARATE_ABKUERZUNGEN = {}
@@ -1022,13 +1070,12 @@ createRegexTrigger(
 )
 
 -- Erdbeben
+local re_bier_eb_angreifer
 local re_bier_eb_1
 re_bier_eb_1 = createRegexTrigger(
   '^Ploetzlich beginnt die Erde zu beben\\.',
   function(m)
-    RE_FLAECHE_WAFFE = 'Erdbeben'
-    RE_FLAECHE_ART = 'Magie'
-    RE_FLAECHE_ZEIT = os.time()
+    flaechen_angriff_start(re_bier_eb_angreifer, 'Erdbeben', 'Magie')
     disableTrigger(re_bier_eb_1)
   end
 )
@@ -1044,7 +1091,7 @@ disableTrigger(re_bier_eb_2)
 createRegexTrigger(
   '^([^ ].+) knies?t kurz nieder und klatscht mit den Haenden auf den Boden\\.$',
   function(m)
-    RE_FLAECHE_ANGREIFER = re_artikelkuerzen(m[1])
+    re_bier_eb_angreifer = re_artikelkuerzen(m[1])
     enableTrigger(re_bier_eb_1)
     enableTrigger(re_bier_eb_2, 2)
   end
@@ -1167,16 +1214,9 @@ createRegexTrigger(
 )
 
 -- Feuerball
-local RE_FBALL = ''
-local zaub_fb_triggers = {}
-zaub_fb_triggers[#zaub_fb_triggers+1] = createMultiLineRegexTrigger(
-  '.* (schleuderst|schleudert) die Kugel in>< .* Richtung\\.'
-)
-zaub_fb_triggers[#zaub_fb_triggers+1] = createMultiLineRegexTrigger(
+local zaub_fb_schaden_trigger = createMultiLineRegexTrigger(
   '^  ([^ ].+) (wird durch|Feuerball verfehlt|Feuerball bringt|Feuerball versengt|Feuerball entzuendet|Feuerball trifft|Feuerball kocht|Feuerball roestet|Feuerball verbrennt)>< (.+) (Feuerball reichlich warm|meilenweit|zum Schwitzen|Haare und Augenbrauen|Kleidung|an der Schulter|wie einen Hummer|auf kleiner Flamme|russig schwarz|fast zu Asche)?\\.$',
   function(m)
-    RE_WAFFE = 'Feuerball'..RE_FBALL
-    RE_ART = 'Zauberei'
     local dmg = nil
     if m[1] == 'Dir' then
       RE_OPFER = 'Dich'
@@ -1211,24 +1251,37 @@ zaub_fb_triggers[#zaub_fb_triggers+1] = createMultiLineRegexTrigger(
     else
       RE_SCHADEN = 15
     end
-    re_ausgabe()
+    re_ausgabe(true)
   end
 )
-disableTrigger(zaub_fb_triggers)
+disableTrigger(zaub_fb_schaden_trigger)
+local zaub_fb_angreifer
+local zaub_fb_staerke = ''
+local zaub_fb_start_trigger
+zaub_fb_start_trigger = createMultiLineRegexTrigger(
+  '.* (schleuderst|schleudert) die Kugel in>< .* Richtung\\.',
+  function(m)
+    disableTrigger(zaub_fb_start_trigger)
+    flaechen_angriff_start(
+      zaub_fb_angreifer,
+      'Feuerball'..zaub_fb_staerke,
+      'Zauberei',
+      {zaub_fb_schaden_trigger}
+    )
+  end
+)
+disableTrigger(zaub_fb_start_trigger)
 createRegexTrigger(
   '^([A-Z].*) laesst eine (kleine |gewaltige )?Kugel aus Feuer entstehen\\.$',
   function(m)
-    RE_FBALL = ''
+    zaub_fb_staerke = ''
     if m[2] == 'kleine ' then
-      RE_FBALL = '(-)'
+      zaub_fb_staerke = '(-)'
     elseif m[1] == 'gewaltige ' then
-      RE_FBALL = '(+)'
+      zaub_fb_staerke = '(+)'
     end
-    RE_FLAECHE_ANGREIFER = m[1]
-    RE_FLAECHE_WAFFE = 'Feuerball'
-    RE_FLAECHE_ART = 'Zauberei'
-    RE_FLAECHE_ZEIT = os.time()
-    enableTrigger(zaub_fb_triggers, 8)
+    zaub_fb_angreifer = m[1]
+    enableTrigger(zaub_fb_start_trigger)
   end
 )
 
@@ -1773,23 +1826,20 @@ createMultiLineRegexTrigger(
 createRegexTrigger(
   '^(Der Koerper (.*) verkrampft sich vor Konzentration|(Du) konzentrierst Deine Gedanken auf einen Donner)\\.$',
   function(m)
-    RE_FLAECHE_WAFFE = 'Donner'
-    RE_WAFFE =  'Donner'
-    RE_FLAECHE_ART = 'Klerus'
-    RE_ART = RE_FLAECHE_ART
+    local angreifer
     if m[3] == '' then
-      RE_FLAECHE_ANGREIFER = re_genitiv_loeschen(re_artikelkuerzen(m[2]))
+      angreifer = re_genitiv_loeschen(re_artikelkuerzen(m[2]))
     else
-      RE_FLAECHE_ANGREIFER = 'Du'
+      angreifer = 'Du'
     end
-    RE_FLAECHE_ZEIT = os.time()
+    flaechen_angriff_start(angreifer, 'Donner', 'Klerus')
   end
 )
 createRegexTrigger(
   '^([^ ].*) (furzt tierisch|laesst tierisch einen Stinkefurz fahren)\\.$',
   function()
     if RE_FLAECHE_WAFFE == 'Donner' then
-      RE_FLAECHE_ANGREIFER = nil
+      flaechen_angriff_beenden()
     end
   end
 )
@@ -1797,7 +1847,7 @@ createSubstrTrigger(
   'Ein gewaltiger Donner erschuettert Dein Trommelfell.',
   function()
     if RE_FLAECHE_WAFFE == 'Donner' then
-      RE_FLAECHE_ANGREIFER = nil
+      flaechen_angriff_beenden()
     end
   end
 )
@@ -3726,6 +3776,7 @@ local function match_normalen_angriff(m)
   local opfer = m[2]
   local waffe = m[3]
   re_loeschen()
+  flaechen_angriff_beenden()
   RE_WAFFE = waffe
   logger.debug('RE_WAFFE = "' .. RE_WAFFE .. '"')
   if RE_WAFFE == 'brennenden Haenden' or RE_WAFFE == 'flammenden Haenden' then
